@@ -232,8 +232,7 @@ class SectionHeader extends StatelessWidget {
 class SectionHeaderCompact extends StatelessWidget {
 
   const SectionHeaderCompact({
-    super.key,
-    required this.title,
+    required this.title, super.key,
     this.titleKhmer,
     this.icon,
     this.onAction,

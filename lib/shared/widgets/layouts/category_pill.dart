@@ -56,8 +56,7 @@ class CategoryPillData {
 class CategoryPill extends StatefulWidget {
 
   const CategoryPill({
-    super.key,
-    required this.category,
+    required this.category, super.key,
     this.isSelected = false,
     this.onTap,
     this.showCount = true,
@@ -266,10 +265,8 @@ class _CategoryPillState extends State<CategoryPill>
 class CategoryPillRow extends StatelessWidget {
 
   const CategoryPillRow({
-    super.key,
-    required this.categories,
+    required this.categories, required this.onSelected, super.key,
     this.selectedId,
-    required this.onSelected,
     this.showCount = true,
     this.pillHeight,
     this.padding,
@@ -341,10 +338,8 @@ class CategoryPillRow extends StatelessWidget {
 class CategoryPillRowWithAll extends StatelessWidget {
 
   const CategoryPillRowWithAll({
-    super.key,
-    required this.categories,
+    required this.categories, required this.onSelected, super.key,
     this.selectedId,
-    required this.onSelected,
     this.allLabel = 'All',
     this.allLabelKhmer,
     this.showCount = true,

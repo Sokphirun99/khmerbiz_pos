@@ -22,14 +22,12 @@ library;
 
 export 'buttons/app_button.dart';
 export 'buttons/payment_method_button.dart';
-
+export 'cards/cart_item_tile.dart';
 // ═══════════════════════════════════════════════════════════════
 // CARDS
 // ═══════════════════════════════════════════════════════════════
 
 export 'cards/product_card.dart';
-export 'cards/cart_item_tile.dart';
-
 // ═══════════════════════════════════════════════════════════════
 // DISPLAYS
 // ═══════════════════════════════════════════════════════════════
@@ -37,26 +35,23 @@ export 'cards/cart_item_tile.dart';
 export 'displays/price_display.dart';
 export 'displays/stock_badge.dart';
 export 'displays/sync_status_badge.dart';
+export 'feedback/confirmation_dialog.dart';
+export 'feedback/empty_state.dart';
+// ═══════════════════════════════════════════════════════════════
+// FEEDBACK
+// ═══════════════════════════════════════════════════════════════
 
+export 'feedback/loading_skeleton.dart';
+export 'feedback/offline_banner.dart';
 // ═══════════════════════════════════════════════════════════════
 // INPUTS
 // ═══════════════════════════════════════════════════════════════
 
 export 'inputs/app_text_field.dart';
 export 'inputs/num_pad.dart';
-
+export 'layouts/category_pill.dart';
 // ═══════════════════════════════════════════════════════════════
 // LAYOUTS
 // ═══════════════════════════════════════════════════════════════
 
 export 'layouts/section_header.dart';
-export 'layouts/category_pill.dart';
-
-// ═══════════════════════════════════════════════════════════════
-// FEEDBACK
-// ═══════════════════════════════════════════════════════════════
-
-export 'feedback/loading_skeleton.dart';
-export 'feedback/empty_state.dart';
-export 'feedback/confirmation_dialog.dart';
-export 'feedback/offline_banner.dart';

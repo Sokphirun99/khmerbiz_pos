@@ -58,8 +58,7 @@ enum StockBadgeStyle {
 class StockBadge extends StatelessWidget {
 
   const StockBadge({
-    super.key,
-    required this.status,
+    required this.status, super.key,
     this.quantity = 0,
     this.lowThreshold = 10,
     this.style = StockBadgeStyle.compact,
@@ -249,10 +248,8 @@ class StockBadge extends StatelessWidget {
 class StockWarningBadge extends StatelessWidget {
 
   const StockWarningBadge({
-    super.key,
-    required this.productName,
+    required this.productName, required this.quantity, super.key,
     this.productNameKhmer,
-    required this.quantity,
     this.lowThreshold = 10,
     this.onTap,
   });

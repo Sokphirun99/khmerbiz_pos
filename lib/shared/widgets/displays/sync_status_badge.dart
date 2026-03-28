@@ -238,8 +238,7 @@ class SyncProgressIndicator extends StatelessWidget {
 class SyncStatusDetail extends StatelessWidget {
 
   const SyncStatusDetail({
-    super.key,
-    required this.status,
+    required this.status, super.key,
     this.pendingCount = 0,
     this.lastSyncTime,
     this.errorMessage,

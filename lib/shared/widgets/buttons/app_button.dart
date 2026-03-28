@@ -73,8 +73,7 @@ enum AppButtonState {
 class AppButton extends StatefulWidget {
 
   const AppButton({
-    super.key,
-    required this.label,
+    required this.label, super.key,
     this.labelKhmer,
     this.type = AppButtonType.primary,
     this.state = AppButtonState.defaultState,

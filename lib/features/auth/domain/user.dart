@@ -9,12 +9,11 @@ final class User extends Equatable {
     required this.id,
     required this.email,
     required this.displayName,
-    this.phoneNumber,
+    required this.createdAt, this.phoneNumber,
     this.role = UserRole.cashier,
     this.businessId,
     this.avatarUrl,
     this.isActive = true,
-    required this.createdAt,
     this.lastLoginAt,
   });
   /// Unique user identifier

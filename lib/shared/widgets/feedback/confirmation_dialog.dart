@@ -432,13 +432,12 @@ class ConfirmationDialog extends StatelessWidget {
 class _DialogConfig {
 
   const _DialogConfig({
-    this.title,
+    required this.confirmColor, this.title,
     this.titleKhmer,
     this.subtitle,
     this.subtitleKhmer,
     this.confirmLabel,
     this.confirmLabelKhmer,
-    required this.confirmColor,
     this.icon,
     this.iconColor,
   });

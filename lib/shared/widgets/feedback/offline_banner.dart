@@ -338,8 +338,7 @@ class OfflineIndicator extends StatelessWidget {
 class ConnectionStatus extends StatelessWidget {
 
   const ConnectionStatus({
-    super.key,
-    required this.isOnline,
+    required this.isOnline, super.key,
     this.pendingCount = 0,
     this.lastSync,
     this.onRetry,

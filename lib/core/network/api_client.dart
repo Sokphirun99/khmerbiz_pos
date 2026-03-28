@@ -22,7 +22,7 @@ final class ApiClient {
             'Accept': 'application/json',
             if (authToken != null) 'Authorization': 'Bearer $authToken',
           },
-        )) {
+        ),) {
     _setupInterceptors();
   }
   final Dio _dio;

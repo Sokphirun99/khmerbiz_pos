@@ -8,10 +8,9 @@ final class CartItem extends Equatable {
     required this.id,
     required this.product,
     required this.quantity,
-    this.priceOverride,
+    required this.addedAt, this.priceOverride,
     this.discountAmount = 0,
     this.notes,
-    required this.addedAt,
   });
   /// Unique cart item identifier
   final String id;
@@ -97,13 +96,11 @@ final class Cart extends Equatable {
   const Cart({
     required this.id,
     required this.items,
-    this.customerId,
+    required this.createdAt, required this.updatedAt, this.customerId,
     this.discountAmount = 0,
     this.discountPercent,
     this.taxRate,
     this.notes,
-    required this.createdAt,
-    required this.updatedAt,
   });
   /// Unique cart identifier
   final String id;

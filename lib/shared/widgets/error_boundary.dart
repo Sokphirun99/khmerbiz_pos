@@ -14,8 +14,7 @@ import 'package:flutter/material.dart';
 final class ErrorBoundary extends StatefulWidget {
 
   const ErrorBoundary({
-    super.key,
-    required this.child,
+    required this.child, super.key,
     this.errorBuilder,
     this.onError,
   });
@@ -167,9 +166,7 @@ void _reportError(BuildContext context, Object error, StackTrace stackTrace) {
 final class DefaultErrorWidget extends StatelessWidget {
 
   const DefaultErrorWidget({
-    super.key,
-    required this.error,
-    required this.stackTrace,
+    required this.error, required this.stackTrace, super.key,
     this.onRetry,
   });
   final Object error;

@@ -13,10 +13,8 @@ class CartItemData {
     required this.id,
     required this.productId,
     required this.name,
-    this.nameKhmer,
-    required this.unitPriceKHR,
+    required this.unitPriceKHR, required this.quantity, this.nameKhmer,
     this.unitPriceUSD,
-    required this.quantity,
     this.discount,
     this.note,
   });
@@ -77,8 +75,7 @@ typedef OnQuantityChanged = void Function(int newQuantity);
 class CartItemTile extends StatefulWidget {
 
   const CartItemTile({
-    super.key,
-    required this.item,
+    required this.item, super.key,
     this.onQuantityChanged,
     this.onRemoved,
     this.onTap,

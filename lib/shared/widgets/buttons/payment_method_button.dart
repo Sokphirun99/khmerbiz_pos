@@ -28,8 +28,7 @@ class PaymentMethodConfig {
   const PaymentMethodConfig({
     required this.type,
     required this.label,
-    this.labelKhmer,
-    required this.icon,
+    required this.icon, this.labelKhmer,
     this.iconColor,
   });
   final PaymentMethodType type;
@@ -106,8 +105,7 @@ class PaymentMethodConfig {
 class PaymentMethodButton extends StatefulWidget {
 
   const PaymentMethodButton({
-    super.key,
-    required this.method,
+    required this.method, super.key,
     this.isSelected = false,
     this.onTap,
     this.isDisabled = false,

@@ -497,7 +497,7 @@ class PlaceholderForgotPasswordScreen extends StatelessWidget {
 
 class PlaceholderMainScaffold extends StatelessWidget {
 
-  const PlaceholderMainScaffold({super.key, required this.child});
+  const PlaceholderMainScaffold({required this.child, super.key});
   final Widget child;
 
   @override
@@ -573,7 +573,7 @@ class PlaceholderProductsScreen extends StatelessWidget {
 
 class PlaceholderProductDetailScreen extends StatelessWidget {
 
-  const PlaceholderProductDetailScreen({super.key, required this.productId});
+  const PlaceholderProductDetailScreen({required this.productId, super.key});
   final String productId;
 
   @override
@@ -641,7 +641,7 @@ class PlaceholderTransactionsScreen extends StatelessWidget {
 
 class PlaceholderTransactionDetailScreen extends StatelessWidget {
 
-  const PlaceholderTransactionDetailScreen({super.key, required this.transactionId});
+  const PlaceholderTransactionDetailScreen({required this.transactionId, super.key});
   final String transactionId;
 
   @override
@@ -697,7 +697,7 @@ class PlaceholderPaymentScreen extends StatelessWidget {
 
 class PlaceholderReceiptScreen extends StatelessWidget {
 
-  const PlaceholderReceiptScreen({super.key, required this.transactionId});
+  const PlaceholderReceiptScreen({required this.transactionId, super.key});
   final String transactionId;
 
   @override
@@ -733,7 +733,7 @@ class PlaceholderCustomersScreen extends StatelessWidget {
 
 class PlaceholderCustomerDetailScreen extends StatelessWidget {
 
-  const PlaceholderCustomerDetailScreen({super.key, required this.customerId});
+  const PlaceholderCustomerDetailScreen({required this.customerId, super.key});
   final String customerId;
 
   @override

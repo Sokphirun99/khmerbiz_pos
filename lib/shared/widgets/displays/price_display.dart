@@ -46,8 +46,7 @@ enum PriceSize {
 class PriceDisplay extends StatelessWidget {
 
   const PriceDisplay({
-    super.key,
-    required this.amountKHR,
+    required this.amountKHR, super.key,
     this.amountUSD,
     this.showUSD = true,
     this.size = PriceSize.medium,
@@ -194,8 +193,7 @@ class PriceDisplay extends StatelessWidget {
 class PriceCompact extends StatelessWidget {
 
   const PriceCompact({
-    super.key,
-    required this.amountKHR,
+    required this.amountKHR, super.key,
     this.amountUSD,
     this.showUSD = false,
     this.color,

@@ -8,12 +8,11 @@ final class Product extends Equatable {
   const Product({
     required this.id,
     required this.name,
-    this.description,
+    required this.priceKhr, required this.createdAt, this.description,
     this.sku,
     this.barcode,
     this.categoryId,
     this.categoryName,
-    required this.priceKhr,
     this.priceUsd,
     this.costPrice,
     this.quantity = 0,
@@ -26,7 +25,6 @@ final class Product extends Equatable {
     this.discountPercent,
     this.minQuantity,
     this.maxQuantity,
-    required this.createdAt,
     this.updatedAt,
     this.syncedAt,
   });

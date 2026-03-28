@@ -73,8 +73,7 @@ class ProductCardData {
 class ProductCard extends StatelessWidget {
 
   const ProductCard({
-    super.key,
-    required this.product,
+    required this.product, super.key,
     this.onTap,
     this.onLongPress,
     this.isSelected = false,
