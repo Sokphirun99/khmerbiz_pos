@@ -1,86 +1,175 @@
+# ═══════════════════════════════════════════════════════════════
+# Flutter/Dart .gitignore
+# ═══════════════════════════════════════════════════════════════
+
 # Miscellaneous
 *.class
 *.log
 *.pyc
 *.swp
 .DS_Store
-.atom/
+.AppleDouble
+.LSOverride
+._*
+
+# Documents
+*.doc
+*.docx
+*.pdf
+*.rtf
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# Temp files
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*~
+
+# Build directories
 .build/
 .buildlog/
-.history
-.svn/
-.swiftpm/
-migrate_working_dir/
+build/
+**/build/
 
-# IntelliJ related
+# IDE
+.idea/
 *.iml
 *.ipr
 *.iws
-.idea/
-
-# VS Code (optional - uncomment if you don't want to track VS Code settings)
 .vscode/
+*.sublime-project
+*.sublime-workspace
 
-# Flutter/Dart/Pub related
-**/doc/api/
-**/ios/Flutter/.last_build_id
+# Flutter/Dart
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
 .pub/
-/build/
+**/ios/Flutter/.last_build_id
 
-# Symbolication related
+# Documentation
+**/doc/api/
+
+# Symbolication
 app.*.symbols
 
-# Obfuscation related
+# Obfuscation
 app.*.map.json
 
-# Android Studio will place build artifacts here
-/android/app/debug
-/android/app/profile
-/android/app/release
+# Android
+/android/app/debug/
+/android/app/profile/
+/android/app/release/
+/android/.gradle/
+/android/captures/
+/android/gradlew
+/android/gradlew.bat
+/android/local.properties
+/android/**/android.iml
+/android/**/.gradle/
+/android/**/build/
+/android/**/generated/
+/android/app/google-services.json
+/android/**/key.properties
+/android/**/gradle-wrapper.jar
 
-# iOS/macOS
+# iOS
 **/ios/Pods/
 **/ios/.symlinks/
-**/macos/Pods/
-**/macos/.symlinks/
 **/ios/Flutter/Flutter.framework/
 **/ios/Flutter/Flutter.podspec
 **/ios/Flutter/Debug.xcconfig
 **/ios/Flutter/Release.xcconfig
-
-# Xcode
-**/ios/**/*.xcworkspace
+**/ios/**/*.xcworkspace/
 **/ios/**/*.xcodeproj/project.xcworkspace/
 **/ios/**/*.xcodeproj/xcuserdata/
+**/ios/Flutter/ephemeral/
+**/ios/**/.generated/
+**/ios/Runner/GeneratedPluginRegistrant.*
 
-# Android
-**/android/**/gradle-wrapper.jar
-**/android/.gradle
-**/android/captures/
-**/android/.gradlew
-**/android/local.properties
-**/android/**/android.iml
-**/android/**/.gradle/
-**/android/**/build/
-**/android/app/google-services.json
-**/android/**/key.properties
+# macOS
+**/macos/Pods/
+**/macos/.symlinks/
+**/macos/Flutter/ephemeral/
+**/macos/**/.generated/
 
-# Environment variables
+# Web
+**/web/manifest.json
+**/web/flutter_bootstrap.js
+**/web/flutter_service_worker.js
+
+# Environment variables (secrets!)
 .env
 .env.local
 .env.*.local
+.env.development
+.env.production
 
 # Coverage
 coverage/
 .lcov.info
+test/.test_coverage.dart
 
-# Temporary files
-*.tmp
-*.temp
-*.bak
-*.orig
+# Swift PM
+.swiftpm/
+migrate_working_dir/
+
+# Xcode
+**/xcuserdata/
+**/DerivedData/
+**/XCBuildData/
+
+# CocoaPods
+**/Pods/
+**/Podfile.lock
+**/Manifest.lock
+
+# Fastlane
+**/fastlane/report.xml
+**/fastlane/Preview.html
+**/fastlane/screenshots/
+**/fastlane/test_output/
+**/fastlane/readme.md
+
+# Firebase
+**/firebase-app-id-file.json
+**/google-services.json
+**/GoogleService-Info.plist
+
+# Keys and secrets
+**/key.properties
+**/keystore/
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pfx
+
+# Database
+**/*.db
+**/*.sqlite
+**/*.realm
+
+# Cache
+**/cache/
+**/.cache/
+**/*.cache
+
+# Logs
+**/logs/
+**/*.log
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# OS generated files
+**/ehthumbs.db
+**/Thumbs.db
+**/Desktop.ini
