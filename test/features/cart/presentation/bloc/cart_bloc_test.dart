@@ -54,7 +54,6 @@ void main() {
   final testUser = User(
     id: 'u1',
     username: 'admin',
-    pinHash: '1234',
     fullNameKh: 'រដ្ឋបាល',
     fullNameEn: 'Admin User',
     role: 'admin',

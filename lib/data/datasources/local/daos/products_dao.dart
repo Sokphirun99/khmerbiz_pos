@@ -1,11 +1,14 @@
 import 'package:drift/drift.dart';
 import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:uuid/uuid.dart';
 
 part 'products_dao.g.dart';
 
 @DriftAccessor(tables: [Products, Categories])
 class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin {
   ProductsDao(super.db);
+
+  final Uuid _uuid = const Uuid();
 
   Stream<List<ProductModel>> watchAllActiveProducts() {
     return (select(products)..where((tbl) => tbl.isActive.equals(true))).watch();
@@ -55,9 +58,9 @@ class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin 
   }
 
   Future<String> insertProduct(ProductsCompanion product) async {
-    final id = product.id.present ? product.id.value : uuid.v4(); // Assuming uuid is available, drift clientDefault runs if missing
+    final id = product.id.present ? product.id.value : _uuid.v4();
     await into(products).insert(product);
-    return id; // returns whatever ID was inserted
+    return id;
   }
 
   Future<void> updateProduct(ProductsCompanion product) async {

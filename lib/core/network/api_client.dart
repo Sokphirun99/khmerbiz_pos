@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import 'package:khmerbiz_pos/core/config/app_config.dart';
@@ -5,6 +7,9 @@ import 'package:khmerbiz_pos/core/config/constants.dart';
 
 /// API client for making HTTP requests.
 final class ApiClient {
+  static const String _redactedValue = '<redacted>';
+  static const String _omittedValue = '<omitted>';
+
   ApiClient({
     required String baseUrl,
     String? authToken,
@@ -43,30 +48,26 @@ final class ApiClient {
   }
 
   void _setupInterceptors() {
-    if (AppConfig.enableLogging) {
-      _dio.interceptors.add(
-        LogInterceptor(
-          requestBody: true,
-          responseBody: true,
-          logPrint: (obj) => print('🌐 $obj'),
-        ),
-      );
-    }
-
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           options.headers['X-Request-ID'] =
               DateTime.now().millisecondsSinceEpoch.toString();
+          if (AppConfig.enableLogging) {
+            _logRequest(options);
+          }
           return handler.next(options);
         },
         onResponse: (response, handler) {
           if (AppConfig.enableLogging) {
-            print('✅ ${response.requestOptions.path} - ${response.statusCode}');
+            _logResponse(response);
           }
           return handler.next(response);
         },
         onError: (error, handler) async {
+          if (AppConfig.enableLogging) {
+            _logError(error);
+          }
           final exception = _handleError(error);
           return handler.reject(exception);
         },
@@ -164,6 +165,119 @@ final class ApiClient {
         ),
       _ => error,
     };
+  }
+
+  void _logRequest(RequestOptions options) {
+    _debugLog(
+      '🌐 ${_formatLogEntry({
+        'type': 'request',
+        'method': options.method,
+        'path': options.path,
+        'headers': _sanitizeHeaders(options.headers),
+        'query': _sanitizeData(options.queryParameters),
+        'body': _sanitizeData(options.data),
+      })}',
+    );
+  }
+
+  void _logResponse(Response<dynamic> response) {
+    _debugLog(
+      '✅ ${_formatLogEntry({
+        'type': 'response',
+        'method': response.requestOptions.method,
+        'path': response.requestOptions.path,
+        'statusCode': response.statusCode,
+        'body': _sanitizeData(response.data),
+      })}',
+    );
+  }
+
+  void _logError(DioException error) {
+    _debugLog(
+      '❌ ${_formatLogEntry({
+        'type': 'error',
+        'method': error.requestOptions.method,
+        'path': error.requestOptions.path,
+        'statusCode': error.response?.statusCode,
+        'message': error.message,
+        'body': _sanitizeData(error.response?.data),
+      })}',
+    );
+  }
+
+  void _debugLog(String message) {
+    print(message);
+  }
+
+  String _formatLogEntry(Map<String, Object?> payload) {
+    try {
+      return jsonEncode(payload);
+    } catch (_) {
+      return payload.toString();
+    }
+  }
+
+  Map<String, dynamic> _sanitizeHeaders(Map<String, dynamic> headers) {
+    return headers.map(
+      (key, value) => MapEntry(
+        key,
+        _isSensitiveKey(key) ? _redactedValue : value,
+      ),
+    );
+  }
+
+  dynamic _sanitizeData(dynamic data) {
+    if (data == null) {
+      return null;
+    }
+
+    if (data is FormData) {
+      return {
+        'fields': Map<String, dynamic>.fromEntries(
+          data.fields.map(
+            (field) => MapEntry(
+              field.key,
+              _isSensitiveKey(field.key) ? _redactedValue : field.value,
+            ),
+          ),
+        ),
+        if (data.files.isNotEmpty) 'files': _omittedValue,
+      };
+    }
+
+    if (data is Map) {
+      return data.map<String, dynamic>(
+        (key, value) => MapEntry(
+          key.toString(),
+          _isSensitiveKey(key.toString())
+              ? _redactedValue
+              : _sanitizeData(value),
+        ),
+      );
+    }
+
+    if (data is List) {
+      return data.map(_sanitizeData).toList(growable: false);
+    }
+
+    if (data is num || data is bool) {
+      return data;
+    }
+
+    return _omittedValue;
+  }
+
+  bool _isSensitiveKey(String key) {
+    final normalizedKey = key.toLowerCase();
+
+    return normalizedKey.contains('authorization') ||
+        normalizedKey.contains('cookie') ||
+        normalizedKey.contains('token') ||
+        normalizedKey.contains('secret') ||
+        normalizedKey.contains('password') ||
+        normalizedKey.contains('pin') ||
+        normalizedKey.contains('api-key') ||
+        normalizedKey.contains('apikey');
   }
 }
 

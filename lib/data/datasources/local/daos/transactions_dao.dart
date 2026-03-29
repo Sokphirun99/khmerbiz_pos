@@ -63,9 +63,15 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
   }) async {
     return db.transaction<String>(() async {
       // a. Generate receiptNumber
-      final todayStr = '${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}';
+      final now = DateTime.now();
+      final todayStr =
+          '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}';
+      final startOfDay = DateTime(now.year, now.month, now.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
       final todayCount = await (select(transactions)
-            ..where((tbl) => tbl.createdAt.like('%$todayStr%')))
+            ..where(
+              (tbl) => tbl.createdAt.isBetweenValues(startOfDay, endOfDay),
+            ))
           .get()
           .then((l) => l.length);
       final sequence = (todayCount + 1).toString().padLeft(4, '0');

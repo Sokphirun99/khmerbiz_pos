@@ -5,7 +5,6 @@ class User extends Equatable {
   const User({
     required this.id,
     required this.username,
-    required this.pinHash,
     required this.fullNameKh,
     required this.fullNameEn,
     required this.role,
@@ -15,7 +14,6 @@ class User extends Equatable {
   });
   final String id;
   final String username;
-  final String pinHash;
   final String fullNameKh;
   final String fullNameEn;
   final String role;
@@ -28,7 +26,6 @@ class User extends Equatable {
   List<Object?> get props => [
         id,
         username,
-        pinHash,
         fullNameKh,
         fullNameEn,
         role,
