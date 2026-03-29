@@ -1,14 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class Category extends Equatable {
-  final String id;
-  final String nameKh;
-  final String nameEn;
-  final String? parentId;
-  final String? iconName;
-  final String? colorHex;
-  final int sortOrder;
-  final bool isActive;
 
   const Category({
     required this.id,
@@ -20,6 +12,14 @@ class Category extends Equatable {
     this.sortOrder = 0,
     this.isActive = true,
   });
+  final String id;
+  final String nameKh;
+  final String nameEn;
+  final String? parentId;
+  final String? iconName;
+  final String? colorHex;
+  final int sortOrder;
+  final bool isActive;
 
   @override
   List<Object?> get props => [

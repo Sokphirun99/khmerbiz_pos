@@ -1,15 +1,15 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import '../../core/error/failures.dart';
-import '../../domain/entities/user.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../datasources/local/database.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/user.dart';
+import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
 
 @LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
-  final AppDatabase _db;
 
   AuthRepositoryImpl(this._db);
+  final AppDatabase _db;
 
   @override
   Future<Either<Failure, User>> login({required String username, required String pin}) async {

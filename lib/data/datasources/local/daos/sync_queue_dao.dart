@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import '../database.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 
 part 'sync_queue_dao.g.dart';
 
@@ -27,7 +27,7 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase> with _$SyncQueueDaoMixi
     await (update(syncQueue)..where((tbl) => tbl.id.equals(id)))
         .write(SyncQueueCompanion(
             status: const Value('processing'),
-            lastAttemptAt: Value(DateTime.now())));
+            lastAttemptAt: Value(DateTime.now()),),);
   }
 
   Future<void> markCompleted(String id) async {
@@ -38,7 +38,7 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase> with _$SyncQueueDaoMixi
   Future<void> markFailed(String id, String errorMessage) async {
     await (update(syncQueue)..where((tbl) => tbl.id.equals(id)))
         .write(SyncQueueCompanion(
-            status: const Value('failed'), errorMessage: Value(errorMessage)));
+            status: const Value('failed'), errorMessage: Value(errorMessage),),);
   }
 
   Future<void> incrementAttempt(String id) async {
@@ -46,7 +46,7 @@ class SyncQueueDao extends DatabaseAccessor<AppDatabase> with _$SyncQueueDaoMixi
       'UPDATE sync_queue SET attemptCount = attemptCount + 1, lastAttemptAt = ? WHERE id = ?',
       variables: [
         Variable.withDateTime(DateTime.now()),
-        Variable.withString(id)
+        Variable.withString(id),
       ],
       updates: {syncQueue},
     );

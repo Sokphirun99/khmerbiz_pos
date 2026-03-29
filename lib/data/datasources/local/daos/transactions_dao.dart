@@ -1,21 +1,17 @@
 import 'package:drift/drift.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:uuid/uuid.dart';
-import '../database.dart';
 
 part 'transactions_dao.g.dart';
 
 class TransactionWithItems {
-  final TransactionModel transaction;
-  final List<TransactionItemModel> items;
 
   TransactionWithItems({required this.transaction, required this.items});
+  final TransactionModel transaction;
+  final List<TransactionItemModel> items;
 }
 
 class DailySummaryResult {
-  final DateTime date;
-  final int totalTransactions;
-  final double totalRevenue;
-  final double totalRevenueUSD;
 
   DailySummaryResult({
     required this.date,
@@ -23,30 +19,34 @@ class DailySummaryResult {
     required this.totalRevenue,
     required this.totalRevenueUSD,
   });
-}
-
-class WeeklySummaryResult {
+  final DateTime date;
   final int totalTransactions;
   final double totalRevenue;
   final double totalRevenueUSD;
+}
+
+class WeeklySummaryResult {
 
   WeeklySummaryResult({
     required this.totalTransactions,
     required this.totalRevenue,
     required this.totalRevenueUSD,
   });
+  final int totalTransactions;
+  final double totalRevenue;
+  final double totalRevenueUSD;
 }
 
 class TopProductResult {
-  final String productId;
-  final double quantitySold;
-  final double totalRevenue;
 
   TopProductResult({
     required this.productId,
     required this.quantitySold,
     required this.totalRevenue,
   });
+  final String productId;
+  final double quantitySold;
+  final double totalRevenue;
 }
 
 @DriftAccessor(
@@ -61,7 +61,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
     required TransactionsCompanion transaction,
     required List<TransactionItemsCompanion> items,
   }) async {
-    return await db.transaction<String>(() async {
+    return db.transaction<String>(() async {
       // a. Generate receiptNumber
       final todayStr = '${DateTime.now().year}${DateTime.now().month.toString().padLeft(2, '0')}${DateTime.now().day.toString().padLeft(2, '0')}';
       final todayCount = await (select(transactions)
@@ -86,7 +86,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
         await into(transactionItems).insert(item.copyWith(
           id: Value(itemId),
           transactionId: Value(txId),
-        ));
+        ),);
 
         // d. Update product stock (atomic decrement)
         final productId = item.productId.value;
@@ -114,7 +114,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
           reason: const Value('sale'),
           referenceId: Value(txId),
           staffId: transaction.staffId,
-        ));
+        ),);
       }
 
       // f. If customerId update loyalty
@@ -141,7 +141,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
         payload: const Value(''), // This will be handled by the Repository layer
         priority: const Value(1),
         createdAt: Value(DateTime.now()),
-      ));
+      ),);
 
       return txId;
     });
@@ -181,7 +181,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
         
     double rev = 0;
     double revUSD = 0;
-    for (var tx in txList) {
+    for (final tx in txList) {
       rev += tx.totalAmount;
       revUSD += tx.totalAmountUSD;
     }
@@ -204,7 +204,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
         
     double rev = 0;
     double revUSD = 0;
-    for (var tx in txList) {
+    for (final tx in txList) {
       rev += tx.totalAmount;
       revUSD += tx.totalAmountUSD;
     }
@@ -248,7 +248,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
   }
 
   Future<void> voidTransaction(String id, String staffId) async {
-    return await db.transaction(() async {
+    return db.transaction(() async {
       await (update(transactions)..where((t) => t.id.equals(id)))
           .write(const TransactionsCompanion(status: Value('voided'), isSynced: Value(false)));
       
@@ -272,7 +272,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase> with _$TransactionsD
           reason: const Value('return'),
           referenceId: Value(id),
           staffId: Value(staffId),
-        ));
+        ),);
       }
     });
   }

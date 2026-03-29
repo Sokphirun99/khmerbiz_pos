@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../../core/theme/foundation/app_radius.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
 class StorySection extends StatelessWidget {
   const StorySection({
-    super.key,
-    required this.title,
+    required this.title, required this.children, super.key,
     this.description,
-    required this.children,
   });
 
   final String title;
@@ -19,7 +17,7 @@ class StorySection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: AppSpacing.xxl),
+      margin: const EdgeInsets.only(bottom: AppSpacing.xxl),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -30,7 +28,7 @@ class StorySection extends StatelessWidget {
           ],
           const SizedBox(height: AppSpacing.base),
           Container(
-            padding: EdgeInsets.all(AppSpacing.lg),
+            padding: const EdgeInsets.all(AppSpacing.lg),
             decoration: BoxDecoration(
               color: AppColors.surface,
               borderRadius: BorderRadius.circular(AppRadius.md),
@@ -46,5 +44,12 @@ class StorySection extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
+    properties.add(StringProperty('description', description));
   }
 }

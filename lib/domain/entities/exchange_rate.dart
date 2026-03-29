@@ -1,6 +1,13 @@
 import 'package:equatable/equatable.dart';
 
 class ExchangeRate extends Equatable {
+
+  const ExchangeRate({
+    required this.id,
+    required this.rate, required this.source, required this.fetchedAt, this.baseCurrency = 'KHR',
+    this.targetCurrency = 'USD',
+    this.isActive = true,
+  });
   final String id;
   final String baseCurrency;
   final String targetCurrency;
@@ -8,16 +15,6 @@ class ExchangeRate extends Equatable {
   final String source;
   final DateTime fetchedAt;
   final bool isActive;
-
-  const ExchangeRate({
-    required this.id,
-    this.baseCurrency = 'KHR',
-    this.targetCurrency = 'USD',
-    required this.rate,
-    required this.source,
-    required this.fetchedAt,
-    this.isActive = true,
-  });
 
   @override
   List<Object?> get props => [

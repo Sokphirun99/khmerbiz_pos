@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../core/theme/app_text_styles.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class FoundationStories extends StatelessWidget {
   const FoundationStories({super.key});
@@ -10,14 +10,14 @@ class FoundationStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
         const Text('Foundation', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.base),
         const Text('Core design tokens including Colors, Spacing, and Typography.'),
         const SizedBox(height: AppSpacing.xl),
 
-        StorySection(
+        const StorySection(
           title: 'Brand Colors',
           description: 'Primary and accent brand colors.',
           children: [
@@ -30,7 +30,7 @@ class FoundationStories extends StatelessWidget {
           ],
         ),
 
-        StorySection(
+        const StorySection(
           title: 'Semantic Colors',
           description: 'State colors for success, warning, error, info.',
           children: [
@@ -41,7 +41,7 @@ class FoundationStories extends StatelessWidget {
           ],
         ),
 
-        StorySection(
+        const StorySection(
           title: 'Background & Surface',
           children: [
             _ColorSwatch('Background', AppColors.background),
@@ -50,7 +50,7 @@ class FoundationStories extends StatelessWidget {
           ],
         ),
 
-        StorySection(
+        const StorySection(
           title: 'Text Colors',
           children: [
             _ColorSwatch('Text Primary', AppColors.textPrimary),
@@ -116,5 +116,12 @@ class _ColorSwatch extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('label', label));
+    properties.add(ColorProperty('color', color));
   }
 }

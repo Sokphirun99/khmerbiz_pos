@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_spacing.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class DisplayStories extends StatelessWidget {
   const DisplayStories({super.key});
@@ -8,14 +8,14 @@ class DisplayStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
-      children: [
-        const Text('Displays', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-        const SizedBox(height: AppSpacing.base),
-        const Text('Data display components like badges, avatars, generic stats.'),
-        const SizedBox(height: AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      children: const [
+        Text('Displays', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        SizedBox(height: AppSpacing.base),
+        Text('Data display components like badges, avatars, generic stats.'),
+        SizedBox(height: AppSpacing.xl),
 
-        const StorySection(
+        StorySection(
           title: 'App Badge',
           description: 'Used for cart count or notifications.',
           children: [

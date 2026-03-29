@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/inventory_log.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/inventory_log.dart';
 
 abstract class InventoryRepository {
   Stream<Either<Failure, List<InventoryLog>>> watchProductHistory(String productId);

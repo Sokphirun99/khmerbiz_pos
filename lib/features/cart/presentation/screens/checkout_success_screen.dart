@@ -4,23 +4,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../core/utils/currency_formatter.dart';
-import '../../../../core/utils/date_formatter.dart';
-import '../../../../domain/entities/checkout_enums.dart';
-import '../../../../shared/widgets/widgets.dart';
-import '../bloc/cart_bloc.dart';
-import '../bloc/cart_event.dart';
-import '../bloc/cart_state.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/utils/currency_formatter.dart';
+import 'package:khmerbiz_pos/core/utils/date_formatter.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
 
 class CheckoutSuccessScreen extends StatefulWidget {
-  final CartCheckoutSuccess state;
   const CheckoutSuccessScreen({super.key, required this.state});
+  final CartCheckoutSuccess state;
 
   @override
   State<CheckoutSuccessScreen> createState() => _CheckoutSuccessScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<CartCheckoutSuccess>('state', state));
+  }
 }
 
 class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with SingleTickerProviderStateMixin {
@@ -71,7 +77,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
   }
 
   String _getLocalizedPaymentMethod(BuildContext context, PaymentMethod method) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     switch (method) {
       case PaymentMethod.cash:
         return l10n.paymentCash;
@@ -88,7 +94,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     
     return AnimatedBuilder(
       animation: _flashColorAnimation,
@@ -123,7 +129,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                             color: AppColors.shadow.withOpacity(0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
-                          )
+                          ),
                         ],
                       ),
                       child: Column(
@@ -191,7 +197,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                               color: AppColors.onPrimary.withOpacity(0.5),
                             ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     
@@ -209,7 +215,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
             ),
           ),
         );
-      }
+      },
     );
   }
 

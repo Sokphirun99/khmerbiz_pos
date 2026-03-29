@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/sync_queue_item.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/sync_queue_item.dart';
 
 abstract class SyncQueueRepository {
   Stream<Either<Failure, int>> watchPendingCount();

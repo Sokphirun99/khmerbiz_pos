@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:uuid/uuid.dart';
-import '../database.dart';
 
 part 'inventory_dao.g.dart';
 
@@ -24,7 +24,7 @@ class InventoryDao extends DatabaseAccessor<AppDatabase> with _$InventoryDaoMixi
     required String staffId,
     String? notes,
   }) async {
-    return await db.transaction(() async {
+    return db.transaction(() async {
       // atomic: fetch current stock, insert log, update product stock
       final currentProduct = await (select(products)..where((tbl) => tbl.id.equals(productId))).getSingle();
       
@@ -46,7 +46,7 @@ class InventoryDao extends DatabaseAccessor<AppDatabase> with _$InventoryDaoMixi
         staffId: Value(staffId),
         notes: Value(notes),
         timestamp: Value(DateTime.now()),
-      ));
+      ),);
     });
   }
 }

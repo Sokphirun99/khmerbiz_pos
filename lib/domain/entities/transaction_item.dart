@@ -1,6 +1,19 @@
 import 'package:equatable/equatable.dart';
 
 class TransactionItem extends Equatable {
+
+  const TransactionItem({
+    required this.id,
+    required this.transactionId,
+    required this.productId,
+    required this.productNameSnapshot,
+    required this.productNameEnSnapshot,
+    required this.quantity,
+    required this.unitPrice,
+    required this.costPrice,
+    required this.subtotal, this.discountAmount = 0,
+    this.modifiers,
+  });
   final String id;
   final String transactionId;
   final String productId;
@@ -12,20 +25,6 @@ class TransactionItem extends Equatable {
   final double discountAmount;
   final double subtotal;
   final String? modifiers;
-
-  const TransactionItem({
-    required this.id,
-    required this.transactionId,
-    required this.productId,
-    required this.productNameSnapshot,
-    required this.productNameEnSnapshot,
-    required this.quantity,
-    required this.unitPrice,
-    required this.costPrice,
-    this.discountAmount = 0,
-    required this.subtotal,
-    this.modifiers,
-  });
 
   @override
   List<Object?> get props => [

@@ -1,15 +1,8 @@
 import 'package:equatable/equatable.dart';
-import 'product.dart';
-import 'modifier.dart';
+import 'package:khmerbiz_pos/domain/entities/modifier.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 class CartItem extends Equatable {
-  final String id;
-  final String productId;
-  final Product product;
-  final double quantity;
-  final double unitPrice;
-  final double costPrice;
-  final List<Modifier> modifiers;
 
   const CartItem({
     required this.id,
@@ -20,8 +13,15 @@ class CartItem extends Equatable {
     required this.costPrice,
     this.modifiers = const [],
   });
+  final String id;
+  final String productId;
+  final Product product;
+  final double quantity;
+  final double unitPrice;
+  final double costPrice;
+  final List<Modifier> modifiers;
   
-  double get modifierTotal => modifiers.fold(0.0, (sum, m) => sum + m.price);
+  double get modifierTotal => modifiers.fold(0, (sum, m) => sum + m.price);
   double get lineTotal => (unitPrice * quantity) + modifierTotal;
 
   CartItem copyWith({

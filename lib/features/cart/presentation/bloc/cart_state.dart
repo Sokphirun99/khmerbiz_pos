@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
-import '../../../../domain/entities/cart_item.dart';
-import '../../../../domain/entities/customer.dart';
-import '../../../../domain/entities/checkout_enums.dart';
-import '../../../../core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/cart_item.dart';
+import 'package:khmerbiz_pos/domain/entities/customer.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
 
 sealed class CartState extends Equatable {
   const CartState();
@@ -14,18 +14,6 @@ sealed class CartState extends Equatable {
 final class CartInitial extends CartState {}
 
 final class CartLoaded extends CartState {
-  final List<CartItem> items;
-  final double subtotal;
-  final double discountAmount;
-  final double taxAmount;
-  final double total;
-  final double totalUSD;
-  final double changeAmount;
-  final Customer? customer;
-  final DiscountType? discountType;
-  final double? discountValue;
-  final bool isCheckingOut;
-  final Map<String, String>? stockWarnings;
 
   const CartLoaded({
     required this.items,
@@ -41,6 +29,18 @@ final class CartLoaded extends CartState {
     this.isCheckingOut = false,
     this.stockWarnings,
   });
+  final List<CartItem> items;
+  final double subtotal;
+  final double discountAmount;
+  final double taxAmount;
+  final double total;
+  final double totalUSD;
+  final double changeAmount;
+  final Customer? customer;
+  final DiscountType? discountType;
+  final double? discountValue;
+  final bool isCheckingOut;
+  final Map<String, String>? stockWarnings;
 
   CartLoaded copyWith({
     List<CartItem>? items,
@@ -92,13 +92,6 @@ final class CartLoaded extends CartState {
 }
 
 final class CartCheckoutSuccess extends CartState {
-  final String transactionId;
-  final String receiptNumber;
-  final double totalAmount;
-  final double totalAmountUSD;
-  final PaymentMethod paymentMethod;
-  final DateTime completedAt;
-  final String staffName;
 
   const CartCheckoutSuccess({
     required this.transactionId,
@@ -109,6 +102,13 @@ final class CartCheckoutSuccess extends CartState {
     required this.completedAt,
     required this.staffName,
   });
+  final String transactionId;
+  final String receiptNumber;
+  final double totalAmount;
+  final double totalAmountUSD;
+  final PaymentMethod paymentMethod;
+  final DateTime completedAt;
+  final String staffName;
 
   @override
   List<Object?> get props => [
@@ -123,9 +123,9 @@ final class CartCheckoutSuccess extends CartState {
 }
 
 final class CartCheckoutFailure extends CartState {
-  final Failure failure;
 
   const CartCheckoutFailure({required this.failure});
+  final Failure failure;
 
   @override
   List<Object?> get props => [failure];

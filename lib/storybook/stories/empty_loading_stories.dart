@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_spacing.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class EmptyLoadingStories extends StatelessWidget {
   const EmptyLoadingStories({super.key});
@@ -8,14 +8,14 @@ class EmptyLoadingStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
-      children: [
-        const Text('Empty & Loading', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-        const SizedBox(height: AppSpacing.base),
-        const Text('States for empty data or loading screens.'),
-        const SizedBox(height: AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      children: const [
+        Text('Empty & Loading', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        SizedBox(height: AppSpacing.base),
+        Text('States for empty data or loading screens.'),
+        SizedBox(height: AppSpacing.xl),
 
-        const StorySection(
+        StorySection(
           title: 'Empty State',
           description: 'Used when lists or screens have no data.',
           children: [

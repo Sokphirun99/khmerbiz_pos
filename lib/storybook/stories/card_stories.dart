@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_spacing.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class CardStories extends StatelessWidget {
   const CardStories({super.key});
@@ -8,14 +8,14 @@ class CardStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
-      children: [
-        const Text('Cards', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-        const SizedBox(height: AppSpacing.base),
-        const Text('Product, Dashboard, and generic cards.'),
-        const SizedBox(height: AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      children: const [
+        Text('Cards', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        SizedBox(height: AppSpacing.base),
+        Text('Product, Dashboard, and generic cards.'),
+        SizedBox(height: AppSpacing.xl),
 
-        const StorySection(
+        StorySection(
           title: 'Product Card',
           description: 'A standard product card for grid view.',
           children: [

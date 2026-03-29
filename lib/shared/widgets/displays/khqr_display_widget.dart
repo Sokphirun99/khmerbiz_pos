@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../core/theme/foundation/app_border.dart';
-import '../../../core/theme/foundation/app_radius.dart';
-import '../../../core/theme/foundation/app_shadow.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/theme/foundation/app_border.dart';
+import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
+import 'package:khmerbiz_pos/core/theme/foundation/app_shadow.dart';
 
 enum KhqrState { generating, ready, success, timeout, offline }
 
 class KhqrDisplayWidget extends StatelessWidget {
   const KhqrDisplayWidget({
-    super.key,
-    required this.state,
+    required this.state, super.key,
     this.qrString,
     this.onRetry,
   });
@@ -25,12 +24,12 @@ class KhqrDisplayWidget extends StatelessWidget {
     return Container(
       width: 300,
       height: 400,
-      padding: EdgeInsets.all(AppSpacing.lg),
+      padding: const EdgeInsets.all(AppSpacing.lg),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
         boxShadow: AppShadow.md,
-        border: Border.all(color: AppColors.border, width: AppBorderWidth.thin),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -105,5 +104,13 @@ class KhqrDisplayWidget extends StatelessWidget {
           ],
         );
     }
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<KhqrState>('state', state));
+    properties.add(StringProperty('qrString', qrString));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onRetry', onRetry));
   }
 }

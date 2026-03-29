@@ -1,16 +1,16 @@
 import 'dart:io';
+
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
-import 'package:uuid/uuid.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import 'daos/products_dao.dart';
-import 'daos/transactions_dao.dart';
-import 'daos/customers_dao.dart';
-import 'daos/inventory_dao.dart';
-import 'daos/sync_queue_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/customers_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/inventory_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/products_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/sync_queue_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/transactions_dao.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 
 part 'database.g.dart';
 
@@ -226,7 +226,7 @@ class ExchangeRates extends Table {
   CustomersDao,
   InventoryDao,
   SyncQueueDao,
-])
+],)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -259,7 +259,7 @@ LazyDatabase _openConnection() {
     
     // Get encryption key from secure storage
     const storage = FlutterSecureStorage();
-    String? dbKey = await storage.read(key: 'db_encryption_key');
+    var dbKey = await storage.read(key: 'db_encryption_key');
     if (dbKey == null) {
       dbKey = const Uuid().v4();
       await storage.write(key: 'db_encryption_key', value: dbKey);

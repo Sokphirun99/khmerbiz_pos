@@ -1,16 +1,16 @@
+import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import 'package:drift/drift.dart';
-import '../../core/error/failures.dart';
-import '../../domain/entities/exchange_rate.dart';
-import '../../domain/repositories/exchange_rate_repository.dart';
-import '../datasources/local/database.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/exchange_rate.dart';
+import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
 
 @LazySingleton(as: ExchangeRateRepository)
 class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
-  final AppDatabase _db;
 
   ExchangeRateRepositoryImpl(this._db);
+  final AppDatabase _db;
 
   @override
   Future<Either<Failure, ExchangeRate>> getLatestRate() async {
@@ -33,7 +33,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
         source: rateModel.source,
         fetchedAt: rateModel.fetchedAt,
         isActive: rateModel.isActive,
-      ));
+      ),);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }

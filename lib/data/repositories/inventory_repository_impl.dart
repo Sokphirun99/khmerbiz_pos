@@ -1,16 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import '../../core/error/failures.dart';
-import '../../domain/entities/inventory_log.dart';
-import '../../domain/repositories/inventory_repository.dart';
-import '../datasources/local/database.dart';
-import '../datasources/local/daos/inventory_dao.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/inventory_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/inventory_log.dart';
+import 'package:khmerbiz_pos/domain/repositories/inventory_repository.dart';
 
 @LazySingleton(as: InventoryRepository)
 class InventoryRepositoryImpl implements InventoryRepository {
-  final InventoryDao _dao;
 
   InventoryRepositoryImpl(this._dao);
+  final InventoryDao _dao;
 
   InventoryLog _mapToDomain(InventoryLogModel model) {
     return InventoryLog(

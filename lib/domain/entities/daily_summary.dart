@@ -1,12 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class DailySummary extends Equatable {
-  final DateTime date;
-  final int totalTransactions;
-  final double totalRevenue;
-  final double totalRevenueUSD;
-  final double totalDiscount;
-  final double totalTax;
 
   const DailySummary({
     required this.date,
@@ -16,6 +10,12 @@ class DailySummary extends Equatable {
     this.totalDiscount = 0,
     this.totalTax = 0,
   });
+  final DateTime date;
+  final int totalTransactions;
+  final double totalRevenue;
+  final double totalRevenueUSD;
+  final double totalDiscount;
+  final double totalTax;
 
   @override
   List<Object?> get props => [

@@ -1,6 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 class InventoryLog extends Equatable {
+
+  const InventoryLog({
+    required this.id,
+    required this.productId,
+    required this.changeAmount,
+    required this.stockBefore,
+    required this.stockAfter,
+    required this.reason,
+    required this.staffId, required this.timestamp, this.referenceId,
+    this.notes,
+  });
   final String id;
   final String productId;
   final double changeAmount;
@@ -11,19 +22,6 @@ class InventoryLog extends Equatable {
   final String staffId;
   final String? notes;
   final DateTime timestamp;
-
-  const InventoryLog({
-    required this.id,
-    required this.productId,
-    required this.changeAmount,
-    required this.stockBefore,
-    required this.stockAfter,
-    required this.reason,
-    this.referenceId,
-    required this.staffId,
-    this.notes,
-    required this.timestamp,
-  });
 
   @override
   List<Object?> get props => [

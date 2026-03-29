@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import '../database.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 
 part 'products_dao.g.dart';
 
@@ -26,7 +26,7 @@ class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin 
               tbl.isActive.equals(true) &
               (tbl.nameKh.like(lowerQuery) |
                   tbl.nameEn.like(lowerQuery) |
-                  tbl.barcode.like(lowerQuery))))
+                  tbl.barcode.like(lowerQuery)),))
         .watch();
   }
 
@@ -42,7 +42,7 @@ class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin 
     return (select(products)
           ..where((tbl) =>
               tbl.isActive.equals(true) &
-              tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold)))
+              tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold),))
         .get();
   }
 

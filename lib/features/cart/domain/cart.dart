@@ -151,7 +151,7 @@ final class Cart extends Equatable {
 
   double get totalDiscount {
     final itemDiscounts =
-        items.fold<double>(0.0, (sum, item) => sum + item.discountAmount);
+        items.fold<double>(0, (sum, item) => sum + item.discountAmount);
     final percentDiscount =
         discountPercent != null ? subtotal * (discountPercent! / 100) : 0.0;
     return itemDiscounts + percentDiscount + discountAmount;

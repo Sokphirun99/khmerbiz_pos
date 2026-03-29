@@ -1,5 +1,5 @@
 import 'package:drift/drift.dart';
-import '../database.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 
 part 'customers_dao.g.dart';
 

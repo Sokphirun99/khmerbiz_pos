@@ -1,16 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import '../../core/error/failures.dart';
-import '../../domain/entities/sync_queue_item.dart';
-import '../../domain/repositories/sync_queue_repository.dart';
-import '../datasources/local/database.dart';
-import '../datasources/local/daos/sync_queue_dao.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/sync_queue_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/sync_queue_item.dart';
+import 'package:khmerbiz_pos/domain/repositories/sync_queue_repository.dart';
 
 @LazySingleton(as: SyncQueueRepository)
 class SyncQueueRepositoryImpl implements SyncQueueRepository {
-  final SyncQueueDao _dao;
 
   SyncQueueRepositoryImpl(this._dao);
+  final SyncQueueDao _dao;
 
   SyncQueueItem _mapToDomain(SyncQueueModel model) {
     return SyncQueueItem(

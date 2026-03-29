@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../storybook/storybook_screen.dart';
+import 'package:khmerbiz_pos/storybook/storybook_screen.dart';
 
 /// App router configuration using go_router.
 ///

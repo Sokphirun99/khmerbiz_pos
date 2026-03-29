@@ -1,16 +1,16 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import '../../core/error/failures.dart';
-import '../../domain/entities/customer.dart';
-import '../../domain/repositories/customer_repository.dart';
-import '../datasources/local/database.dart';
-import '../datasources/local/daos/customers_dao.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/customers_dao.dart';
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/customer.dart';
+import 'package:khmerbiz_pos/domain/repositories/customer_repository.dart';
 
 @LazySingleton(as: CustomerRepository)
 class CustomerRepositoryImpl implements CustomerRepository {
-  final CustomersDao _dao;
 
   CustomerRepositoryImpl(this._dao);
+  final CustomersDao _dao;
 
   Customer _mapToDomain(CustomerModel model) {
     return Customer(

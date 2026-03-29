@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/product.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 abstract class ProductRepository {
   Stream<Either<Failure, List<Product>>> watchAllActiveProducts();

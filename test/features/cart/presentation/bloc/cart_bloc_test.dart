@@ -47,7 +47,6 @@ void main() {
     nameEn: 'Tea',
     retailPrice: 8000,
     costPrice: 4000,
-    stock: 0,
     updatedAt: DateTime.now(),
     createdAt: DateTime.now(),
   );
@@ -72,7 +71,7 @@ void main() {
     mockAuthRepository = MockAuthRepository();
     mockExchangeRateRepository = MockExchangeRateRepository();
 
-    when(() => mockExchangeRateRepository.getCachedRate()).thenReturn(4000.0);
+    when(() => mockExchangeRateRepository.getCachedRate()).thenReturn(4000);
 
     cartBloc = CartBloc(
       transactionRepository: mockTransactionRepository,
@@ -90,25 +89,25 @@ void main() {
     blocTest<CartBloc, CartState>(
       'emits [CartLoaded] with new item on happy path',
       build: () => cartBloc,
-      act: (bloc) => bloc.add(AddToCart(product: testProduct, quantity: 1)),
+      act: (bloc) => bloc.add(AddToCart(product: testProduct)),
       expect: () => [
         isA<CartLoaded>()
             .having((s) => s.items.length, 'items count', 1)
             .having((s) => s.items.first.productId, 'product id', 'p1')
             .having((s) => s.subtotal, 'subtotal', 10000.0)
-            .having((s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true)
+            .having((s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true),
       ],
     );
 
     blocTest<CartBloc, CartState>(
       'emits [CartLoaded] with stock warning when out of stock',
       build: () => cartBloc,
-      act: (bloc) => bloc.add(AddToCart(product: outOfStockProduct, quantity: 1)),
+      act: (bloc) => bloc.add(AddToCart(product: outOfStockProduct)),
       expect: () => [
         isA<CartLoaded>()
             .having((s) => s.items.length, 'items count', 1)
             .having((s) => s.stockWarnings?.containsKey('p2'), 'has warning', true)
-            .having((s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock')
+            .having((s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock'),
       ],
     );
   });
@@ -123,7 +122,7 @@ void main() {
         return CartInitial();
       },
       act: (bloc) {
-        bloc.add(AddToCart(product: testProduct, quantity: 1)); // 10000
+        bloc.add(AddToCart(product: testProduct)); // 10000
         bloc.add(const ApplyDiscount(type: DiscountType.percent, value: 10)); // 10% -> 1000
       },
       skip: 1, // Skip AddToCart state
@@ -131,7 +130,7 @@ void main() {
         isA<CartLoaded>()
             .having((s) => s.discountAmount, 'discount amount', 1000.0)
             .having((s) => s.taxAmount, 'tax on remaining', 900.0) // (10000 - 1000) * 0.1
-            .having((s) => s.total, 'total', 9900.0)
+            .having((s) => s.total, 'total', 9900.0),
       ],
     );
 
@@ -139,7 +138,7 @@ void main() {
       'applies fixed discount correctly',
       build: () => cartBloc,
       act: (bloc) {
-        bloc.add(AddToCart(product: testProduct, quantity: 1)); // 10000
+        bloc.add(AddToCart(product: testProduct)); // 10000
         bloc.add(const ApplyDiscount(type: DiscountType.fixed, value: 2000));
       },
       skip: 1,
@@ -147,7 +146,7 @@ void main() {
         isA<CartLoaded>()
             .having((s) => s.discountAmount, 'discount amount', 2000.0)
             .having((s) => s.taxAmount, 'tax', 800.0)
-            .having((s) => s.total, 'total', 8800.0)
+            .having((s) => s.total, 'total', 8800.0),
       ],
     );
   });
@@ -162,13 +161,13 @@ void main() {
             .thenAnswer((_) async => Right(testUser));
         when(() => mockTransactionRepository.processSale(
             transaction: any(named: 'transaction'),
-            items: any(named: 'items')))
+            items: any(named: 'items'),),)
             .thenAnswer((_) async => const Right('txn-123'));
         
         return cartBloc;
       },
       act: (bloc) {
-        bloc.add(AddToCart(product: testProduct, quantity: 1));
+        bloc.add(AddToCart(product: testProduct));
         bloc.add(const ProcessCheckout(method: PaymentMethod.khqr));
       },
       skip: 1, // Skip AddToCart
@@ -176,7 +175,7 @@ void main() {
         isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', true),
         isA<CartCheckoutSuccess>()
             .having((s) => s.transactionId, 'txn id', 'txn-123')
-            .having((s) => s.totalAmount, 'total amount', 11000.0) // 10000 + 1000 tax
+            .having((s) => s.totalAmount, 'total amount', 11000.0), // 10000 + 1000 tax
       ],
     );
 
@@ -188,7 +187,7 @@ void main() {
         return cartBloc;
       },
       act: (bloc) {
-        bloc.add(AddToCart(product: testProduct, quantity: 1));
+        bloc.add(AddToCart(product: testProduct));
         bloc.add(const ProcessCheckout(method: PaymentMethod.khqr));
       },
       skip: 1,
@@ -208,13 +207,13 @@ void main() {
             .thenAnswer((_) async => Right(testUser));
         when(() => mockTransactionRepository.processSale(
             transaction: any(named: 'transaction'),
-            items: any(named: 'items')))
+            items: any(named: 'items'),),)
             .thenAnswer((_) async => Left(CacheFailure.defaultError(details: 'DB Crash')));
         
         return cartBloc;
       },
       act: (bloc) {
-        bloc.add(AddToCart(product: testProduct, quantity: 1));
+        bloc.add(AddToCart(product: testProduct));
         bloc.add(const ProcessCheckout(method: PaymentMethod.khqr));
       },
       skip: 1,

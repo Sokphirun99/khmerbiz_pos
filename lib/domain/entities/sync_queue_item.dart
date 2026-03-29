@@ -1,6 +1,19 @@
 import 'package:equatable/equatable.dart';
 
 class SyncQueueItem extends Equatable {
+
+  const SyncQueueItem({
+    required this.id,
+    required this.operationType,
+    required this.entityType,
+    required this.entityId,
+    required this.payload,
+    required this.createdAt, this.attemptCount = 0,
+    this.lastAttemptAt,
+    this.status = 'pending',
+    this.errorMessage,
+    this.priority = 5,
+  });
   final String id;
   final String operationType;
   final String entityType;
@@ -12,20 +25,6 @@ class SyncQueueItem extends Equatable {
   final String? errorMessage;
   final int priority;
   final DateTime createdAt;
-
-  const SyncQueueItem({
-    required this.id,
-    required this.operationType,
-    required this.entityType,
-    required this.entityId,
-    required this.payload,
-    this.attemptCount = 0,
-    this.lastAttemptAt,
-    this.status = 'pending',
-    this.errorMessage,
-    this.priority = 5,
-    required this.createdAt,
-  });
 
   @override
   List<Object?> get props => [

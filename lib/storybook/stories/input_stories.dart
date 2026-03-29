@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_spacing.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class InputStories extends StatelessWidget {
   const InputStories({super.key});
@@ -8,14 +8,14 @@ class InputStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
-      children: [
-        const Text('Inputs', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
-        const SizedBox(height: AppSpacing.base),
-        const Text('Text fields, dropdowns, and switch inputs.'),
-        const SizedBox(height: AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      children: const [
+        Text('Inputs', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        SizedBox(height: AppSpacing.base),
+        Text('Text fields, dropdowns, and switch inputs.'),
+        SizedBox(height: AppSpacing.xl),
 
-        const StorySection(
+        StorySection(
           title: 'Text Field',
           description: 'Standard text input.',
           children: [

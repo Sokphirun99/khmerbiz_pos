@@ -1,22 +1,21 @@
+import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
-import 'package:drift/drift.dart';
-import 'dart:convert';
-import '../../core/error/failures.dart';
-import '../../domain/entities/transaction.dart' as entity;
-import '../../domain/entities/transaction_item.dart' as entityItem;
-import '../../domain/entities/daily_summary.dart';
-import '../../domain/entities/weekly_summary.dart';
-import '../../domain/entities/top_product.dart';
-import '../../domain/repositories/transaction_repository.dart';
-import '../datasources/local/database.dart';
-import '../datasources/local/daos/transactions_dao.dart' hide TransactionWithItems;
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/data/datasources/local/daos/transactions_dao.dart' hide TransactionWithItems;
+import 'package:khmerbiz_pos/data/datasources/local/database.dart';
+import 'package:khmerbiz_pos/domain/entities/daily_summary.dart';
+import 'package:khmerbiz_pos/domain/entities/top_product.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity;
+import 'package:khmerbiz_pos/domain/entities/transaction_item.dart' as entityItem;
+import 'package:khmerbiz_pos/domain/entities/weekly_summary.dart';
+import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
 
 @LazySingleton(as: TransactionRepository)
 class TransactionRepositoryImpl implements TransactionRepository {
-  final TransactionsDao _dao;
 
   TransactionRepositoryImpl(this._dao);
+  final TransactionsDao _dao;
 
   entity.Transaction _mapToDomain(TransactionModel model) {
     return entity.Transaction(
@@ -96,7 +95,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         costPrice: Value(item.costPrice),
         subtotal: Value(item.subtotal),
         discountAmount: Value(item.discountAmount),
-      )).toList();
+      ),).toList();
 
       final txId = await _dao.processSale(transaction: txCompanion, items: itemsCompanion);
       return right(txId);
@@ -127,7 +126,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
       return right(TransactionWithItems(
         transaction: _mapToDomain(res.transaction),
         items: res.items.map(_mapItemToDomain).toList(),
-      ));
+      ),);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
@@ -142,7 +141,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         totalTransactions: res.totalTransactions,
         totalRevenue: res.totalRevenue,
         totalRevenueUSD: res.totalRevenueUSD,
-      ));
+      ),);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
@@ -158,7 +157,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
         totalTransactions: res.totalTransactions,
         totalRevenue: res.totalRevenue,
         totalRevenueUSD: res.totalRevenueUSD,
-      ));
+      ),);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }

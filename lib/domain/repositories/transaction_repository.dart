@@ -1,15 +1,15 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/transaction.dart';
-import '../entities/transaction_item.dart';
-import '../entities/daily_summary.dart';
-import '../entities/weekly_summary.dart';
-import '../entities/top_product.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction_item.dart';
+import 'package:khmerbiz_pos/domain/entities/daily_summary.dart';
+import 'package:khmerbiz_pos/domain/entities/weekly_summary.dart';
+import 'package:khmerbiz_pos/domain/entities/top_product.dart';
 
 class TransactionWithItems {
+  TransactionWithItems({required this.transaction, required this.items});
   final Transaction transaction;
   final List<TransactionItem> items;
-  TransactionWithItems({required this.transaction, required this.items});
 }
 
 abstract class TransactionRepository {

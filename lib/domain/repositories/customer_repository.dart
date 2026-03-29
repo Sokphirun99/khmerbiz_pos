@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/customer.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/customer.dart';
 
 abstract class CustomerRepository {
   Future<Either<Failure, Customer?>> getCustomerByPhone(String phone);

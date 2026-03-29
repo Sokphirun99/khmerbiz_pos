@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_spacing.dart';
-import '../../../core/theme/app_text_styles.dart';
-import '../../../core/theme/foundation/app_radius.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
 
 class AppToast {
@@ -36,7 +36,7 @@ class AppToast {
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
         behavior: SnackBarBehavior.floating,
-        margin: EdgeInsets.all(AppSpacing.md),
+        margin: const EdgeInsets.all(AppSpacing.md),
         elevation: 8,
       ),
     );

@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class Modifier extends Equatable {
-  final String name;
-  final double price;
 
   const Modifier({
     required this.name,
@@ -15,6 +13,8 @@ class Modifier extends Equatable {
       price: (json['price'] as num?)?.toDouble() ?? 0,
     );
   }
+  final String name;
+  final double price;
 
   Map<String, dynamic> toJson() {
     return {

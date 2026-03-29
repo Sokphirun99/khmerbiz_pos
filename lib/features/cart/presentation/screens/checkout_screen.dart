@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_text_styles.dart';
-import '../../../../shared/widgets/widgets.dart';
-import '../../../../shared/widgets/feedback/app_snackbar.dart';
-import '../../../../shared/widgets/feedback/app_toast.dart';
-import '../../../../domain/entities/checkout_enums.dart';
-import '../bloc/cart_bloc.dart';
-import '../bloc/cart_event.dart';
-import '../bloc/cart_state.dart';
+import 'package:khmerbiz_pos/core/theme/app_colors.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
+import 'package:khmerbiz_pos/shared/widgets/feedback/app_snackbar.dart';
+import 'package:khmerbiz_pos/shared/widgets/feedback/app_toast.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -77,9 +77,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 children: [
                   Expanded(
                     flex: 6,
-                    child: Container(
+                    child: ColoredBox(
                         color: AppColors.surfaceAlt,
-                        child: const Center(child: Text('ProductListScreen Placeholder'))),
+                        child: const Center(child: Text('ProductListScreen Placeholder')),),
                   ),
                   const VerticalDivider(width: 1),
                   SizedBox(
@@ -104,7 +104,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 children: [
                   _buildCartContent(context, state),
                   if (state.isCheckingOut)
-                    Container(
+                    ColoredBox(
                       color: Colors.black.withOpacity(0.3),
                       child: const Center(child: CircularProgressIndicator()),
                     ),
@@ -123,8 +123,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     return Column(
       children: [
         // Customer Selector Row
-        Padding(
-          padding: const EdgeInsets.all(AppSpacing.base),
+        const Padding(
+          padding: EdgeInsets.all(AppSpacing.base),
           child: AppTextField(
             type: AppTextFieldType.search,
             hintText: 'Search customer by phone...',
@@ -171,7 +171,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         // Discount Row
         Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.base, vertical: AppSpacing.sm),
+              horizontal: AppSpacing.base, vertical: AppSpacing.sm,),
           child: Row(
             children: [
               Expanded(
@@ -183,7 +183,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onTap: () {
                     // Just applying a fixed 10% for now
                     context.read<CartBloc>().add(
-                        const ApplyDiscount(type: DiscountType.percent, value: 10));
+                        const ApplyDiscount(type: DiscountType.percent, value: 10),);
                   },
                 ),
               ),
@@ -192,8 +192,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 IconButton(
                   icon: const Icon(Icons.close),
                   onPressed: () => context.read<CartBloc>().add(RemoveDiscount()),
-                )
-              ]
+                ),
+              ],
             ],
           ),
         ),
@@ -318,7 +318,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     cashReceived: _selectedPaymentMethod == PaymentMethod.cash
                         ? _cashReceived
                         : null,
-                  ));
+                  ),);
             },
           ),
         ),

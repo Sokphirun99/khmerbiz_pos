@@ -2,24 +2,19 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
-import 'cart_event.dart';
-import 'cart_state.dart';
-import '../../../../domain/repositories/transaction_repository.dart';
-import '../../../../domain/repositories/product_repository.dart';
-import '../../../../domain/repositories/auth_repository.dart';
-import '../../../../domain/repositories/exchange_rate_repository.dart';
-import '../../../../domain/entities/cart_item.dart';
-import '../../../../domain/entities/transaction.dart' as entity_tx;
-import '../../../../domain/entities/transaction_item.dart';
-import '../../../../domain/entities/checkout_enums.dart';
-import '../../../../core/error/failures.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
+import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
+import 'package:khmerbiz_pos/domain/entities/cart_item.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity_tx;
+import 'package:khmerbiz_pos/domain/entities/transaction_item.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final TransactionRepository _transactionRepository;
-  final ProductRepository _productRepository;
-  final AuthRepository _authRepository;
-  final ExchangeRateRepository _exchangeRateRepository;
-  final Uuid _uuid = const Uuid();
 
   CartBloc({
     required TransactionRepository transactionRepository,
@@ -41,15 +36,20 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     on<ClearCart>(_onClearCart);
     on<ProcessCheckout>(_onProcessCheckout);
   }
+  final TransactionRepository _transactionRepository;
+  final ProductRepository _productRepository;
+  final AuthRepository _authRepository;
+  final ExchangeRateRepository _exchangeRateRepository;
+  final Uuid _uuid = const Uuid();
 
   void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
     final currentState = state is CartLoaded ? state as CartLoaded : _getEmptyCart();
     
-    List<CartItem> updatedItems = List.from(currentState.items);
-    Map<String, String> updatedWarnings = Map.from(currentState.stockWarnings ?? {});
+    var updatedItems = List<CartItem>.from(currentState.items);
+    var updatedWarnings = Map<String, String>.from(currentState.stockWarnings ?? {});
 
     final existingIndex = updatedItems.indexWhere((item) => item.productId == event.product.id);
-    double newQuantity = event.quantity;
+    var newQuantity = event.quantity;
 
     if (existingIndex >= 0) {
       newQuantity += updatedItems[existingIndex].quantity;
@@ -64,13 +64,13 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         quantity: newQuantity,
         unitPrice: event.product.retailPrice,
         costPrice: event.product.costPrice,
-      ));
+      ),);
     }
 
     if (event.product.stock == 0) {
-      updatedWarnings[event.product.id] = "Out of stock";
+      updatedWarnings[event.product.id] = 'Out of stock';
     } else if (event.product.stock < newQuantity) {
-      updatedWarnings[event.product.id] = "Only ${event.product.stock} left";
+      updatedWarnings[event.product.id] = 'Only ${event.product.stock} left';
     } else {
       updatedWarnings.remove(event.product.id);
     }
@@ -103,8 +103,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       return;
     }
 
-    List<CartItem> updatedItems = List.from(currentState.items);
-    Map<String, String> updatedWarnings = Map.from(currentState.stockWarnings ?? {});
+    var updatedItems = List<CartItem>.from(currentState.items);
+    var updatedWarnings = Map<String, String>.from(currentState.stockWarnings ?? {});
     
     final index = updatedItems.indexWhere((item) => item.productId == event.productId);
     if (index >= 0) {
@@ -112,9 +112,9 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       updatedItems[index] = updatedItems[index].copyWith(quantity: event.quantity);
 
       if (product.stock == 0) {
-        updatedWarnings[product.id] = "Out of stock";
+        updatedWarnings[product.id] = 'Out of stock';
       } else if (product.stock < event.quantity) {
-        updatedWarnings[product.id] = "Only ${product.stock} left";
+        updatedWarnings[product.id] = 'Only ${product.stock} left';
       } else {
         updatedWarnings.remove(product.id);
       }
@@ -127,7 +127,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (state is! CartLoaded) return;
     final currentState = state as CartLoaded;
 
-    List<CartItem> updatedItems = List.from(currentState.items);
+    var updatedItems = List<CartItem>.from(currentState.items);
     final index = updatedItems.indexWhere((item) => item.productId == event.productId);
     if (index >= 0) {
       updatedItems[index] = updatedItems[index].copyWith(modifiers: event.modifiers);
@@ -147,7 +147,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         discountValue: event.value,
       ), 
       currentState.items, 
-      currentState.stockWarnings
+      currentState.stockWarnings,
     );
   }
 
@@ -159,7 +159,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       emit, 
       currentState.copyWith(clearDiscount: true), 
       currentState.items, 
-      currentState.stockWarnings
+      currentState.stockWarnings,
     );
   }
 
@@ -196,18 +196,18 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(currentState.copyWith(isCheckingOut: true));
 
     // Re-verify stock
-    for (var item in currentState.items) {
+    for (final item in currentState.items) {
       final productResult = await _productRepository.getProductById(item.productId);
-      bool stockSufficient = productResult.fold(
+      var stockSufficient = productResult.fold(
         (l) => false,
-        (p) => p != null && p.stock >= item.quantity
+        (p) => p != null && p.stock >= item.quantity,
       );
 
       if (!stockSufficient) {
         emit(CartCheckoutFailure(failure: ValidationFailure.custom(
           messageEn: 'Insufficient stock for ${item.product.nameEn}',
-          messageKm: 'ស្តុកមិនគ្រប់គ្រាន់សម្រាប់ ${item.product.nameKh}'
-        )));
+          messageKm: 'ស្តុកមិនគ្រប់គ្រាន់សម្រាប់ ${item.product.nameKh}',
+        ),),);
         emit(currentState.copyWith(isCheckingOut: false));
         return;
       }
@@ -232,14 +232,12 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       discountType: currentState.discountType?.name,
       discountValue: currentState.discountValue ?? 0,
       discountAmount: currentState.discountAmount,
-      taxRate: 0.10,
       taxAmount: currentState.taxAmount,
       totalAmount: currentState.total,
       totalAmountUSD: currentState.totalUSD,
       paymentMethod: event.method.name,
       cashReceived: event.cashReceived,
       changeGiven: currentState.changeAmount > 0 ? currentState.changeAmount : 0,
-      status: 'completed',
       createdAt: now,
     );
 
@@ -253,7 +251,6 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         costPrice: item.costPrice,
-        discountAmount: 0, // Item level discount not used currently
         subtotal: item.lineTotal,
         modifiers: item.modifiers.isEmpty ? null : jsonEncode(item.modifiers.map((m) => m.toJson()).toList()),
       );
@@ -275,7 +272,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
           paymentMethod: event.method,
           completedAt: now,
           staffName: staffName,
-        ));
+        ),);
       }
     );
   }
@@ -284,10 +281,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     Emitter<CartState> emit, 
     CartLoaded stateToCalculateFrom, 
     List<CartItem> items, 
-    Map<String, String>? warnings
+    Map<String, String>? warnings,
   ) {
     double subtotal = 0;
-    for (var item in items) {
+    for (final item in items) {
       subtotal += item.lineTotal;
     }
 
@@ -302,16 +299,16 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     if (discountAmount > subtotal) discountAmount = subtotal;
 
-    double taxable = subtotal - discountAmount;
-    double taxAmount = taxable * 0.10; // 10% tax rate
-    double total = taxable + taxAmount;
+    var taxable = subtotal - discountAmount;
+    var taxAmount = taxable * 0.10; // 10% tax rate
+    var total = taxable + taxAmount;
     
     // Round to 0 decimal places for KHR
     total = total.roundToDouble();
 
-    double exchangeRate = _exchangeRateRepository.getCachedRate();
+    var exchangeRate = _exchangeRateRepository.getCachedRate();
     if (exchangeRate <= 0) exchangeRate = 4000; // fallback
-    double totalUSD = total / exchangeRate;
+    var totalUSD = total / exchangeRate;
 
     // Recalculate change if any cash received is part of state? We don't store cashReceived in state.
     // It's only passed during ProcessCheckout. We will default changeAmount to 0.
@@ -325,7 +322,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       totalUSD: totalUSD,
       changeAmount: 0,
       stockWarnings: warnings,
-    ));
+    ),);
   }
 
   CartLoaded _getEmptyCart() {

@@ -1,6 +1,27 @@
 import 'package:equatable/equatable.dart';
 
 class Transaction extends Equatable {
+
+  const Transaction({
+    required this.id,
+    required this.receiptNumber,
+    required this.transactionDate,
+    required this.staffId,
+    required this.subtotal, required this.totalAmount, required this.totalAmountUSD, required this.paymentMethod, required this.createdAt, this.customerId,
+    this.discountType,
+    this.discountValue = 0,
+    this.discountAmount = 0,
+    this.taxRate = 0.10,
+    this.taxAmount = 0,
+    this.cashReceived,
+    this.changeGiven,
+    this.khqrReference,
+    this.khqrMd5,
+    this.status = 'completed',
+    this.isSynced = false,
+    this.syncedAt,
+    this.notes,
+  });
   final String id;
   final String receiptNumber;
   final DateTime transactionDate;
@@ -24,32 +45,6 @@ class Transaction extends Equatable {
   final DateTime? syncedAt;
   final String? notes;
   final DateTime createdAt;
-
-  const Transaction({
-    required this.id,
-    required this.receiptNumber,
-    required this.transactionDate,
-    required this.staffId,
-    this.customerId,
-    required this.subtotal,
-    this.discountType,
-    this.discountValue = 0,
-    this.discountAmount = 0,
-    this.taxRate = 0.10,
-    this.taxAmount = 0,
-    required this.totalAmount,
-    required this.totalAmountUSD,
-    required this.paymentMethod,
-    this.cashReceived,
-    this.changeGiven,
-    this.khqrReference,
-    this.khqrMd5,
-    this.status = 'completed',
-    this.isSynced = false,
-    this.syncedAt,
-    this.notes,
-    required this.createdAt,
-  });
 
   @override
   List<Object?> get props => [

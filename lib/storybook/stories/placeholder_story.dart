@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 
 class PlaceholderStory extends StatelessWidget {
-  const PlaceholderStory({super.key, required this.title});
+  const PlaceholderStory({required this.title, super.key});
 
   final String title;
 
@@ -16,5 +16,11 @@ class PlaceholderStory extends StatelessWidget {
         textAlign: TextAlign.center,
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('title', title));
   }
 }

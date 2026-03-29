@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/theme/app_spacing.dart';
-import '../../shared/widgets/buttons/app_button.dart';
-import '../widgets/story_section.dart';
+import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
+import 'package:khmerbiz_pos/shared/widgets/buttons/app_button.dart';
+import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
 class ButtonStories extends StatelessWidget {
   const ButtonStories({super.key});
@@ -9,7 +9,7 @@ class ButtonStories extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(AppSpacing.xl),
+      padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
         const Text('Buttons', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.base),

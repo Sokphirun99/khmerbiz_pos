@@ -1,6 +1,6 @@
 import 'package:fpdart/fpdart.dart';
-import '../../core/error/failures.dart';
-import '../entities/user.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/user.dart';
 
 abstract class AuthRepository {
   Future<Either<Failure, User>> login({required String username, required String pin});
