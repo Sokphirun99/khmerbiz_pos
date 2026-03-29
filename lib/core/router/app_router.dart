@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../storybook/storybook_screen.dart';
+
 /// App router configuration using go_router.
 ///
 /// This file defines all routes for the application using a declarative
@@ -113,6 +115,9 @@ final class AppRouter {
   /// About app route
   static const String about = '/about';
 
+  /// Storybook dev screen route
+  static const String storybook = '/dev/storybook';
+
   // ═══════════════════════════════════════════════════════════════════════════
   // ROUTE NAMES
   // ═══════════════════════════════════════════════════════════════════════════
@@ -146,6 +151,7 @@ final class AppRouter {
   static const String settingsPrinterName = 'settings-printer';
   static const String settingsLanguageName = 'settings-language';
   static const String aboutName = 'about';
+  static const String storybookName = 'storybook';
 
   /// Create the GoRouter configuration.
   ///
@@ -401,6 +407,18 @@ final class AppRouter {
           path: about,
           name: aboutName,
           builder: (context, state) => const PlaceholderAboutScreen(),
+        ),
+
+        // Storybook screen (Dev only)
+        GoRoute(
+          path: storybook,
+          name: storybookName,
+          builder: (context, state) {
+            if (!kDebugMode) {
+              return const PlaceholderHomeScreen();
+            }
+            return const StorybookScreen();
+          },
         ),
       ],
     );
@@ -820,7 +838,22 @@ class PlaceholderSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Screen - To be implemented')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text('Settings Screen - To be implemented'),
+            if (kDebugMode) ...[
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.developer_mode),
+                label: const Text('Developer Storybook'),
+                onPressed: () => context.go(AppRouter.storybook),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }
