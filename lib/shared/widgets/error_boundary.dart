@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Error boundary widget to catch and display unhandled errors.
@@ -12,9 +13,9 @@ import 'package:flutter/material.dart';
 /// )
 /// ```
 final class ErrorBoundary extends StatefulWidget {
-
   const ErrorBoundary({
-    required this.child, super.key,
+    required this.child,
+    super.key,
     this.errorBuilder,
     this.onError,
   });
@@ -28,8 +29,12 @@ final class ErrorBoundary extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<Widget Function(Object error, StackTrace stackTrace)?>.has('errorBuilder', errorBuilder));
-    properties.add(ObjectFlagProperty<void Function(Object error, StackTrace stackTrace)?>.has('onError', onError));
+    properties.add(ObjectFlagProperty<
+            Widget Function(Object error, StackTrace stackTrace)?>.has(
+        'errorBuilder', errorBuilder,),);
+    properties.add(ObjectFlagProperty<
+        void Function(
+            Object error, StackTrace stackTrace,)?>.has('onError', onError),);
   }
 }
 
@@ -135,7 +140,6 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
 
 /// Scope for error boundary to catch errors in child widgets.
 class _ErrorBoundaryScope extends InheritedWidget {
-
   const _ErrorBoundaryScope({
     required super.child,
     required this.onError,
@@ -148,7 +152,9 @@ class _ErrorBoundaryScope extends InheritedWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<void Function(Object error, StackTrace stackTrace)>.has('onError', onError));
+    properties.add(ObjectFlagProperty<
+        void Function(
+            Object error, StackTrace stackTrace,)>.has('onError', onError),);
   }
 }
 
@@ -158,15 +164,17 @@ class _ErrorBoundaryScope extends InheritedWidget {
 /// It will be used when error reporting is implemented.
 // ignore: unused_element
 void _reportError(BuildContext context, Object error, StackTrace stackTrace) {
-  final scope = context.dependOnInheritedWidgetOfExactType<_ErrorBoundaryScope>();
+  final scope =
+      context.dependOnInheritedWidgetOfExactType<_ErrorBoundaryScope>();
   scope?.onError(error, stackTrace);
 }
 
 /// Default error widget for small sections.
 final class DefaultErrorWidget extends StatelessWidget {
-
   const DefaultErrorWidget({
-    required this.error, required this.stackTrace, super.key,
+    required this.error,
+    required this.stackTrace,
+    super.key,
     this.onRetry,
   });
   final Object error;

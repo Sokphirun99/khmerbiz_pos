@@ -169,7 +169,8 @@ mixin LoggerMixin {
   }
 
   /// Log an error message
-  void errorLog(String message, {String? tag, Object? error, StackTrace? stackTrace}) {
+  void errorLog(String message,
+      {String? tag, Object? error, StackTrace? stackTrace,}) {
     final timestamp = DateTime.now().toIso8601String();
     final tagStr = tag != null ? '[$tag]' : '';
     print('❌ $timestamp $tagStr $message');

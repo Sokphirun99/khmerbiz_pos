@@ -2,7 +2,6 @@ import 'package:khmerbiz_pos/features/products/domain/product.dart';
 
 /// Pagination result for product queries.
 final class ProductPagedResult {
-
   const ProductPagedResult({
     required this.products,
     required this.currentPage,
@@ -22,6 +21,7 @@ final class ProductPagedResult {
       pageSize: pageSize,
     );
   }
+
   /// List of products in this page
   final List<Product> products;
 
@@ -46,7 +46,6 @@ final class ProductPagedResult {
 
 /// Filter options for product queries.
 final class ProductFilter {
-
   const ProductFilter({
     this.searchQuery,
     this.categoryId,
@@ -58,6 +57,7 @@ final class ProductFilter {
     this.sortField = ProductSortField.name,
     this.sortOrder = SortOrder.ascending,
   });
+
   /// Search query (matches name, sku, barcode)
   final String? searchQuery;
 

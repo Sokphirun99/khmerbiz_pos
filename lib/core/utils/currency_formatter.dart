@@ -15,7 +15,6 @@ import 'package:khmerbiz_pos/core/config/constants.dart';
 /// formatter.formatDual(12500); // "៛12,500 ($3.05)"
 /// ```
 final class CurrencyFormatter {
-
   /// Creates a currency formatter with the given exchange rate.
   ///
   /// [exchangeRate] - The current exchange rate (1 USD = X KHR)
@@ -25,6 +24,7 @@ final class CurrencyFormatter {
     _khrFormat = NumberFormat('#,##0', 'en_US');
     _usdFormat = NumberFormat('#,##0.00', 'en_US');
   }
+
   /// Current exchange rate (1 USD = X KHR)
   /// This can be updated from the API
   double _exchangeRate;
@@ -147,9 +147,8 @@ final class CurrencyFormatter {
   /// [decimalPlaces] - Number of decimal places to show
   /// Returns formatted string
   String formatKHRCustom(double amount, int decimalPlaces) {
-    final pattern = decimalPlaces > 0
-        ? '#,##0.${'0' * decimalPlaces}'
-        : '#,##0';
+    final pattern =
+        decimalPlaces > 0 ? '#,##0.${'0' * decimalPlaces}' : '#,##0';
     final format = NumberFormat(pattern, 'en_US');
     return '${AppConstants.currencySymbolKHR}${format.format(amount)}';
   }

@@ -141,7 +141,7 @@
   "editCustomer": "Edit Customer",
   "customerHistory": "Purchase History",
 
-  "inventory": "Inventory",
+  "inventoryManagement": "Inventory",
   "stockLevel": "Stock Level",
   "stockAdjustment": "Stock Adjustment",
   "stockIn": "Stock In",
@@ -159,7 +159,7 @@
   "customReport": "Custom Report",
   "exportReport": "Export Report",
 
-  "settings": "Settings",
+  "settingsManagement": "Settings",
   "generalSettings": "General Settings",
   "businessInfo": "Business Information",
   "businessName": "Business Name",
@@ -188,5 +188,54 @@
   "notificationOutOfStock": "Out of stock alert",
   "notificationPaymentReceived": "Payment received",
   "notificationSyncComplete": "Sync completed",
-  "notificationSyncFailed": "Sync failed"
+  "notificationSyncFailed": "Sync failed",
+
+  "loginSelectStaff": "Select Staff",
+  "loginEnterPin": "Enter PIN",
+  "loginWrongPin": "Wrong PIN. Try again.",
+  "loginLockedOut": "Too many attempts. Please wait.",
+
+  "cartDiscount": "Discount",
+  "cartTax": "Tax",
+  "cartSubtotal": "Subtotal",
+  "cartItemCount": "{count, plural, =0{No items} =1{1 item} other{{count} items}}",
+  "@cartItemCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "checkoutSuccess": "Payment Successful!",
+  "checkoutSuccessKhmer": "ការទូទាត់បានជោគជ័យ!",
+  "newSale": "New Sale",
+
+  "scanToPay": "Scan to Pay",
+  "waitingPayment": "Waiting for payment...",
+  "paymentTimeout": "Payment timed out. Try again.",
+
+  "offline": "Offline",
+  "offlineMode": "Offline Mode",
+  "pendingSync": "{count, plural, =0{All synced} =1{1 pending} other{{count} pending}}",
+  "@pendingSync": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "lowStockCount": "{count} items low on stock",
+  "@lowStockCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "searchProducts": "Search products...",
+  "scanBarcode": "Scan Barcode",
+  "stockAdjust": "Adjust Stock",
+  "thankYou": "Thank you!",
+  "receiptFooter": "Thank you for shopping with us!",
+
+  "currencyKHR": "KHR",
+  "currencyUSD": "USD",
+  "exchangeRate": "Exchange Rate"
 }

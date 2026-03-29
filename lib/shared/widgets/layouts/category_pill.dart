@@ -6,7 +6,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 
 /// Category data for CategoryPill
 class CategoryPillData {
-
   const CategoryPillData({
     required this.id,
     required this.name,
@@ -54,14 +53,15 @@ class CategoryPillData {
 /// )
 /// ```
 class CategoryPill extends StatefulWidget {
-
   const CategoryPill({
-    required this.category, super.key,
+    required this.category,
+    super.key,
     this.isSelected = false,
     this.onTap,
     this.showCount = true,
     this.height,
   });
+
   /// Category data
   final CategoryPillData category;
 
@@ -95,7 +95,6 @@ class _CategoryPillState extends State<CategoryPill>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -116,18 +115,15 @@ class _CategoryPillState extends State<CategoryPill>
   }
 
   void _handleTapDown(TapDownDetails details) {
-    setState(() => _isPressed = true);
     _controller.forward();
   }
 
   void _handleTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
     _controller.reverse();
     widget.onTap?.call();
   }
 
   void _handleTapCancel() {
-    setState(() => _isPressed = false);
     _controller.reverse();
   }
 
@@ -204,7 +200,8 @@ class _CategoryPillState extends State<CategoryPill>
                 ],
 
                 // Product count
-                if (widget.showCount && widget.category.productCount != null) ...[
+                if (widget.showCount &&
+                    widget.category.productCount != null) ...[
                   const SizedBox(width: AppSpacing.xs),
                   Container(
                     padding: const EdgeInsets.symmetric(
@@ -213,7 +210,8 @@ class _CategoryPillState extends State<CategoryPill>
                     ),
                     decoration: BoxDecoration(
                       color: _getCountBackgroundColor(),
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                      borderRadius:
+                          BorderRadius.circular(AppSpacing.radiusSmall),
                     ),
                     child: Text(
                       '${widget.category.productCount}',
@@ -263,15 +261,17 @@ class _CategoryPillState extends State<CategoryPill>
 
 /// Scrollable row of category pills
 class CategoryPillRow extends StatelessWidget {
-
   const CategoryPillRow({
-    required this.categories, required this.onSelected, super.key,
+    required this.categories,
+    required this.onSelected,
+    super.key,
     this.selectedId,
     this.showCount = true,
     this.pillHeight,
     this.padding,
     this.scrollController,
   });
+
   /// List of categories
   final List<CategoryPillData> categories;
 
@@ -306,7 +306,8 @@ class CategoryPillRow extends StatelessWidget {
         controller: scrollController,
         scrollDirection: Axis.horizontal,
         itemCount: categories.length,
-        separatorBuilder: (context, index) => const SizedBox(width: AppSpacing.xs),
+        separatorBuilder: (context, index) =>
+            const SizedBox(width: AppSpacing.xs),
         itemBuilder: (context, index) {
           final category = categories[index];
           return CategoryPill(
@@ -324,21 +325,26 @@ class CategoryPillRow extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<CategoryPillData>('categories', categories));
+    properties
+        .add(IterableProperty<CategoryPillData>('categories', categories));
     properties.add(StringProperty('selectedId', selectedId));
-    properties.add(ObjectFlagProperty<ValueChanged<String>>.has('onSelected', onSelected));
+    properties.add(
+        ObjectFlagProperty<ValueChanged<String>>.has('onSelected', onSelected),);
     properties.add(DiagnosticsProperty<bool>('showCount', showCount));
     properties.add(DoubleProperty('pillHeight', pillHeight));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
-    properties.add(DiagnosticsProperty<ScrollController?>('scrollController', scrollController));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties.add(DiagnosticsProperty<ScrollController?>(
+        'scrollController', scrollController,),);
   }
 }
 
 /// Category pill with all option
 class CategoryPillRowWithAll extends StatelessWidget {
-
   const CategoryPillRowWithAll({
-    required this.categories, required this.onSelected, super.key,
+    required this.categories,
+    required this.onSelected,
+    super.key,
     this.selectedId,
     this.allLabel = 'All',
     this.allLabelKhmer,
@@ -358,7 +364,9 @@ class CategoryPillRowWithAll extends StatelessWidget {
       name: allLabel,
       nameKhmer: allLabelKhmer,
       icon: Icons.apps_outlined,
-      productCount: showCount ? categories.fold<int>(0, (sum, c) => sum + (c.productCount ?? 0)) : null,
+      productCount: showCount
+          ? categories.fold<int>(0, (sum, c) => sum + (c.productCount ?? 0))
+          : null,
     );
 
     final allCategories = [allCategory, ...categories];
@@ -374,9 +382,11 @@ class CategoryPillRowWithAll extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(IterableProperty<CategoryPillData>('categories', categories));
+    properties
+        .add(IterableProperty<CategoryPillData>('categories', categories));
     properties.add(StringProperty('selectedId', selectedId));
-    properties.add(ObjectFlagProperty<ValueChanged<String?>>.has('onSelected', onSelected));
+    properties.add(ObjectFlagProperty<ValueChanged<String?>>.has(
+        'onSelected', onSelected,),);
     properties.add(StringProperty('allLabel', allLabel));
     properties.add(StringProperty('allLabelKhmer', allLabelKhmer));
     properties.add(DiagnosticsProperty<bool>('showCount', showCount));

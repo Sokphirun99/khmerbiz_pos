@@ -8,7 +8,6 @@ import 'package:khmerbiz_pos/features/auth/presentation/bloc/auth_state.dart';
 
 /// BLoC for handling authentication logic.
 final class AuthBloc extends Bloc<AuthEvent, AuthState> {
-
   /// Create an [AuthBloc] with the given repository.
   AuthBloc({
     required AuthRepository authRepository,
@@ -77,7 +76,8 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthLoading(message: 'Creating account...'));
 
     try {
-      final result = await _authRepository.register(event.email, event.password);
+      final result =
+          await _authRepository.register(event.email, event.password);
       emit(AuthAuthenticated(result.user));
     } on Failure catch (e) {
       emit(AuthError(e.messageEn, messageKm: e.messageKm));

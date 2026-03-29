@@ -43,7 +43,6 @@ enum SyncStatus {
 /// )
 /// ```
 class SyncStatusBadge extends StatelessWidget {
-
   const SyncStatusBadge({
     super.key,
     this.status = SyncStatus.synced,
@@ -52,6 +51,7 @@ class SyncStatusBadge extends StatelessWidget {
     this.showTooltip = true,
     this.tooltipMessage,
   });
+
   /// Current sync status
   final SyncStatus status;
 
@@ -189,7 +189,6 @@ class SyncStatusBadge extends StatelessWidget {
 
 /// Animated sync indicator for sync-in-progress
 class SyncProgressIndicator extends StatelessWidget {
-
   const SyncProgressIndicator({
     super.key,
     this.message,
@@ -236,9 +235,9 @@ class SyncProgressIndicator extends StatelessWidget {
 
 /// Sync status with detailed information
 class SyncStatusDetail extends StatelessWidget {
-
   const SyncStatusDetail({
-    required this.status, super.key,
+    required this.status,
+    super.key,
     this.pendingCount = 0,
     this.lastSyncTime,
     this.errorMessage,
@@ -413,7 +412,8 @@ class SyncStatusDetail extends StatelessWidget {
     super.debugFillProperties(properties);
     properties.add(EnumProperty<SyncStatus>('status', status));
     properties.add(IntProperty('pendingCount', pendingCount));
-    properties.add(DiagnosticsProperty<DateTime?>('lastSyncTime', lastSyncTime));
+    properties
+        .add(DiagnosticsProperty<DateTime?>('lastSyncTime', lastSyncTime));
     properties.add(StringProperty('errorMessage', errorMessage));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onRetry', onRetry));
   }

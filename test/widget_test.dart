@@ -11,7 +11,8 @@ import 'package:flutter_test/flutter_test.dart';
 ///
 /// NOTE: Full widget tests will be implemented after BLoCs and DI are fully set up.
 void main() {
-  testWidgets('KhmerBiz POS app loads successfully', (WidgetTester tester) async {
+  testWidgets('KhmerBiz POS app loads successfully',
+      (WidgetTester tester) async {
     // Build our app and trigger a frame.
     // Note: This test will need proper DI setup to run successfully
     // For now, it's a placeholder that will be updated when the app is fully implemented

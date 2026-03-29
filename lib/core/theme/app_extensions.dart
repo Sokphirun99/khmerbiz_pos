@@ -14,7 +14,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// final spacing = Theme.of(context).extension<AppSpacingExtension>()!;
 /// ```
 final class AppColorExtension extends ThemeExtension<AppColorExtension> {
-
   const AppColorExtension({
     required this.primary,
     required this.primaryLight,
@@ -35,8 +34,13 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
     required this.textDisabled,
     required this.border,
     required this.borderLight,
+    required this.borderFocus,
     required this.overlay,
     required this.shadow,
+    required this.khqrBlue,
+    required this.abaRed,
+    required this.wingOrange,
+    required this.cashGreen,
   });
 
   /// Light theme color extension
@@ -61,8 +65,13 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
       textDisabled: AppColors.textDisabled,
       border: AppColors.border,
       borderLight: AppColors.borderLight,
+      borderFocus: AppColors.borderFocus,
       overlay: AppColors.overlay,
       shadow: AppColors.shadow,
+      khqrBlue: AppColors.khqrBlue,
+      abaRed: AppColors.abaRed,
+      wingOrange: AppColors.wingOrange,
+      cashGreen: AppColors.cashGreen,
     );
   }
 
@@ -81,17 +90,23 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
       warningLight: AppColors.darkWarningLight,
       error: AppColors.darkError,
       errorLight: AppColors.darkErrorLight,
-      info: AppColors.info, // Keep same for consistency
-      infoLight: AppColors.infoLight, // Keep same for consistency
+      info: AppColors.darkInfo,
+      infoLight: AppColors.darkInfoLight,
       surfaceAlt: AppColors.darkSurfaceAlt,
       textHint: AppColors.darkTextHint,
       textDisabled: AppColors.darkTextSecondary,
       border: AppColors.darkBorder,
       borderLight: AppColors.darkDivider,
+      borderFocus: AppColors.darkPrimary,
       overlay: AppColors.darkOverlay,
       shadow: AppColors.shadow, // Keep same for consistency
+      khqrBlue: AppColors.khqrBlue,
+      abaRed: AppColors.abaRed,
+      wingOrange: AppColors.wingOrange,
+      cashGreen: AppColors.cashGreen,
     );
   }
+
   /// Brand colors
   final Color primary;
   final Color primaryLight;
@@ -120,10 +135,17 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
   /// Border colors
   final Color border;
   final Color borderLight;
+  final Color borderFocus;
 
   /// Overlay colors
   final Color overlay;
   final Color shadow;
+
+  /// Payment brand colors
+  final Color khqrBlue;
+  final Color abaRed;
+  final Color wingOrange;
+  final Color cashGreen;
 
   @override
   AppColorExtension copyWith({
@@ -146,8 +168,13 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
     Color? textDisabled,
     Color? border,
     Color? borderLight,
+    Color? borderFocus,
     Color? overlay,
     Color? shadow,
+    Color? khqrBlue,
+    Color? abaRed,
+    Color? wingOrange,
+    Color? cashGreen,
   }) {
     return AppColorExtension(
       primary: primary ?? this.primary,
@@ -169,8 +196,13 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
       textDisabled: textDisabled ?? this.textDisabled,
       border: border ?? this.border,
       borderLight: borderLight ?? this.borderLight,
+      borderFocus: borderFocus ?? this.borderFocus,
       overlay: overlay ?? this.overlay,
       shadow: shadow ?? this.shadow,
+      khqrBlue: khqrBlue ?? this.khqrBlue,
+      abaRed: abaRed ?? this.abaRed,
+      wingOrange: wingOrange ?? this.wingOrange,
+      cashGreen: cashGreen ?? this.cashGreen,
     );
   }
 
@@ -199,15 +231,19 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
       textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
       border: Color.lerp(border, other.border, t)!,
       borderLight: Color.lerp(borderLight, other.borderLight, t)!,
+      borderFocus: Color.lerp(borderFocus, other.borderFocus, t)!,
       overlay: Color.lerp(overlay, other.overlay, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
+      khqrBlue: Color.lerp(khqrBlue, other.khqrBlue, t)!,
+      abaRed: Color.lerp(abaRed, other.abaRed, t)!,
+      wingOrange: Color.lerp(wingOrange, other.wingOrange, t)!,
+      cashGreen: Color.lerp(cashGreen, other.cashGreen, t)!,
     );
   }
 }
 
 /// Spacing extension for custom spacing values
 final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
-
   const AppSpacingExtension({
     required this.xs,
     required this.sm,
@@ -276,6 +312,7 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
       elevation4: AppSpacing.elevation4,
     );
   }
+
   /// Base spacing units
   final double xs;
   final double sm;
@@ -356,7 +393,8 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
       xl: xl ?? this.xl,
       xxl: xxl ?? this.xxl,
       buttonHeightPrimary: buttonHeightPrimary ?? this.buttonHeightPrimary,
-      buttonHeightSecondary: buttonHeightSecondary ?? this.buttonHeightSecondary,
+      buttonHeightSecondary:
+          buttonHeightSecondary ?? this.buttonHeightSecondary,
       buttonHeightSmall: buttonHeightSmall ?? this.buttonHeightSmall,
       iconButtonSize: iconButtonSize ?? this.iconButtonSize,
       numpadKeySize: numpadKeySize ?? this.numpadKeySize,
@@ -382,7 +420,8 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
   }
 
   @override
-  AppSpacingExtension lerp(ThemeExtension<AppSpacingExtension> other, double t) {
+  AppSpacingExtension lerp(
+      ThemeExtension<AppSpacingExtension> other, double t,) {
     if (other is! AppSpacingExtension) {
       return this;
     }
@@ -394,24 +433,34 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
       lg: _lerpDouble(lg, other.lg, t),
       xl: _lerpDouble(xl, other.xl, t),
       xxl: _lerpDouble(xxl, other.xxl, t),
-      buttonHeightPrimary: _lerpDouble(buttonHeightPrimary, other.buttonHeightPrimary, t),
-      buttonHeightSecondary: _lerpDouble(buttonHeightSecondary, other.buttonHeightSecondary, t),
-      buttonHeightSmall: _lerpDouble(buttonHeightSmall, other.buttonHeightSmall, t),
+      buttonHeightPrimary:
+          _lerpDouble(buttonHeightPrimary, other.buttonHeightPrimary, t),
+      buttonHeightSecondary:
+          _lerpDouble(buttonHeightSecondary, other.buttonHeightSecondary, t),
+      buttonHeightSmall:
+          _lerpDouble(buttonHeightSmall, other.buttonHeightSmall, t),
       iconButtonSize: _lerpDouble(iconButtonSize, other.iconButtonSize, t),
       numpadKeySize: _lerpDouble(numpadKeySize, other.numpadKeySize, t),
-      productCardWidth: _lerpDouble(productCardWidth, other.productCardWidth, t),
-      productCardHeight: _lerpDouble(productCardHeight, other.productCardHeight, t),
-      categoryPillHeight: _lerpDouble(categoryPillHeight, other.categoryPillHeight, t),
+      productCardWidth:
+          _lerpDouble(productCardWidth, other.productCardWidth, t),
+      productCardHeight:
+          _lerpDouble(productCardHeight, other.productCardHeight, t),
+      categoryPillHeight:
+          _lerpDouble(categoryPillHeight, other.categoryPillHeight, t),
       listItemHeight: _lerpDouble(listItemHeight, other.listItemHeight, t),
       appBarHeight: _lerpDouble(appBarHeight, other.appBarHeight, t),
       bottomNavHeight: _lerpDouble(bottomNavHeight, other.bottomNavHeight, t),
-      paymentMethodHeight: _lerpDouble(paymentMethodHeight, other.paymentMethodHeight, t),
-      inputFieldHeight: _lerpDouble(inputFieldHeight, other.inputFieldHeight, t),
-      stepperButtonSize: _lerpDouble(stepperButtonSize, other.stepperButtonSize, t),
+      paymentMethodHeight:
+          _lerpDouble(paymentMethodHeight, other.paymentMethodHeight, t),
+      inputFieldHeight:
+          _lerpDouble(inputFieldHeight, other.inputFieldHeight, t),
+      stepperButtonSize:
+          _lerpDouble(stepperButtonSize, other.stepperButtonSize, t),
       radiusSmall: _lerpDouble(radiusSmall, other.radiusSmall, t),
       radiusMedium: _lerpDouble(radiusMedium, other.radiusMedium, t),
       radiusLarge: _lerpDouble(radiusLarge, other.radiusLarge, t),
-      radiusExtraLarge: _lerpDouble(radiusExtraLarge, other.radiusExtraLarge, t),
+      radiusExtraLarge:
+          _lerpDouble(radiusExtraLarge, other.radiusExtraLarge, t),
       radiusFull: _lerpDouble(radiusFull, other.radiusFull, t),
       elevation1: _lerpDouble(elevation1, other.elevation1, t),
       elevation2: _lerpDouble(elevation2, other.elevation2, t),
@@ -429,12 +478,14 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
 extension BuildContextThemeExtension on BuildContext {
   /// Get AppColorExtension from theme
   AppColorExtension get appColors {
-    return Theme.of(this).extension<AppColorExtension>() ?? AppColorExtension.light();
+    return Theme.of(this).extension<AppColorExtension>() ??
+        AppColorExtension.light();
   }
 
   /// Get AppSpacingExtension from theme
   AppSpacingExtension get appSpacing {
-    return Theme.of(this).extension<AppSpacingExtension>() ?? AppSpacingExtension.defaultSpacing();
+    return Theme.of(this).extension<AppSpacingExtension>() ??
+        AppSpacingExtension.defaultSpacing();
   }
 
   /// Check if dark mode is active

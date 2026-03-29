@@ -221,7 +221,8 @@ final class AppTheme {
       surfaceTintColor: AppColors.surface,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(AppSpacing.radiusMedium)),
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppSpacing.radiusMedium)),
       ),
     );
   }
@@ -234,7 +235,8 @@ final class AppTheme {
         foregroundColor: AppColors.onPrimary,
         disabledBackgroundColor: AppColors.border,
         disabledForegroundColor: AppColors.textDisabled,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightPrimary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightPrimary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -258,7 +260,8 @@ final class AppTheme {
         foregroundColor: AppColors.onAccent,
         disabledBackgroundColor: AppColors.border,
         disabledForegroundColor: AppColors.textDisabled,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightPrimary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightPrimary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -280,7 +283,8 @@ final class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.primary,
         disabledForegroundColor: AppColors.textDisabled,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightSecondary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightSecondary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -303,7 +307,8 @@ final class AppTheme {
       style: TextButton.styleFrom(
         foregroundColor: AppColors.primary,
         disabledForegroundColor: AppColors.textDisabled,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightSecondary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightSecondary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -325,7 +330,8 @@ final class AppTheme {
       style: IconButton.styleFrom(
         foregroundColor: AppColors.textPrimary,
         disabledForegroundColor: AppColors.textDisabled,
-        minimumSize: const Size(AppSpacing.iconButtonSize, AppSpacing.iconButtonSize),
+        minimumSize:
+            const Size(AppSpacing.iconButtonSize, AppSpacing.iconButtonSize),
       ),
     );
   }
@@ -436,7 +442,8 @@ final class AppTheme {
       modalBackgroundColor: AppColors.surface,
       modalBarrierColor: AppColors.overlay,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusExtraLarge)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusExtraLarge),),
       ),
       clipBehavior: Clip.antiAlias,
     );
@@ -548,7 +555,8 @@ final class AppTheme {
       surfaceTintColor: AppColors.darkSurface,
       margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(AppSpacing.radiusMedium)),
+        borderRadius:
+            BorderRadius.all(Radius.circular(AppSpacing.radiusMedium)),
       ),
     );
   }
@@ -561,7 +569,8 @@ final class AppTheme {
         foregroundColor: AppColors.onPrimary,
         disabledBackgroundColor: AppColors.darkBorder,
         disabledForegroundColor: AppColors.darkTextSecondary,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightPrimary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightPrimary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -585,7 +594,8 @@ final class AppTheme {
         foregroundColor: AppColors.onAccent,
         disabledBackgroundColor: AppColors.darkBorder,
         disabledForegroundColor: AppColors.darkTextSecondary,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightPrimary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightPrimary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -607,7 +617,8 @@ final class AppTheme {
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.darkPrimary,
         disabledForegroundColor: AppColors.darkTextSecondary,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightSecondary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightSecondary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -630,7 +641,8 @@ final class AppTheme {
       style: TextButton.styleFrom(
         foregroundColor: AppColors.darkPrimary,
         disabledForegroundColor: AppColors.darkTextSecondary,
-        minimumSize: const Size(double.infinity, AppSpacing.buttonHeightSecondary),
+        minimumSize:
+            const Size(double.infinity, AppSpacing.buttonHeightSecondary),
         padding: const EdgeInsets.symmetric(
           horizontal: AppSpacing.base,
           vertical: AppSpacing.sm,
@@ -652,7 +664,8 @@ final class AppTheme {
       style: IconButton.styleFrom(
         foregroundColor: AppColors.darkTextPrimary,
         disabledForegroundColor: AppColors.darkTextSecondary,
-        minimumSize: const Size(AppSpacing.iconButtonSize, AppSpacing.iconButtonSize),
+        minimumSize:
+            const Size(AppSpacing.iconButtonSize, AppSpacing.iconButtonSize),
       ),
     );
   }
@@ -763,7 +776,8 @@ final class AppTheme {
       modalBackgroundColor: AppColors.darkSurface,
       modalBarrierColor: AppColors.darkOverlay,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusExtraLarge)),
+        borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSpacing.radiusExtraLarge),),
       ),
       clipBehavior: Clip.antiAlias,
     );

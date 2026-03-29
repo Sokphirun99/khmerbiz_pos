@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -201,7 +202,8 @@ final class AppRouter {
 
         // Main shell route with bottom navigation
         ShellRoute(
-          builder: (BuildContext context, GoRouterState state, Widget child) => PlaceholderMainScaffold(child: child),
+          builder: (BuildContext context, GoRouterState state, Widget child) =>
+              PlaceholderMainScaffold(child: child),
           routes: [
             // Home screen
             GoRoute(
@@ -226,7 +228,8 @@ final class AppRouter {
                 GoRoute(
                   path: 'add',
                   name: productAddName,
-                  builder: (context, state) => const PlaceholderProductFormScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderProductFormScreen(),
                 ),
                 GoRoute(
                   path: ':id',
@@ -239,7 +242,8 @@ final class AppRouter {
                     GoRoute(
                       path: 'edit',
                       name: productEditName,
-                      builder: (context, state) => const PlaceholderProductFormScreen(),
+                      builder: (context, state) =>
+                          const PlaceholderProductFormScreen(),
                     ),
                   ],
                 ),
@@ -255,7 +259,8 @@ final class AppRouter {
                 GoRoute(
                   path: 'adjust',
                   name: stockAdjustmentName,
-                  builder: (context, state) => const PlaceholderStockAdjustmentScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderStockAdjustmentScreen(),
                 ),
               ],
             ),
@@ -264,14 +269,16 @@ final class AppRouter {
             GoRoute(
               path: transactions,
               name: transactionsName,
-              builder: (context, state) => const PlaceholderTransactionsScreen(),
+              builder: (context, state) =>
+                  const PlaceholderTransactionsScreen(),
               routes: [
                 GoRoute(
                   path: ':id',
                   name: transactionDetailName,
                   builder: (context, state) {
                     final id = state.pathParameters['id'] ?? '';
-                    return PlaceholderTransactionDetailScreen(transactionId: id);
+                    return PlaceholderTransactionDetailScreen(
+                        transactionId: id,);
                   },
                 ),
               ],
@@ -286,7 +293,8 @@ final class AppRouter {
                 GoRoute(
                   path: 'add',
                   name: customerAddName,
-                  builder: (context, state) => const PlaceholderCustomerFormScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderCustomerFormScreen(),
                 ),
                 GoRoute(
                   path: ':id',
@@ -308,12 +316,14 @@ final class AppRouter {
                 GoRoute(
                   path: 'sales',
                   name: salesReportName,
-                  builder: (context, state) => const PlaceholderSalesReportScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderSalesReportScreen(),
                 ),
                 GoRoute(
                   path: 'inventory',
                   name: inventoryReportName,
-                  builder: (context, state) => const PlaceholderInventoryReportScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderInventoryReportScreen(),
                 ),
               ],
             ),
@@ -327,17 +337,20 @@ final class AppRouter {
                 GoRoute(
                   path: 'business',
                   name: settingsBusinessName,
-                  builder: (context, state) => const PlaceholderBusinessSettingsScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderBusinessSettingsScreen(),
                 ),
                 GoRoute(
                   path: 'printer',
                   name: settingsPrinterName,
-                  builder: (context, state) => const PlaceholderPrinterSettingsScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderPrinterSettingsScreen(),
                 ),
                 GoRoute(
                   path: 'language',
                   name: settingsLanguageName,
-                  builder: (context, state) => const PlaceholderLanguageSettingsScreen(),
+                  builder: (context, state) =>
+                      const PlaceholderLanguageSettingsScreen(),
                 ),
               ],
             ),
@@ -490,13 +503,13 @@ class PlaceholderForgotPasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Forgot Password')),
-      body: const Center(child: Text('Forgot Password Screen - To be implemented')),
+      body: const Center(
+          child: Text('Forgot Password Screen - To be implemented'),),
     );
   }
 }
 
 class PlaceholderMainScaffold extends StatelessWidget {
-
   const PlaceholderMainScaffold({required this.child, super.key});
   final Widget child;
 
@@ -507,10 +520,14 @@ class PlaceholderMainScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.point_of_sale), label: 'POS'),
-          BottomNavigationBarItem(icon: Icon(Icons.inventory), label: 'Products'),
-          BottomNavigationBarItem(icon: Icon(Icons.receipt_long), label: 'Transactions'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.point_of_sale), label: 'POS',),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.inventory), label: 'Products',),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.receipt_long), label: 'Transactions',),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings), label: 'Settings',),
         ],
         onTap: (index) {
           switch (index) {
@@ -572,7 +589,6 @@ class PlaceholderProductsScreen extends StatelessWidget {
 }
 
 class PlaceholderProductDetailScreen extends StatelessWidget {
-
   const PlaceholderProductDetailScreen({required this.productId, super.key});
   final String productId;
 
@@ -640,8 +656,8 @@ class PlaceholderTransactionsScreen extends StatelessWidget {
 }
 
 class PlaceholderTransactionDetailScreen extends StatelessWidget {
-
-  const PlaceholderTransactionDetailScreen({required this.transactionId, super.key});
+  const PlaceholderTransactionDetailScreen(
+      {required this.transactionId, super.key,});
   final String transactionId;
 
   @override
@@ -696,7 +712,6 @@ class PlaceholderPaymentScreen extends StatelessWidget {
 }
 
 class PlaceholderReceiptScreen extends StatelessWidget {
-
   const PlaceholderReceiptScreen({required this.transactionId, super.key});
   final String transactionId;
 
@@ -732,7 +747,6 @@ class PlaceholderCustomersScreen extends StatelessWidget {
 }
 
 class PlaceholderCustomerDetailScreen extends StatelessWidget {
-
   const PlaceholderCustomerDetailScreen({required this.customerId, super.key});
   final String customerId;
 

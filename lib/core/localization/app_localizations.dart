@@ -878,6 +878,12 @@ abstract class AppLocalizations {
   /// **'Purchase History'**
   String get customerHistory;
 
+  /// No description provided for @inventoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory'**
+  String get inventoryManagement;
+
   /// No description provided for @stockLevel.
   ///
   /// In en, this message translates to:
@@ -967,6 +973,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Export Report'**
   String get exportReport;
+
+  /// No description provided for @settingsManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsManagement;
 
   /// No description provided for @generalSettings.
   ///
@@ -1135,6 +1147,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Sync failed'**
   String get notificationSyncFailed;
+
+  /// No description provided for @loginSelectStaff.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Staff'**
+  String get loginSelectStaff;
+
+  /// No description provided for @loginEnterPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter PIN'**
+  String get loginEnterPin;
+
+  /// No description provided for @loginWrongPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong PIN. Try again.'**
+  String get loginWrongPin;
+
+  /// No description provided for @loginLockedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait.'**
+  String get loginLockedOut;
+
+  /// No description provided for @cartDiscount.
+  ///
+  /// In en, this message translates to:
+  /// **'Discount'**
+  String get cartDiscount;
+
+  /// No description provided for @cartTax.
+  ///
+  /// In en, this message translates to:
+  /// **'Tax'**
+  String get cartTax;
+
+  /// No description provided for @cartSubtotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Subtotal'**
+  String get cartSubtotal;
+
+  /// No description provided for @cartItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No items} =1{1 item} other{{count} items}}'**
+  String cartItemCount(int count);
+
+  /// No description provided for @checkoutSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Successful!'**
+  String get checkoutSuccess;
+
+  /// No description provided for @checkoutSuccessKhmer.
+  ///
+  /// In en, this message translates to:
+  /// **'ការទូទាត់បានជោគជ័យ!'**
+  String get checkoutSuccessKhmer;
+
+  /// No description provided for @newSale.
+  ///
+  /// In en, this message translates to:
+  /// **'New Sale'**
+  String get newSale;
+
+  /// No description provided for @scanToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to Pay'**
+  String get scanToPay;
+
+  /// No description provided for @waitingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for payment...'**
+  String get waitingPayment;
+
+  /// No description provided for @paymentTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment timed out. Try again.'**
+  String get paymentTimeout;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @offlineMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline Mode'**
+  String get offlineMode;
+
+  /// No description provided for @pendingSync.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{All synced} =1{1 pending} other{{count} pending}}'**
+  String pendingSync(int count);
+
+  /// No description provided for @lowStockCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} items low on stock'**
+  String lowStockCount(int count);
+
+  /// No description provided for @searchProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Search products...'**
+  String get searchProducts;
+
+  /// No description provided for @scanBarcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan Barcode'**
+  String get scanBarcode;
+
+  /// No description provided for @stockAdjust.
+  ///
+  /// In en, this message translates to:
+  /// **'Adjust Stock'**
+  String get stockAdjust;
+
+  /// No description provided for @thankYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you!'**
+  String get thankYou;
+
+  /// No description provided for @receiptFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you for shopping with us!'**
+  String get receiptFooter;
+
+  /// No description provided for @currencyKHR.
+  ///
+  /// In en, this message translates to:
+  /// **'KHR'**
+  String get currencyKHR;
+
+  /// No description provided for @currencyUSD.
+  ///
+  /// In en, this message translates to:
+  /// **'USD'**
+  String get currencyUSD;
+
+  /// No description provided for @exchangeRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Exchange Rate'**
+  String get exchangeRate;
 }
 
 class _AppLocalizationsDelegate

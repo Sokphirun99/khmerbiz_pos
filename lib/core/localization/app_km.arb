@@ -141,7 +141,7 @@
   "editCustomer": "កែសម្រួលអតិថិជន",
   "customerHistory": "ប្រវត្តិការទិញ",
 
-  "inventory": "ស្តុក",
+  "inventoryManagement": "ស្តុក",
   "stockLevel": "កម្រិតស្តុក",
   "stockAdjustment": "កែតម្រូវស្តុក",
   "stockIn": "បញ្ចូលស្តុក",
@@ -159,7 +159,7 @@
   "customReport": "របាយការណ៍តាមបំណង",
   "exportReport": "នាំចេញរបាយការណ៍",
 
-  "settings": "ការកំណត់",
+  "settingsManagement": "ការកំណត់",
   "generalSettings": "ការកំណត់ទូទៅ",
   "businessInfo": "ព័ត៌មានអាជីវកម្ម",
   "businessName": "ឈ្មោះអាជីវកម្ម",
@@ -188,5 +188,54 @@
   "notificationOutOfStock": "ការជូនដំណឹងអស់ស្តុក",
   "notificationPaymentReceived": "ទទួលបានការទូទាត់",
   "notificationSyncComplete": "សមកាលកម្មបានជោគជ័យ",
-  "notificationSyncFailed": "សមកាលកម្មបរាជ័យ"
+  "notificationSyncFailed": "សមកាលកម្មបរាជ័យ",
+
+  "loginSelectStaff": "ជ្រើសរើសបុគ្គលិក",
+  "loginEnterPin": "បញ្ចូល PIN",
+  "loginWrongPin": "PIN ខុស។ សាកម្ដងទៀត។",
+  "loginLockedOut": "ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំ។",
+
+  "cartDiscount": "បញ្ចុះតម្លៃ",
+  "cartTax": "ពន្ធ",
+  "cartSubtotal": "សរុបរង",
+  "cartItemCount": "{count, plural, =0{គ្មានមុខទំនិញ} =1{១ មុខទំនិញ} other{{count} មុខទំនិញ}}",
+  "@cartItemCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "checkoutSuccess": "ការទូទាត់បានជោគជ័យ!",
+  "checkoutSuccessKhmer": "ការទូទាត់បានជោគជ័យ!",
+  "newSale": "ការលក់ថ្មី",
+
+  "scanToPay": "ស្កែនដើម្បីបង់ប្រាក់",
+  "waitingPayment": "កំពុងរង់ចាំការទូទាត់...",
+  "paymentTimeout": "ការទូទាត់ផុតកំណត់។ សាកម្ដងទៀត។",
+
+  "offline": "អុហ្វឡាញ",
+  "offlineMode": "របៀបអុហ្វឡាញ",
+  "pendingSync": "{count, plural, =0{សមកាលកម្មទាំងអស់} =1{១ កំពុងរង់ចាំ} other{{count} កំពុងរង់ចាំ}}",
+  "@pendingSync": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "lowStockCount": "{count} មុខទំនិញស្តុកទាប",
+  "@lowStockCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+
+  "searchProducts": "ស្វែងរកផលិតផល...",
+  "scanBarcode": "ស្កែនបារកូដ",
+  "stockAdjust": "កែតម្រូវស្តុក",
+  "thankYou": "អរគុណ!",
+  "receiptFooter": "អរគុណសម្រាប់ការទិញទំនិញជាមួយយើង!",
+
+  "currencyKHR": "រៀល",
+  "currencyUSD": "ដុល្លារ",
+  "exchangeRate": "អត្រាប្ដូរប្រាក់"
 }

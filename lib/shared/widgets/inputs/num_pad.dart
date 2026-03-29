@@ -44,11 +44,11 @@ typedef OnConfirm = void Function();
 /// )
 /// ```
 class NumPad extends StatefulWidget {
-
   const NumPad({
     super.key,
     this.onDigitTapped,
     this.onBackspace,
+    this.onClear,
     this.onConfirm,
     this.decimalAllowed = true,
     this.showConfirm = false,
@@ -57,11 +57,15 @@ class NumPad extends StatefulWidget {
     this.enabled = true,
     this.showZero = true,
   });
+
   /// Callback when digit is tapped
   final OnDigitTapped? onDigitTapped;
 
   /// Callback when backspace is tapped
   final OnBackspace? onBackspace;
+
+  /// Callback when backspace is held (clear)
+  final VoidCallback? onClear;
 
   /// Callback when confirm is tapped
   final OnConfirm? onConfirm;
@@ -90,8 +94,10 @@ class NumPad extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped));
-    properties.add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
+    properties.add(
+        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+    properties
+        .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));
     properties.add(DiagnosticsProperty<bool>('decimalAllowed', decimalAllowed));
     properties.add(DiagnosticsProperty<bool>('showConfirm', showConfirm));
@@ -99,6 +105,7 @@ class NumPad extends StatefulWidget {
     properties.add(DoubleProperty('buttonSize', buttonSize));
     properties.add(DiagnosticsProperty<bool>('enabled', enabled));
     properties.add(DiagnosticsProperty<bool>('showZero', showZero));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onClear', onClear));
   }
 }
 
@@ -159,6 +166,39 @@ class _NumPadState extends State<NumPad> {
     widget.onBackspace?.call();
   }
 
+  void _handleClear() {
+    if (!widget.enabled) return;
+
+    HapticFeedback.mediumImpact();
+    if (widget.onClear != null) {
+      widget.onClear?.call();
+    } else {
+      // Fallback: repeat backspace if no onClear provided
+      _holdTimer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+        if (!_isHolding || !mounted) {
+          timer.cancel();
+        } else {
+          _handleBackspace();
+        }
+      });
+    }
+  }
+
+  void _handleBackspaceLongPressStart() {
+    if (!widget.enabled) return;
+    setState(() => _isHolding = true);
+    _holdTimer = Timer(const Duration(milliseconds: 500), () {
+      if (_isHolding && mounted) {
+        _handleClear();
+      }
+    });
+  }
+
+  void _handleBackspaceLongPressEnd() {
+    setState(() => _isHolding = false);
+    _holdTimer?.cancel();
+  }
+
   void _handleConfirm() {
     if (!widget.enabled) return;
 
@@ -204,13 +244,22 @@ class _NumPadState extends State<NumPad> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             // Decimal point (if allowed)
-            if (widget.decimalAllowed) _buildDigitButton('.', size: buttonSize) else SizedBox(width: buttonSize),
+            if (widget.decimalAllowed)
+              _buildDigitButton('.', size: buttonSize)
+            else
+              SizedBox(width: buttonSize),
 
             // Zero
-            if (widget.showZero) _buildDigitButton('0', size: buttonSize) else SizedBox(width: buttonSize),
+            if (widget.showZero)
+              _buildDigitButton('0', size: buttonSize)
+            else
+              SizedBox(width: buttonSize),
 
             // Backspace or Confirm
-            if (widget.showConfirm && widget.onConfirm != null) _buildConfirmButton(size: buttonSize) else _buildBackspaceButton(size: buttonSize),
+            if (widget.showConfirm && widget.onConfirm != null)
+              _buildConfirmButton(size: buttonSize)
+            else
+              _buildBackspaceButton(size: buttonSize),
           ],
         ),
       ],
@@ -255,6 +304,8 @@ class _NumPadState extends State<NumPad> {
     return GestureDetector(
       onTap: _handleBackspace,
       onTapDown: (_) => HapticFeedback.lightImpact(),
+      onLongPressStart: (_) => _handleBackspaceLongPressStart(),
+      onLongPressEnd: (_) => _handleBackspaceLongPressEnd(),
       child: Container(
         width: size,
         height: size,
@@ -304,24 +355,31 @@ class _NumPadState extends State<NumPad> {
 
 /// Compact NumPad for smaller spaces
 class CompactNumPad extends StatelessWidget {
-
   const CompactNumPad({
     super.key,
     this.onDigitTapped,
     this.onBackspace,
+    this.onClear,
     this.onConfirm,
     this.decimalAllowed = true,
     this.showConfirm = false,
   });
   final OnDigitTapped? onDigitTapped;
   final OnBackspace? onBackspace;
+  final VoidCallback? onClear;
   final OnConfirm? onConfirm;
   final bool decimalAllowed;
   final bool showConfirm;
 
   @override
   Widget build(BuildContext context) {
-    return const NumPad(
+    return NumPad(
+      onDigitTapped: onDigitTapped,
+      onBackspace: onBackspace,
+      onClear: onClear,
+      onConfirm: onConfirm,
+      decimalAllowed: decimalAllowed,
+      showConfirm: showConfirm,
       buttonSize: 56,
     );
   }
@@ -329,17 +387,19 @@ class CompactNumPad extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped));
-    properties.add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
+    properties.add(
+        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+    properties
+        .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));
     properties.add(DiagnosticsProperty<bool>('decimalAllowed', decimalAllowed));
     properties.add(DiagnosticsProperty<bool>('showConfirm', showConfirm));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onClear', onClear));
   }
 }
 
 /// NumPad with display for showing entered value
 class NumPadWithDisplay extends StatefulWidget {
-
   const NumPadWithDisplay({
     super.key,
     this.initialValue,
@@ -373,8 +433,10 @@ class NumPadWithDisplay extends StatefulWidget {
     properties.add(StringProperty('initialValue', initialValue));
     properties.add(StringProperty('label', label));
     properties.add(StringProperty('labelKhmer', labelKhmer));
-    properties.add(ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped));
-    properties.add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
+    properties.add(
+        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+    properties
+        .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));
     properties.add(DiagnosticsProperty<bool>('decimalAllowed', decimalAllowed));
     properties.add(DiagnosticsProperty<bool>('showConfirm', showConfirm));
@@ -436,6 +498,7 @@ class _NumPadWithDisplayState extends State<NumPadWithDisplay> {
         NumPad(
           onDigitTapped: _appendDigit,
           onBackspace: _removeDigit,
+          onClear: _clearAll,
           onConfirm: widget.onConfirm,
           decimalAllowed: widget.decimalAllowed,
           showConfirm: widget.showConfirm,
@@ -499,7 +562,9 @@ class _NumPadWithDisplayState extends State<NumPadWithDisplay> {
                     fontFamily: 'Roboto Mono',
                     fontSize: _value.length > 12 ? 24 : 32,
                     fontWeight: FontWeight.bold,
-                    color: _value.isEmpty ? AppColors.textHint : AppColors.textPrimary,
+                    color: _value.isEmpty
+                        ? AppColors.textHint
+                        : AppColors.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),

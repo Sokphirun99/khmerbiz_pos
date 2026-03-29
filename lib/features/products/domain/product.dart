@@ -4,11 +4,12 @@ import 'package:equatable/equatable.dart';
 ///
 /// This is a pure domain object with no dependencies on Flutter or data layers.
 final class Product extends Equatable {
-
   const Product({
     required this.id,
     required this.name,
-    required this.priceKhr, required this.createdAt, this.description,
+    required this.priceKhr,
+    required this.createdAt,
+    this.description,
     this.sku,
     this.barcode,
     this.categoryId,
@@ -28,6 +29,7 @@ final class Product extends Equatable {
     this.updatedAt,
     this.syncedAt,
   });
+
   /// Unique product identifier
   final String id;
 

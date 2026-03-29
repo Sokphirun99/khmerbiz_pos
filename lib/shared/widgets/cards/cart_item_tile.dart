@@ -8,12 +8,13 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 
 /// Cart item data model
 class CartItemData {
-
   const CartItemData({
     required this.id,
     required this.productId,
     required this.name,
-    required this.unitPriceKHR, required this.quantity, this.nameKhmer,
+    required this.unitPriceKHR,
+    required this.quantity,
+    this.nameKhmer,
     this.unitPriceUSD,
     this.discount,
     this.note,
@@ -73,9 +74,9 @@ typedef OnQuantityChanged = void Function(int newQuantity);
 /// )
 /// ```
 class CartItemTile extends StatefulWidget {
-
   const CartItemTile({
-    required this.item, super.key,
+    required this.item,
+    super.key,
     this.onQuantityChanged,
     this.onRemoved,
     this.onTap,
@@ -83,6 +84,7 @@ class CartItemTile extends StatefulWidget {
     this.minQuantity = 1,
     this.maxQuantity = 0,
   });
+
   /// Cart item data
   final CartItemData item;
 
@@ -111,8 +113,10 @@ class CartItemTile extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<CartItemData>('item', item));
-    properties.add(ObjectFlagProperty<OnQuantityChanged?>.has('onQuantityChanged', onQuantityChanged));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has('onRemoved', onRemoved));
+    properties.add(ObjectFlagProperty<OnQuantityChanged?>.has(
+        'onQuantityChanged', onQuantityChanged,),);
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onRemoved', onRemoved));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
     properties.add(DiagnosticsProperty<bool>('showUSD', showUSD));
     properties.add(IntProperty('minQuantity', minQuantity));
@@ -209,7 +213,8 @@ class _CartItemTileState extends State<CartItemTile> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Remove Item?'),
-                content: Text('Remove "${widget.item.nameKhmer ?? widget.item.name}" from cart?'),
+                content: Text(
+                    'Remove "${widget.item.nameKhmer ?? widget.item.name}" from cart?',),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
@@ -382,13 +387,15 @@ class _CartItemTileState extends State<CartItemTile> {
         // Increase button
         _buildStepperButton(
           icon: Icons.add,
-          onPressed: widget.maxQuantity == 0 || widget.item.quantity < widget.maxQuantity
+          onPressed: widget.maxQuantity == 0 ||
+                  widget.item.quantity < widget.maxQuantity
               ? () {
                   _increaseQuantity();
                   _startHoldIncrease();
                 }
               : null,
-          onLongPressStart: widget.maxQuantity == 0 || widget.item.quantity < widget.maxQuantity
+          onLongPressStart: widget.maxQuantity == 0 ||
+                  widget.item.quantity < widget.maxQuantity
               ? (_) => _startHoldIncrease()
               : null,
           onLongPressEnd: (_) => _stopHold(),
@@ -400,8 +407,8 @@ class _CartItemTileState extends State<CartItemTile> {
   Widget _buildStepperButton({
     required IconData icon,
     VoidCallback? onPressed,
-    Function(LongPressStartDetails)? onLongPressStart,
-    Function(LongPressEndDetails)? onLongPressEnd,
+    void Function(LongPressStartDetails)? onLongPressStart,
+    void Function(LongPressEndDetails)? onLongPressEnd,
   }) {
     return GestureDetector(
       onTap: onPressed,
@@ -417,7 +424,8 @@ class _CartItemTileState extends State<CartItemTile> {
         child: Icon(
           icon,
           size: 20,
-          color: onPressed != null ? AppColors.onPrimary : AppColors.textDisabled,
+          color:
+              onPressed != null ? AppColors.onPrimary : AppColors.textDisabled,
         ),
       ),
     );

@@ -34,7 +34,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// )
 /// ```
 class OfflineBanner extends StatefulWidget {
-
   const OfflineBanner({
     super.key,
     this.isPendingCount = 0,
@@ -44,6 +43,7 @@ class OfflineBanner extends StatefulWidget {
     this.message,
     this.messageKhmer,
   });
+
   /// Number of pending items to sync
   final int isPendingCount;
 
@@ -70,7 +70,8 @@ class OfflineBanner extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(IntProperty('isPendingCount', isPendingCount));
     properties.add(DiagnosticsProperty<bool>('isVisible', isVisible));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has('onDismiss', onDismiss));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onDismiss', onDismiss));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onRetry', onRetry));
     properties.add(StringProperty('message', message));
     properties.add(StringProperty('messageKhmer', messageKhmer));
@@ -92,10 +93,12 @@ class _OfflineBannerState extends State<OfflineBanner>
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ),);
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     if (widget.isVisible) {
       _controller.value = 1.0;
@@ -258,7 +261,6 @@ class _OfflineBannerState extends State<OfflineBanner>
 
 /// Compact offline indicator (for AppBar)
 class OfflineIndicator extends StatelessWidget {
-
   const OfflineIndicator({
     super.key,
     this.pendingCount,
@@ -336,9 +338,9 @@ class OfflineIndicator extends StatelessWidget {
 
 /// Connection status widget
 class ConnectionStatus extends StatelessWidget {
-
   const ConnectionStatus({
-    required this.isOnline, super.key,
+    required this.isOnline,
+    super.key,
     this.pendingCount = 0,
     this.lastSync,
     this.onRetry,
@@ -400,9 +402,7 @@ class ConnectionStatus extends StatelessWidget {
         ),
         const SizedBox(width: AppSpacing.xs),
         Text(
-          pendingCount > 0
-              ? '$pendingCount pending'
-              : 'Offline',
+          pendingCount > 0 ? '$pendingCount pending' : 'Offline',
           style: const TextStyle(
             fontFamily: 'Kantumruy Pro',
             fontSize: 12,

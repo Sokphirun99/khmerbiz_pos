@@ -5,24 +5,25 @@ import 'package:khmerbiz_pos/core/config/constants.dart';
 
 /// API client for making HTTP requests.
 final class ApiClient {
-
   ApiClient({
     required String baseUrl,
     String? authToken,
-  }) : _dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(
-            milliseconds: AppConstants.apiConnectionTimeoutMs,
+  }) : _dio = Dio(
+          BaseOptions(
+            baseUrl: baseUrl,
+            connectTimeout: const Duration(
+              milliseconds: AppConstants.apiConnectionTimeoutMs,
+            ),
+            receiveTimeout: const Duration(
+              milliseconds: AppConstants.apiReceiveTimeoutMs,
+            ),
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+              if (authToken != null) 'Authorization': 'Bearer $authToken',
+            },
           ),
-          receiveTimeout: const Duration(
-            milliseconds: AppConstants.apiReceiveTimeoutMs,
-          ),
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            if (authToken != null) 'Authorization': 'Bearer $authToken',
-          },
-        ),) {
+        ) {
     _setupInterceptors();
   }
   final Dio _dio;
@@ -43,30 +44,34 @@ final class ApiClient {
 
   void _setupInterceptors() {
     if (AppConfig.enableLogging) {
-      _dio.interceptors.add(LogInterceptor(
-        requestBody: true,
-        responseBody: true,
-        logPrint: (obj) => print('🌐 $obj'),
-      ),);
+      _dio.interceptors.add(
+        LogInterceptor(
+          requestBody: true,
+          responseBody: true,
+          logPrint: (obj) => print('🌐 $obj'),
+        ),
+      );
     }
 
-    _dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) async {
-        options.headers['X-Request-ID'] =
-            DateTime.now().millisecondsSinceEpoch.toString();
-        return handler.next(options);
-      },
-      onResponse: (response, handler) {
-        if (AppConfig.enableLogging) {
-          print('✅ ${response.requestOptions.path} - ${response.statusCode}');
-        }
-        return handler.next(response);
-      },
-      onError: (error, handler) async {
-        final exception = _handleError(error);
-        return handler.reject(exception);
-      },
-    ),);
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          options.headers['X-Request-ID'] =
+              DateTime.now().millisecondsSinceEpoch.toString();
+          return handler.next(options);
+        },
+        onResponse: (response, handler) {
+          if (AppConfig.enableLogging) {
+            print('✅ ${response.requestOptions.path} - ${response.statusCode}');
+          }
+          return handler.next(response);
+        },
+        onError: (error, handler) async {
+          final exception = _handleError(error);
+          return handler.reject(exception);
+        },
+      ),
+    );
   }
 
   DioException _handleError(DioException error) {
@@ -164,7 +169,6 @@ final class ApiClient {
 
 /// Retry interceptor for handling transient failures.
 final class RetryInterceptor extends Interceptor {
-
   RetryInterceptor({
     required this.dio,
     this.retries = 3,

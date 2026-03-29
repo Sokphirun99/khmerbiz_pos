@@ -31,7 +31,6 @@ enum ConnectionType {
 
 /// Implementation of [NetworkInfo] using `connectivity_plus`.
 final class NetworkInfoImpl implements NetworkInfo {
-
   NetworkInfoImpl({Connectivity? connectivity})
       : _connectivity = connectivity ?? Connectivity();
   final Connectivity _connectivity;
@@ -86,7 +85,8 @@ final class NetworkInfoImpl implements NetworkInfo {
 
   @override
   Stream<ConnectionType> get onConnectivityChanged {
-    return _connectivity.onConnectivityChanged.map<ConnectionType>((ConnectivityResult result) {
+    return _connectivity.onConnectivityChanged
+        .map<ConnectionType>((ConnectivityResult result) {
       return switch (result) {
         ConnectivityResult.wifi => ConnectionType.wifi,
         ConnectivityResult.mobile => ConnectionType.mobile,
@@ -101,7 +101,6 @@ final class NetworkInfoImpl implements NetworkInfo {
 
 /// Network monitor that can be used to track connectivity state.
 final class NetworkMonitor {
-
   NetworkMonitor(this._networkInfo);
   final NetworkInfo _networkInfo;
 
@@ -116,7 +115,8 @@ final class NetworkMonitor {
 
   bool get isWifiConnected => _currentConnectionType == ConnectionType.wifi;
 
-  bool get isMobileDataConnected => _currentConnectionType == ConnectionType.mobile;
+  bool get isMobileDataConnected =>
+      _currentConnectionType == ConnectionType.mobile;
 
   bool get isInitialized => _isInitialized;
 

@@ -111,7 +111,8 @@ final class AppConfig {
   /// Get default API URL based on environment
   static String _getDefaultApiUrl(Environment env) {
     return switch (env) {
-      Environment.dev => 'http://10.0.2.2:8080/api', // Android emulator localhost
+      Environment.dev =>
+        'http://10.0.2.2:8080/api', // Android emulator localhost
       Environment.staging => 'https://api-staging.khmerbiz.com',
       Environment.prod => 'https://api.khmerbiz.com',
     };

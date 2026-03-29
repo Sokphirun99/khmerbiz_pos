@@ -2,12 +2,12 @@ import 'package:equatable/equatable.dart';
 
 /// Login credentials for authentication.
 final class LoginCredentials extends Equatable {
-
   const LoginCredentials({
     required this.email,
     required this.password,
     this.rememberMe = false,
   });
+
   /// User's email
   final String email;
 

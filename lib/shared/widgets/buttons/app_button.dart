@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
@@ -71,9 +72,9 @@ enum AppButtonState {
 /// )
 /// ```
 class AppButton extends StatefulWidget {
-
   const AppButton({
-    required this.label, super.key,
+    required this.label,
+    super.key,
     this.labelKhmer,
     this.type = AppButtonType.primary,
     this.state = AppButtonState.defaultState,
@@ -88,6 +89,7 @@ class AppButton extends StatefulWidget {
     this.padding,
     this.textStyle,
   });
+
   /// Button label (English, required)
   final String label;
 
@@ -148,12 +150,14 @@ class AppButton extends StatefulWidget {
     properties.add(DoubleProperty('width', width));
     properties.add(DoubleProperty('height', height));
     properties.add(DoubleProperty('borderRadius', borderRadius));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
     properties.add(DiagnosticsProperty<TextStyle?>('textStyle', textStyle));
   }
 }
 
-class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMixin {
+class _AppButtonState extends State<AppButton>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   bool _isPressed = false;
@@ -176,7 +180,8 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
     super.dispose();
   }
 
-  bool get _isInteractive => !widget.isLoading && !widget.isDisabled && widget.onTap != null;
+  bool get _isInteractive =>
+      !widget.isLoading && !widget.isDisabled && widget.onTap != null;
 
   void _handleTapDown(TapDownDetails details) {
     if (_isInteractive) {
@@ -201,6 +206,7 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
 
   void _handleTap() {
     if (_isInteractive) {
+      HapticFeedback.lightImpact();
       widget.onTap?.call();
     }
   }
@@ -214,10 +220,12 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
             : widget.state;
 
     final buttonHeight = widget.height ??
-        (widget.type == AppButtonType.primary ? AppSpacing.buttonHeightPrimary : AppSpacing.buttonHeightSecondary);
+        (widget.type == AppButtonType.primary
+            ? AppSpacing.buttonHeightPrimary
+            : AppSpacing.buttonHeightSecondary);
 
-    final buttonWidth = widget.width ??
-        (widget.isFullWidth ? double.infinity : null);
+    final buttonWidth =
+        widget.width ?? (widget.isFullWidth ? double.infinity : null);
 
     return GestureDetector(
       onTapDown: _handleTapDown,
@@ -232,8 +240,10 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
           width: buttonWidth,
           decoration: BoxDecoration(
             color: _getBackgroundColor(effectiveState),
-            borderRadius: BorderRadius.circular(widget.borderRadius ?? AppSpacing.radiusMedium),
-            border: widget.type == AppButtonType.ghost || widget.type == AppButtonType.secondary
+            borderRadius: BorderRadius.circular(
+                widget.borderRadius ?? AppSpacing.radiusMedium,),
+            border: widget.type == AppButtonType.ghost ||
+                    widget.type == AppButtonType.secondary
                 ? Border.all(
                     color: _getBorderColor(effectiveState),
                     width: 1.5,
@@ -257,7 +267,9 @@ class _AppButtonState extends State<AppButton> with SingleTickerProviderStateMix
         child: CircularProgressIndicator(
           strokeWidth: 2.5,
           valueColor: AlwaysStoppedAnimation<Color>(
-            widget.type == AppButtonType.ghost ? _getBorderColor(state) : _getTextColor(),
+            widget.type == AppButtonType.ghost
+                ? _getBorderColor(state)
+                : _getTextColor(),
           ),
         ),
       );

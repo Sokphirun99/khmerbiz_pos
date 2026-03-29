@@ -17,12 +17,12 @@ final class AuthCheckRequested extends AuthEvent {
 
 /// Event to login with email and password.
 final class AuthLoginRequested extends AuthEvent {
-
   const AuthLoginRequested({
     required this.email,
     required this.password,
     this.rememberMe = false,
   });
+
   /// User's email
   final String email;
 
@@ -38,7 +38,6 @@ final class AuthLoginRequested extends AuthEvent {
 
 /// Event to register a new user.
 final class AuthRegisterRequested extends AuthEvent {
-
   const AuthRegisterRequested({
     required this.email,
     required this.password,
@@ -53,7 +52,8 @@ final class AuthRegisterRequested extends AuthEvent {
   final String businessName;
 
   @override
-  List<Object?> get props => [email, password, displayName, phoneNumber, businessName];
+  List<Object?> get props =>
+      [email, password, displayName, phoneNumber, businessName];
 }
 
 /// Event to logout current user.

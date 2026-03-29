@@ -44,6 +44,10 @@ final class AppSpacing {
   /// Usage: Hero spacing, large gaps
   static const double xxl = 48;
 
+  /// Triple extra large: 64dp
+  /// Usage: Major section separation, screen padding
+  static const double xxxl = 64;
+
   // ═══════════════════════════════════════════════════════════════
   // COMPONENT SIZES (Minimum touch targets)
   // ═══════════════════════════════════════════════════════════════
@@ -116,9 +120,9 @@ final class AppSpacing {
   /// For compact forms
   static const double inputFieldHeightDense = 48;
 
-  /// Cart item stepper button: 40dp
-  /// Large +/- buttons for quantity adjustment
-  static const double stepperButtonSize = 40;
+  /// Cart item stepper button: 48dp
+  /// Minimum 48×48 touch target for quantity +/- buttons
+  static const double stepperButtonSize = 48;
 
   /// Avatar size (small): 32dp
   static const double avatarSizeSmall = 32;
@@ -205,10 +209,35 @@ final class AppSpacing {
         return xl;
       case 'xxl':
         return xxl;
+      case 'xxxl':
+        return xxxl;
       default:
         return base;
     }
   }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SEMANTIC SPACING (Common layout patterns)
+  // ═══════════════════════════════════════════════════════════════
+
+  /// Horizontal padding for screen-level content: 16dp
+  static const double pageHorizontal = base;
+
+  /// Vertical padding for screen-level content: 16dp
+  static const double pageVertical = base;
+
+  /// Gap between major sections: 24dp
+  static const double sectionGap = lg;
+
+  /// Internal card padding: 16dp
+  static const double cardPadding = base;
+
+  /// List item internal padding: 12dp
+  static const double listItemPadding = md;
+
+  /// Chip internal padding: 8dp horizontal, 4dp vertical
+  static const double chipPaddingH = sm;
+  static const double chipPaddingV = xs;
 
   /// Convert dp to EdgeInsets
   static EdgeInsets edgeInsets(double value) {
@@ -216,7 +245,8 @@ final class AppSpacing {
   }
 
   /// Symmetric padding (horizontal and vertical)
-  static EdgeInsets symmetric({double horizontal = base, double vertical = base}) {
+  static EdgeInsets symmetric(
+      {double horizontal = base, double vertical = base,}) {
     return EdgeInsets.symmetric(
       horizontal: horizontal,
       vertical: vertical,

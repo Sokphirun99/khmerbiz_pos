@@ -24,11 +24,11 @@ enum PaymentMethodType {
 
 /// Payment method button configuration
 class PaymentMethodConfig {
-
   const PaymentMethodConfig({
     required this.type,
     required this.label,
-    required this.icon, this.labelKhmer,
+    required this.icon,
+    this.labelKhmer,
     this.iconColor,
   });
   final PaymentMethodType type;
@@ -103,15 +103,16 @@ class PaymentMethodConfig {
 /// )
 /// ```
 class PaymentMethodButton extends StatefulWidget {
-
   const PaymentMethodButton({
-    required this.method, super.key,
+    required this.method,
+    super.key,
     this.isSelected = false,
     this.onTap,
     this.isDisabled = false,
     this.height,
     this.showKhmer = true,
   });
+
   /// Payment method type
   final PaymentMethodType method;
 
@@ -235,7 +236,8 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
                       height: 48,
                       decoration: BoxDecoration(
                         color: _getIconBackgroundColor(),
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMedium),
                       ),
                       child: Icon(
                         config.icon,
@@ -266,7 +268,8 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
                                   : AppColors.textPrimary,
                             ),
                           ),
-                          if (widget.showKhmer && config.labelKhmer != null) ...[
+                          if (widget.showKhmer &&
+                              config.labelKhmer != null) ...[
                             const SizedBox(height: 2),
                             Text(
                               config.labelKhmer!,
@@ -318,7 +321,9 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
     if (widget.isDisabled) {
       return AppColors.surfaceAlt;
     }
-    return widget.isSelected ? AppColors.primaryLight.withOpacity(0.1) : AppColors.surface;
+    return widget.isSelected
+        ? AppColors.primaryLight.withOpacity(0.1)
+        : AppColors.surface;
   }
 
   Color _getBorderColor() {

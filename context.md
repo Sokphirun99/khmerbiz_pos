@@ -575,10 +575,19 @@ KhmerBiz POS is used by cashiers in fast-paced environments:
 
 ### UX Flows & Micro-interactions
 
+**High-Performance Cashier Interactions:**
+- **Self-Contained Components**: Following LDSG principles, widgets manage their own internal interaction states (e.g., `ProductCard` and `CategoryPill` use internal `AnimationController`s) to decouple visual feedback from parent business logic, ensuring 60fps responsiveness.
+- **Tactile Feedback**: Haptics are integrated strictly into every major tap to aid cashiers in noisy environments:
+  - `HapticFeedback.lightImpact()`: minor actions like NumPad digit entries and backspaces.
+  - `HapticFeedback.selectionClick()`: primary selections like Product adding and Cart stepping.
+  - `HapticFeedback.mediumImpact()`: finalize/destructive actions like Confirmations and hold-to-clear.
+- **Scale Animations**: Tap interactions trigger an immediate 80ms `ScaleTransition` (down to `0.96` scale), providing instant visual confirmation of intent.
+
 **Checkout Speed Optimization:**
-- Product tap: IMMEDIATE haptic + cart count update (optimistic)
+- Product tap: IMMEDIATE scale animation, haptic click, + cart count update (optimistic)
 - No modal confirmation on add (too slow)
 - Quantity stepper: hold + to increase continuously (after 500ms)
+- NumPad: hold-to-clear backspace functionality (after 500ms hold)
 - Cart total: real-time updates
 
 **Error Feedback:**

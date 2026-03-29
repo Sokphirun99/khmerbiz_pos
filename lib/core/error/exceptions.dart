@@ -1,6 +1,5 @@
 /// Base exception class for all custom exceptions in the application.
 abstract class AppException implements Exception {
-
   const AppException({
     required this.message,
     this.details,
@@ -19,7 +18,6 @@ abstract class AppException implements Exception {
 
 /// Server-related exceptions
 final class ServerException extends AppException {
-
   const ServerException({
     required super.message,
     super.details,
@@ -46,7 +44,6 @@ final class NetworkException extends AppException {
 
 /// Validation exceptions
 final class ValidationException extends AppException {
-
   const ValidationException({
     required super.message,
     super.details,

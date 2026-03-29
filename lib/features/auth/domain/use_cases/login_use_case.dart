@@ -5,7 +5,6 @@ import 'package:khmerbiz_pos/features/auth/domain/login_credentials.dart';
 
 /// Use case for user login.
 final class LoginUseCase {
-
   const LoginUseCase(this._repository);
   final AuthRepository _repository;
 

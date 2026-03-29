@@ -51,7 +51,6 @@ enum SkeletonType {
 /// )
 /// ```
 class LoadingSkeleton extends StatelessWidget {
-
   const LoadingSkeleton({
     super.key,
     this.type = SkeletonType.textLines,
@@ -61,6 +60,7 @@ class LoadingSkeleton extends StatelessWidget {
     this.child,
     this.borderRadius,
   });
+
   /// Skeleton type
   final SkeletonType type;
 
@@ -116,7 +116,8 @@ class LoadingSkeleton extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius ?? AppSpacing.radiusMedium),
+          borderRadius:
+              BorderRadius.circular(borderRadius ?? AppSpacing.radiusMedium),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -267,7 +268,8 @@ class LoadingSkeleton extends StatelessWidget {
       children: List.generate(
         lineCount,
         (index) => Padding(
-          padding: EdgeInsets.only(bottom: index < lineCount - 1 ? AppSpacing.sm : 0),
+          padding: EdgeInsets.only(
+              bottom: index < lineCount - 1 ? AppSpacing.sm : 0,),
           child: Container(
             height: height ?? 14,
             width: width ?? (index == lineCount - 1 ? 100 : double.infinity),
@@ -304,7 +306,6 @@ class LoadingSkeleton extends StatelessWidget {
 
 /// Grid of loading skeletons for product grid
 class ProductGridSkeleton extends StatelessWidget {
-
   const ProductGridSkeleton({
     super.key,
     this.itemCount = 8,
@@ -341,7 +342,6 @@ class ProductGridSkeleton extends StatelessWidget {
 
 /// List of loading skeletons
 class ListSkeleton extends StatelessWidget {
-
   const ListSkeleton({
     super.key,
     this.itemCount = 5,
@@ -358,7 +358,8 @@ class ListSkeleton extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: itemCount,
-      separatorBuilder: (context, index) => const SizedBox(height: AppSpacing.sm),
+      separatorBuilder: (context, index) =>
+          const SizedBox(height: AppSpacing.sm),
       itemBuilder: (context, index) => LoadingSkeleton(
         type: type,
         height: itemHeight,

@@ -33,7 +33,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// )
 /// ```
 class SectionHeader extends StatelessWidget {
-
   const SectionHeader({
     super.key,
     this.title,
@@ -46,6 +45,7 @@ class SectionHeader extends StatelessWidget {
     this.showDivider = true,
     this.padding,
   });
+
   /// Title (English)
   final String? title;
 
@@ -92,7 +92,8 @@ class SectionHeader extends StatelessWidget {
               ),
 
               // Action button
-              if (onAction != null && (actionLabel != null || actionLabelKhmer != null))
+              if (onAction != null &&
+                  (actionLabel != null || actionLabelKhmer != null))
                 TextButton(
                   onPressed: onAction,
                   style: TextButton.styleFrom(
@@ -224,15 +225,16 @@ class SectionHeader extends StatelessWidget {
     properties.add(StringProperty('actionLabelKhmer', actionLabelKhmer));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onAction', onAction));
     properties.add(DiagnosticsProperty<bool>('showDivider', showDivider));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
   }
 }
 
 /// Compact section header for cards
 class SectionHeaderCompact extends StatelessWidget {
-
   const SectionHeaderCompact({
-    required this.title, super.key,
+    required this.title,
+    super.key,
     this.titleKhmer,
     this.icon,
     this.onAction,

@@ -68,7 +68,6 @@ enum AppTextFieldType {
 /// )
 /// ```
 class AppTextField extends StatefulWidget {
-
   const AppTextField({
     super.key,
     this.label,
@@ -101,6 +100,7 @@ class AppTextField extends StatefulWidget {
     this.textCapitalization = TextCapitalization.none,
     this.contentPadding,
   });
+
   /// Field label (English)
   final String? label;
 
@@ -204,24 +204,31 @@ class AppTextField extends StatefulWidget {
     properties.add(StringProperty('errorText', errorText));
     properties.add(StringProperty('errorTextKhmer', errorTextKhmer));
     properties.add(StringProperty('value', value));
-    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged));
-    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has('onSubmitted', onSubmitted));
+    properties.add(
+        ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged),);
+    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has(
+        'onSubmitted', onSubmitted,),);
     properties.add(DiagnosticsProperty<IconData?>('prefixIcon', prefixIcon));
     properties.add(StringProperty('prefixText', prefixText));
     properties.add(DiagnosticsProperty<IconData?>('suffixIcon', suffixIcon));
     properties.add(DiagnosticsProperty<bool>('isRequired', isRequired));
     properties.add(DiagnosticsProperty<bool>('isDisabled', isDisabled));
-    properties.add(DiagnosticsProperty<bool>('showClearButton', showClearButton));
+    properties
+        .add(DiagnosticsProperty<bool>('showClearButton', showClearButton));
     properties.add(IntProperty('maxLines', maxLines));
     properties.add(IntProperty('minLines', minLines));
     properties.add(IntProperty('maxLength', maxLength));
-    properties.add(IterableProperty<TextInputFormatter>('inputFormatters', inputFormatters));
+    properties.add(IterableProperty<TextInputFormatter>(
+        'inputFormatters', inputFormatters,),);
     properties.add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode));
-    properties.add(DiagnosticsProperty<TextEditingController?>('controller', controller));
+    properties.add(
+        DiagnosticsProperty<TextEditingController?>('controller', controller),);
     properties.add(DiagnosticsProperty<bool>('autofocus', autofocus));
     properties.add(DiagnosticsProperty<bool>('obscureText', obscureText));
-    properties.add(EnumProperty<TextCapitalization>('textCapitalization', textCapitalization));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('contentPadding', contentPadding));
+    properties.add(EnumProperty<TextCapitalization>(
+        'textCapitalization', textCapitalization,),);
+    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>(
+        'contentPadding', contentPadding,),);
   }
 }
 
@@ -232,8 +239,10 @@ class _AppTextFieldState extends State<AppTextField> {
   @override
   void initState() {
     super.initState();
-    _controller = widget.controller ?? TextEditingController(text: widget.value);
-    _obscureText = widget.type == AppTextFieldType.password || widget.obscureText;
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.value);
+    _obscureText =
+        widget.type == AppTextFieldType.password || widget.obscureText;
   }
 
   @override
@@ -263,7 +272,8 @@ class _AppTextFieldState extends State<AppTextField> {
           autofocus: widget.autofocus,
           obscureText: _obscureText,
           textCapitalization: widget.textCapitalization,
-          maxLines: widget.type == AppTextFieldType.multiline ? widget.maxLines : 1,
+          maxLines:
+              widget.type == AppTextFieldType.multiline ? widget.maxLines : 1,
           minLines: widget.minLines,
           maxLength: widget.maxLength,
           inputFormatters: _getInputFormatters(),
@@ -412,7 +422,11 @@ class _AppTextFieldState extends State<AppTextField> {
     final isError = widget.errorText != null || widget.errorTextKhmer != null;
 
     return Text(
-      widget.errorTextKhmer ?? widget.errorText ?? widget.helperTextKhmer ?? widget.helperText ?? '',
+      widget.errorTextKhmer ??
+          widget.errorText ??
+          widget.helperTextKhmer ??
+          widget.helperText ??
+          '',
       style: TextStyle(
         fontFamily: 'Kantumruy Pro',
         fontSize: 12,
@@ -437,7 +451,6 @@ class _AppTextFieldState extends State<AppTextField> {
         return TextInputType.text;
       case AppTextFieldType.multiline:
         return TextInputType.multiline;
-      case AppTextFieldType.text:
       default:
         return TextInputType.text;
     }
@@ -447,11 +460,14 @@ class _AppTextFieldState extends State<AppTextField> {
     if (widget.type == AppTextFieldType.multiline) {
       return TextInputAction.newline;
     }
-    return widget.onSubmitted != null ? TextInputAction.done : TextInputAction.next;
+    return widget.onSubmitted != null
+        ? TextInputAction.done
+        : TextInputAction.next;
   }
 
   List<TextInputFormatter>? _getInputFormatters() {
-    final formatters = widget.inputFormatters?.toList() ?? <TextInputFormatter>[];
+    final formatters =
+        widget.inputFormatters?.toList() ?? <TextInputFormatter>[];
 
     if (widget.maxLength != null) {
       formatters.add(LengthLimitingTextInputFormatter(widget.maxLength));

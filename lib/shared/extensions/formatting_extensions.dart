@@ -29,9 +29,9 @@ extension NumFormattingExtension on num {
   /// Format with thousand separators
   String get withSeparators {
     return toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 
   /// Clamp value between min and max
@@ -81,7 +81,15 @@ extension IntFormattingExtension on int {
 
   /// Format as Khmer day name
   String get asDayNameKhmer {
-    const days = ['អាទិត្យ', 'ច័ន្ទ', 'អង្គារ', 'ពុធ', 'ព្រហស្បតិ៍', 'សុក្រ', 'សៅរ៍'];
+    const days = [
+      'អាទិត្យ',
+      'ច័ន្ទ',
+      'អង្គារ',
+      'ពុធ',
+      'ព្រហស្បតិ៍',
+      'សុក្រ',
+      'សៅរ៍',
+    ];
     return days[this % 7];
   }
 }
@@ -220,7 +228,8 @@ extension StringParsingExtension on String {
 
   /// Check if string is a valid email
   bool get isValidEmail {
-    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$').hasMatch(this);
+    return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        .hasMatch(this);
   }
 
   /// Check if string is a valid Khmer phone number

@@ -39,18 +39,18 @@ final class DateFormatter {
   String formatKhmer(DateTime date) {
     // Khmer month names
     const khmerMonths = [
-      'មករា',     // January
-      'កុម្ភៈ',    // February
-      'មីនា',     // March
-      'មេសា',     // April
-      'ឧសភា',     // May
-      'មិថុនា',    // June
-      'កក្កដា',    // July
-      'សីហា',     // August
-      'កញ្ញា',     // September
-      'តុលា',     // October
-      'វិច្ឆិកា',   // November
-      'ធ្នូ',      // December
+      'មករា', // January
+      'កុម្ភៈ', // February
+      'មីនា', // March
+      'មេសា', // April
+      'ឧសភា', // May
+      'មិថុនា', // June
+      'កក្កដា', // July
+      'សីហា', // August
+      'កញ្ញា', // September
+      'តុលា', // October
+      'វិច្ឆិកា', // November
+      'ធ្នូ', // December
     ];
 
     final day = _convertToKhmerNumber(date.day);
@@ -67,7 +67,8 @@ final class DateFormatter {
   String formatDateTimeKhmer(DateTime date) {
     final datePart = formatKhmer(date);
     final hour = _convertToKhmerNumber(date.hour);
-    final minute = _convertToKhmerNumber(date.minute.toString().padLeft(2, '0'));
+    final minute =
+        _convertToKhmerNumber(date.minute.toString().padLeft(2, '0'));
     return '$datePart $hour:$minute';
   }
 
@@ -168,7 +169,8 @@ final class DateFormatter {
   /// Returns DateTime, or null if parsing fails
   DateTime? parseDisplay(String displayString) {
     try {
-      return DateFormat(AppConstants.dateFormatDisplay, 'en_US').parse(displayString);
+      return DateFormat(AppConstants.dateFormatDisplay, 'en_US')
+          .parse(displayString);
     } catch (_) {
       return null;
     }
@@ -240,13 +242,13 @@ final class DateFormatter {
   /// Returns Khmer day name
   String getDayNameKhmer(DateTime date) {
     const khmerDays = [
-      'ថ្ងៃអាទិត្យ',   // Sunday
-      'ថ្ងៃច័ន្ទ',    // Monday
-      'ថ្ងៃអង្គារ',   // Tuesday
-      'ថ្ងៃពុធ',     // Wednesday
+      'ថ្ងៃអាទិត្យ', // Sunday
+      'ថ្ងៃច័ន្ទ', // Monday
+      'ថ្ងៃអង្គារ', // Tuesday
+      'ថ្ងៃពុធ', // Wednesday
       'ថ្ងៃព្រហស្បតិ៍', // Thursday
-      'ថ្ងៃសុក្រ',    // Friday
-      'ថ្ងៃសៅរ៍',    // Saturday
+      'ថ្ងៃសុក្រ', // Friday
+      'ថ្ងៃសៅរ៍', // Saturday
     ];
 
     return khmerDays[date.weekday % 7];

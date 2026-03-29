@@ -24,7 +24,7 @@ final class AppColors {
   static const Color primaryLight = Color(0xFF2A5F95);
 
   /// Primary Dark: For pressed states
-  static const Color primaryDark = Color(0xFF0F2A44);
+  static const Color primaryDark = Color(0xFF0F2540);
 
   /// Accent: Cambodian gold (CTAs, highlights - like temple decorations)
   static const Color accent = Color(0xFFE8A020);
@@ -33,7 +33,7 @@ final class AppColors {
   static const Color accentDark = Color(0xFFC4841A);
 
   /// Accent Light: Hover state for accent
-  static const Color accentLight = Color(0xFFF0B94B);
+  static const Color accentLight = Color(0xFFFFF3D6);
 
   /// Success: Stock OK, payment confirmed, sync done
   static const Color success = Color(0xFF2E7D32);
@@ -45,7 +45,7 @@ final class AppColors {
   static const Color warning = Color(0xFFF57F17);
 
   /// Warning Light: Background for warning states
-  static const Color warningLight = Color(0xFFFFF3E0);
+  static const Color warningLight = Color(0xFFFFF8E1);
 
   /// Error: Payment failed, stock out, critical errors
   static const Color error = Color(0xFFC62828);
@@ -54,7 +54,7 @@ final class AppColors {
   static const Color errorLight = Color(0xFFFFEBEE);
 
   /// Info: General information, hints
-  static const Color info = Color(0xFF1976D2);
+  static const Color info = Color(0xFF1565C0);
 
   /// Info Light: Background for info states
   static const Color infoLight = Color(0xFFE3F2FD);
@@ -95,11 +95,33 @@ final class AppColors {
   /// Border Light: Light borders for subtle separation
   static const Color borderLight = Color(0xFFEEEEEE);
 
+  /// Border Focus: Focused input field border
+  static const Color borderFocus = Color(0xFF1A3C5E); // = primary
+
   /// Overlay: Modal barriers, scrim
   static const Color overlay = Color(0x66000000); // 40% black
 
+  /// Surface Overlay: Semi-transparent overlay for elevated surfaces
+  static const Color surfaceOverlay = Color(0x0A000000); // 4% black
+
   /// Shadow: Drop shadows
   static const Color shadow = Color(0x33000000); // 20% black
+
+  // ═══════════════════════════════════════════════════════════════
+  // PAYMENT BRAND COLORS (Cambodia-specific)
+  // ═══════════════════════════════════════════════════════════════
+
+  /// KHQR Blue: Bakong KHQR payment system brand color
+  static const Color khqrBlue = Color(0xFF0066A1);
+
+  /// ABA Red: ABA Bank brand color
+  static const Color abaRed = Color(0xFFD32030);
+
+  /// Wing Orange: Wing (Cambodia) brand color
+  static const Color wingOrange = Color(0xFFF7941D);
+
+  /// Cash Green: Cash payment method accent
+  static const Color cashGreen = Color(0xFF2E7D32); // = success
 
   // ═══════════════════════════════════════════════════════════════
   // DARK THEME COLORS (for night-shift cashiers)
@@ -161,6 +183,12 @@ final class AppColors {
 
   /// Dark Overlay: Modal barriers in dark mode
   static const Color darkOverlay = Color(0x99000000); // 60% black
+
+  /// Dark Info: Info color for dark mode
+  static const Color darkInfo = Color(0xFF42A5F5);
+
+  /// Dark Info Light: Info background in dark mode
+  static const Color darkInfoLight = Color(0xFF0D47A1);
 
   // ═══════════════════════════════════════════════════════════════
   // SEMANTIC COLOR MAPPINGS (for easy theme switching)

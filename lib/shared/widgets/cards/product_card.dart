@@ -1,14 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
-
+import 'package:flutter/services.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/shared/widgets/displays/stock_badge.dart';
+import 'package:shimmer/shimmer.dart';
 
 /// Product data model for ProductCard
 class ProductCardData {
-
   const ProductCardData({
     required this.id,
     required this.name,
@@ -70,10 +69,10 @@ class ProductCardData {
 ///   onLongPress: () => _showProductDetails(product),
 /// )
 /// ```
-class ProductCard extends StatelessWidget {
-
+class ProductCard extends StatefulWidget {
   const ProductCard({
-    required this.product, super.key,
+    required this.product,
+    super.key,
     this.onTap,
     this.onLongPress,
     this.isSelected = false,
@@ -82,6 +81,7 @@ class ProductCard extends StatelessWidget {
     this.width,
     this.height,
   });
+
   /// Product data
   final ProductCardData product;
 
@@ -107,147 +107,215 @@ class ProductCard extends StatelessWidget {
   final double? height;
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<ProductCardData>('product', product));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
+    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
+    properties.add(DiagnosticsProperty<bool>('showStockBadge', showStockBadge));
+    properties.add(DiagnosticsProperty<bool>('showAddButton', showAddButton));
+    properties.add(DoubleProperty('width', width));
+    properties.add(DoubleProperty('height', height));
+  }
+}
+
+class _ProductCardState extends State<ProductCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _scaleController;
+  late Animation<double> _scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _scaleController = AnimationController(
+      duration: const Duration(milliseconds: 80),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(begin: 1, end: 0.96).animate(
+      CurvedAnimation(parent: _scaleController, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scaleController.dispose();
+    super.dispose();
+  }
+
+  void _handleTapDown(TapDownDetails details) {
+    _scaleController.forward();
+  }
+
+  void _handleTapUp(TapUpDetails details) {
+    _scaleController.reverse();
+  }
+
+  void _handleTapCancel() {
+    _scaleController.reverse();
+  }
+
+  void _handleTap() {
+    HapticFeedback.selectionClick();
+    widget.onTap?.call();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final cardWidth = width ?? AppSpacing.productCardWidth;
-    final cardHeight = height ?? AppSpacing.productCardHeight;
+    final cardWidth = widget.width ?? AppSpacing.productCardWidth;
+    final cardHeight = widget.height ?? AppSpacing.productCardHeight;
 
     return GestureDetector(
-      onTap: onTap,
-      onLongPress: onLongPress,
-      child: SizedBox(
-        width: cardWidth,
-        height: cardHeight,
-        child: Card(
-          clipBehavior: Clip.antiAlias,
-          elevation: isSelected ? 4 : 1,
-          shadowColor: AppColors.shadow,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-          ),
-          child: Stack(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Product image
-                  _buildImage(),
+      onTapDown: _handleTapDown,
+      onTapUp: _handleTapUp,
+      onTapCancel: _handleTapCancel,
+      onTap: _handleTap,
+      onLongPress: widget.onLongPress,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: SizedBox(
+          width: cardWidth,
+          height: cardHeight,
+          child: Card(
+            clipBehavior: Clip.antiAlias,
+            elevation: widget.isSelected ? 4 : 1,
+            shadowColor: AppColors.shadow,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+            ),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Product image
+                    _buildImage(),
 
-                  // Content
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.sm),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Product name (Khmer + English)
-                          Expanded(
-                            child: _buildName(),
-                          ),
+                    // Content
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.sm),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Product name (Khmer + English)
+                            Expanded(
+                              child: _buildName(),
+                            ),
 
-                          // Price
-                          _buildPrice(),
+                            // Price
+                            _buildPrice(),
 
-                          // Stock badge
-                          if (showStockBadge) ...[
-                            const SizedBox(height: AppSpacing.xs),
-                            _buildStockBadge(),
+                            // Stock badge
+                            if (widget.showStockBadge) ...[
+                              const SizedBox(height: AppSpacing.xs),
+                              _buildStockBadge(),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-
-              // Selected overlay
-              if (isSelected)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(AppSpacing.xs),
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check,
-                      size: 16,
-                      color: AppColors.onPrimary,
-                    ),
-                  ),
+                  ],
                 ),
 
-              // Add to cart overlay button
-              if (showAddButton && product.stockStatus != StockStatus.outOfStock)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 36,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.transparent,
-                          AppColors.surface.withOpacity(0.9),
-                        ],
+                // Selected overlay
+                if (widget.isSelected)
+                  Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSpacing.xs),
+                      decoration: const BoxDecoration(
+                        color: AppColors.primary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.check,
+                        size: 16,
+                        color: AppColors.onPrimary,
                       ),
                     ),
-                    child: Center(
-                      child: InkWell(
-                        onTap: onTap,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                  ),
+
+                // Add to cart overlay button
+                if (widget.showAddButton &&
+                    widget.product.stockStatus != StockStatus.outOfStock)
+                  Positioned(
+                    bottom: 0,
+                    left: 0,
+                    right: 0,
+                    child: Container(
+                      height: 36,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            AppColors.surface.withOpacity(0.9),
+                          ],
+                        ),
+                      ),
+                      child: Center(
+                        child: InkWell(
+                          onTap: widget.onTap,
+                          borderRadius:
+                              BorderRadius.circular(AppSpacing.radiusSmall),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                              vertical: AppSpacing.xs,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius:
+                                  BorderRadius.circular(AppSpacing.radiusSmall),
+                            ),
+                            child: const Icon(
+                              Icons.add_shopping_cart,
+                              size: 20,
+                              color: AppColors.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // Out of stock overlay
+                if (widget.product.stockStatus == StockStatus.outOfStock)
+                  Positioned.fill(
+                    child: ColoredBox(
+                      color: Colors.black.withOpacity(0.5),
+                      child: Center(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: AppSpacing.md,
                             vertical: AppSpacing.xs,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.primary,
-                            borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
+                            color: AppColors.error,
+                            borderRadius:
+                                BorderRadius.circular(AppSpacing.radiusSmall),
                           ),
-                          child: const Icon(
-                            Icons.add_shopping_cart,
-                            size: 20,
-                            color: AppColors.onPrimary,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-              // Out of stock overlay
-              if (product.stockStatus == StockStatus.outOfStock)
-                Positioned.fill(
-                  child: ColoredBox(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.md,
-                          vertical: AppSpacing.xs,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.error,
-                          borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
-                        ),
-                        child: const Text(
-                          'Out of Stock',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                          child: const Text(
+                            'Out of Stock',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -258,9 +326,9 @@ class ProductCard extends StatelessWidget {
     return SizedBox(
       height: 100,
       width: double.infinity,
-      child: product.imageUrl != null
+      child: widget.product.imageUrl != null
           ? Image.network(
-              product.imageUrl!,
+              widget.product.imageUrl!,
               fit: BoxFit.cover,
               errorBuilder: (context, error, stackTrace) {
                 return _buildImagePlaceholder();
@@ -282,13 +350,13 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildName() {
-    if (product.nameKhmer != null) {
+    if (widget.product.nameKhmer != null) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Khmer name (primary, bold)
           Text(
-            product.nameKhmer!,
+            widget.product.nameKhmer!,
             style: const TextStyle(
               fontFamily: 'Kantumruy Pro',
               fontSize: 15,
@@ -301,9 +369,9 @@ class ProductCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           // English name (secondary)
-          if (product.name.isNotEmpty)
+          if (widget.product.name.isNotEmpty)
             Text(
-              product.name,
+              widget.product.name,
               style: const TextStyle(
                 fontFamily: 'Kantumruy Pro',
                 fontSize: 13,
@@ -318,7 +386,7 @@ class ProductCard extends StatelessWidget {
       );
     } else {
       return Text(
-        product.name,
+        widget.product.name,
         style: const TextStyle(
           fontFamily: 'Kantumruy Pro',
           fontSize: 14,
@@ -338,7 +406,7 @@ class ProductCard extends StatelessWidget {
       children: [
         // KHR price (large, bold, monospace)
         Text(
-          '៛${_formatNumber(product.priceKHR)}',
+          '៛${_formatNumber(widget.product.priceKHR)}',
           style: const TextStyle(
             fontFamily: 'Roboto Mono',
             fontSize: 16,
@@ -348,10 +416,10 @@ class ProductCard extends StatelessWidget {
           ),
         ),
         // USD price (small, gray)
-        if (product.priceUSD != null) ...[
+        if (widget.product.priceUSD != null) ...[
           const SizedBox(height: 2),
           Text(
-            '≈ \$${product.priceUSD!.toStringAsFixed(2)}',
+            '≈ \$${widget.product.priceUSD!.toStringAsFixed(2)}',
             style: const TextStyle(
               fontFamily: 'Roboto Mono',
               fontSize: 11,
@@ -366,7 +434,7 @@ class ProductCard extends StatelessWidget {
   }
 
   Widget _buildStockBadge() {
-    final status = product.stockStatus;
+    final status = widget.product.stockStatus;
     final Color color;
     final String text;
     final IconData icon;
@@ -378,7 +446,7 @@ class ProductCard extends StatelessWidget {
         icon = Icons.check_circle;
       case StockStatus.lowStock:
         color = AppColors.warning;
-        text = '${product.stockQuantity} left';
+        text = '${widget.product.stockQuantity} left';
         icon = Icons.warning_amber;
       case StockStatus.outOfStock:
         color = AppColors.error;
@@ -423,20 +491,24 @@ class ProductCard extends StatelessWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(DiagnosticsProperty<ProductCardData>('product', product));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
-    properties.add(DiagnosticsProperty<bool>('isSelected', isSelected));
-    properties.add(DiagnosticsProperty<bool>('showStockBadge', showStockBadge));
-    properties.add(DiagnosticsProperty<bool>('showAddButton', showAddButton));
-    properties.add(DoubleProperty('width', width));
-    properties.add(DoubleProperty('height', height));
+    properties
+        .add(DiagnosticsProperty<ProductCardData>('product', widget.product));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onTap', widget.onTap));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has(
+        'onLongPress', widget.onLongPress,),);
+    properties.add(DiagnosticsProperty<bool>('isSelected', widget.isSelected));
+    properties.add(
+        DiagnosticsProperty<bool>('showStockBadge', widget.showStockBadge),);
+    properties
+        .add(DiagnosticsProperty<bool>('showAddButton', widget.showAddButton));
+    properties.add(DoubleProperty('width', widget.width));
+    properties.add(DoubleProperty('height', widget.height));
   }
 }
 
 /// Shimmer loading placeholder for ProductCard
 class ProductCardShimmer extends StatelessWidget {
-
   const ProductCardShimmer({
     super.key,
     this.width,

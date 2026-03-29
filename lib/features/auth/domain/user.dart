@@ -4,18 +4,19 @@ import 'package:equatable/equatable.dart';
 ///
 /// This is a pure domain object with no dependencies on Flutter or data layers.
 final class User extends Equatable {
-
   const User({
     required this.id,
     required this.email,
     required this.displayName,
-    required this.createdAt, this.phoneNumber,
+    required this.createdAt,
+    this.phoneNumber,
     this.role = UserRole.cashier,
     this.businessId,
     this.avatarUrl,
     this.isActive = true,
     this.lastLoginAt,
   });
+
   /// Unique user identifier
   final String id;
 

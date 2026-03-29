@@ -44,9 +44,9 @@ enum PriceSize {
 /// )
 /// ```
 class PriceDisplay extends StatelessWidget {
-
   const PriceDisplay({
-    required this.amountKHR, super.key,
+    required this.amountKHR,
+    super.key,
     this.amountUSD,
     this.showUSD = true,
     this.size = PriceSize.medium,
@@ -55,6 +55,7 @@ class PriceDisplay extends StatelessWidget {
     this.showSymbol = true,
     this.showSeparator = true,
   });
+
   /// Amount in Cambodian Riel (KHR)
   final double amountKHR;
 
@@ -83,7 +84,8 @@ class PriceDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     // Never show negative amounts
     final effectiveAmountKHR = amountKHR.abs();
-    final effectiveAmountUSD = amountUSD?.abs() ?? (effectiveAmountKHR / exchangeRate);
+    final effectiveAmountUSD =
+        amountUSD?.abs() ?? (effectiveAmountKHR / exchangeRate);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,9 +193,9 @@ class PriceDisplay extends StatelessWidget {
 
 /// Compact price display for tight spaces
 class PriceCompact extends StatelessWidget {
-
   const PriceCompact({
-    required this.amountKHR, super.key,
+    required this.amountKHR,
+    super.key,
     this.amountUSD,
     this.showUSD = false,
     this.color,

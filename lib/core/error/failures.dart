@@ -3,7 +3,6 @@ import 'package:equatable/equatable.dart';
 /// Base sealed class for all failures in the application.
 /// Used for error handling across Clean Architecture layers.
 sealed class Failure extends Equatable {
-
   const Failure({
     required this.messageEn,
     required this.messageKm,
@@ -19,7 +18,6 @@ sealed class Failure extends Equatable {
 
 /// Server-related failures (API errors, timeouts, etc.)
 final class ServerFailure extends Failure {
-
   const ServerFailure({
     required super.messageEn,
     required super.messageKm,
@@ -144,7 +142,6 @@ final class NetworkFailure extends Failure {
 
 /// Input validation failures
 final class ValidationFailure extends Failure {
-
   const ValidationFailure({
     required super.messageEn,
     required super.messageKm,

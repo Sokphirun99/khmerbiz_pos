@@ -399,6 +399,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get customerHistory => 'Purchase History';
 
   @override
+  String get inventoryManagement => 'Inventory';
+
+  @override
   String get stockLevel => 'Stock Level';
 
   @override
@@ -442,6 +445,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get exportReport => 'Export Report';
+
+  @override
+  String get settingsManagement => 'Settings';
 
   @override
   String get generalSettings => 'General Settings';
@@ -526,4 +532,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notificationSyncFailed => 'Sync failed';
+
+  @override
+  String get loginSelectStaff => 'Select Staff';
+
+  @override
+  String get loginEnterPin => 'Enter PIN';
+
+  @override
+  String get loginWrongPin => 'Wrong PIN. Try again.';
+
+  @override
+  String get loginLockedOut => 'Too many attempts. Please wait.';
+
+  @override
+  String get cartDiscount => 'Discount';
+
+  @override
+  String get cartTax => 'Tax';
+
+  @override
+  String get cartSubtotal => 'Subtotal';
+
+  @override
+  String cartItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+      zero: 'No items',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutSuccess => 'Payment Successful!';
+
+  @override
+  String get checkoutSuccessKhmer => 'ការទូទាត់បានជោគជ័យ!';
+
+  @override
+  String get newSale => 'New Sale';
+
+  @override
+  String get scanToPay => 'Scan to Pay';
+
+  @override
+  String get waitingPayment => 'Waiting for payment...';
+
+  @override
+  String get paymentTimeout => 'Payment timed out. Try again.';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get offlineMode => 'Offline Mode';
+
+  @override
+  String pendingSync(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pending',
+      one: '1 pending',
+      zero: 'All synced',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lowStockCount(int count) {
+    return '$count items low on stock';
+  }
+
+  @override
+  String get searchProducts => 'Search products...';
+
+  @override
+  String get scanBarcode => 'Scan Barcode';
+
+  @override
+  String get stockAdjust => 'Adjust Stock';
+
+  @override
+  String get thankYou => 'Thank you!';
+
+  @override
+  String get receiptFooter => 'Thank you for shopping with us!';
+
+  @override
+  String get currencyKHR => 'KHR';
+
+  @override
+  String get currencyUSD => 'USD';
+
+  @override
+  String get exchangeRate => 'Exchange Rate';
 }

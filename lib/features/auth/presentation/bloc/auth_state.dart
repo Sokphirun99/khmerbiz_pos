@@ -19,8 +19,8 @@ final class AuthInitial extends AuthState {
 
 /// Loading state - authentication in progress.
 final class AuthLoading extends AuthState {
-
   const AuthLoading({this.message});
+
   /// Optional loading message
   final String? message;
 
@@ -30,8 +30,8 @@ final class AuthLoading extends AuthState {
 
 /// Authenticated state - user is logged in.
 final class AuthAuthenticated extends AuthState {
-
   const AuthAuthenticated(this.user);
+
   /// Logged in user
   final User user;
 
@@ -46,8 +46,8 @@ final class AuthUnauthenticated extends AuthState {
 
 /// Error state - authentication failed.
 final class AuthError extends AuthState {
-
   const AuthError(this.message, {this.messageKm});
+
   /// Error message
   final String message;
 

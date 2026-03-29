@@ -3,15 +3,16 @@ import 'package:khmerbiz_pos/features/products/domain/product.dart';
 
 /// Cart item representing a product added to the cart.
 final class CartItem extends Equatable {
-
   const CartItem({
     required this.id,
     required this.product,
     required this.quantity,
-    required this.addedAt, this.priceOverride,
+    required this.addedAt,
+    this.priceOverride,
     this.discountAmount = 0,
     this.notes,
   });
+
   /// Unique cart item identifier
   final String id;
 
@@ -92,16 +93,18 @@ final class CartItem extends Equatable {
 
 /// Shopping cart containing items for current transaction.
 final class Cart extends Equatable {
-
   const Cart({
     required this.id,
     required this.items,
-    required this.createdAt, required this.updatedAt, this.customerId,
+    required this.createdAt,
+    required this.updatedAt,
+    this.customerId,
     this.discountAmount = 0,
     this.discountPercent,
     this.taxRate,
     this.notes,
   });
+
   /// Unique cart identifier
   final String id;
 
@@ -146,12 +149,11 @@ final class Cart extends Equatable {
     return items.fold(0, (sum, item) => sum + item.total);
   }
 
-  /// Get total discount
   double get totalDiscount {
-    final itemDiscounts = items.fold(0, (sum, item) => sum + item.discountAmount);
-    final percentDiscount = discountPercent != null
-        ? subtotal * (discountPercent! / 100)
-        : 0.0;
+    final itemDiscounts =
+        items.fold<double>(0.0, (sum, item) => sum + item.discountAmount);
+    final percentDiscount =
+        discountPercent != null ? subtotal * (discountPercent! / 100) : 0.0;
     return itemDiscounts + percentDiscount + discountAmount;
   }
 
@@ -213,7 +215,8 @@ final class Cart extends Equatable {
       final updatedItem = existingItem.copyWith(
         quantity: existingItem.quantity + newItem.quantity,
       );
-      final updatedItems = List<CartItem>.from(items)..[existingIndex] = updatedItem;
+      final updatedItems = List<CartItem>.from(items)
+        ..[existingIndex] = updatedItem;
       return copyWith(
         items: updatedItems,
       );

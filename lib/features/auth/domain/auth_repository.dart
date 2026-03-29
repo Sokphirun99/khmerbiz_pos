@@ -1,4 +1,5 @@
-import 'package:khmerbiz_pos/core/error/failures.dart' show ServerFailure, NetworkFailure, ValidationFailure;
+import 'package:khmerbiz_pos/core/error/failures.dart'
+    show ServerFailure, NetworkFailure, ValidationFailure;
 
 import 'package:khmerbiz_pos/features/auth/domain/auth_result.dart';
 import 'package:khmerbiz_pos/features/auth/domain/login_credentials.dart';

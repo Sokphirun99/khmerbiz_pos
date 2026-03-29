@@ -54,7 +54,6 @@ enum ConfirmationDialogType {
 /// )
 /// ```
 class ConfirmationDialog extends StatelessWidget {
-
   const ConfirmationDialog({
     super.key,
     this.title,
@@ -72,6 +71,7 @@ class ConfirmationDialog extends StatelessWidget {
     this.showCancel = true,
     this.isLoading = false,
   });
+
   /// Dialog title (English)
   final String? title;
 
@@ -293,7 +293,8 @@ class ConfirmationDialog extends StatelessWidget {
           child: SizedBox(
             height: AppSpacing.buttonHeightPrimary,
             child: OutlinedButton(
-              onPressed: isLoading ? null : (onCancel ?? () => Navigator.pop(context)),
+              onPressed:
+                  isLoading ? null : (onCancel ?? () => Navigator.pop(context)),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppColors.textSecondary,
                 side: const BorderSide(color: AppColors.border),
@@ -422,7 +423,8 @@ class ConfirmationDialog extends StatelessWidget {
     properties.add(StringProperty('confirmLabelKhmer', confirmLabelKhmer));
     properties.add(StringProperty('cancelLabel', cancelLabel));
     properties.add(StringProperty('cancelLabelKhmer', cancelLabelKhmer));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has('onConfirm', onConfirm));
+    properties
+        .add(ObjectFlagProperty<VoidCallback?>.has('onConfirm', onConfirm));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onCancel', onCancel));
     properties.add(DiagnosticsProperty<bool>('showCancel', showCancel));
     properties.add(DiagnosticsProperty<bool>('isLoading', isLoading));
@@ -430,9 +432,9 @@ class ConfirmationDialog extends StatelessWidget {
 }
 
 class _DialogConfig {
-
   const _DialogConfig({
-    required this.confirmColor, this.title,
+    required this.confirmColor,
+    this.title,
     this.titleKhmer,
     this.subtitle,
     this.subtitleKhmer,

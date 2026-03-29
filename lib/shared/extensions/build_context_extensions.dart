@@ -66,10 +66,12 @@ extension BuildContextMediaQueryExtension on BuildContext {
   double get bottomBarHeight => MediaQuery.of(this).padding.bottom;
 
   /// Check if in portrait mode.
-  bool get isPortrait => MediaQuery.of(this).orientation == Orientation.portrait;
+  bool get isPortrait =>
+      MediaQuery.of(this).orientation == Orientation.portrait;
 
   /// Check if in landscape mode.
-  bool get isLandscape => MediaQuery.of(this).orientation == Orientation.landscape;
+  bool get isLandscape =>
+      MediaQuery.of(this).orientation == Orientation.landscape;
 
   /// Get device pixel ratio.
   double get devicePixelRatio => MediaQuery.of(this).devicePixelRatio;
@@ -87,7 +89,8 @@ extension BuildContextMediaQueryExtension on BuildContext {
 /// Extension on BuildContext for navigation.
 extension BuildContextNavigationExtension on BuildContext {
   /// Show a snackbar.
-  void showSnackBar(String message, {Duration? duration, SnackBarAction? action}) {
+  void showSnackBar(String message,
+      {Duration? duration, SnackBarAction? action,}) {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Text(message),

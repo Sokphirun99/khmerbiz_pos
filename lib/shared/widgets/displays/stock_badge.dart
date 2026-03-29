@@ -56,9 +56,9 @@ enum StockBadgeStyle {
 /// )
 /// ```
 class StockBadge extends StatelessWidget {
-
   const StockBadge({
-    required this.status, super.key,
+    required this.status,
+    super.key,
     this.quantity = 0,
     this.lowThreshold = 10,
     this.style = StockBadgeStyle.compact,
@@ -92,6 +92,7 @@ class StockBadge extends StatelessWidget {
       hideWhenInStock: hideWhenInStock,
     );
   }
+
   /// Stock status
   final StockStatus status;
 
@@ -133,7 +134,8 @@ class StockBadge extends StatelessWidget {
 
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: style == StockBadgeStyle.compact ? AppSpacing.sm : AppSpacing.md,
+        horizontal:
+            style == StockBadgeStyle.compact ? AppSpacing.sm : AppSpacing.md,
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
@@ -240,15 +242,17 @@ class StockBadge extends StatelessWidget {
     properties.add(StringProperty('lowStockText', lowStockText));
     properties.add(StringProperty('outOfStockText', outOfStockText));
     properties.add(StringProperty('inStockText', inStockText));
-    properties.add(DiagnosticsProperty<bool>('hideWhenInStock', hideWhenInStock));
+    properties
+        .add(DiagnosticsProperty<bool>('hideWhenInStock', hideWhenInStock));
   }
 }
 
 /// Stock badge with product name for low stock warnings
 class StockWarningBadge extends StatelessWidget {
-
   const StockWarningBadge({
-    required this.productName, required this.quantity, super.key,
+    required this.productName,
+    required this.quantity,
+    super.key,
     this.productNameKhmer,
     this.lowThreshold = 10,
     this.onTap,

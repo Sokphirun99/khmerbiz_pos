@@ -64,7 +64,6 @@ enum EmptyStateVariant {
 /// )
 /// ```
 class EmptyState extends StatelessWidget {
-
   const EmptyState({
     super.key,
     this.variant,
@@ -80,6 +79,7 @@ class EmptyState extends StatelessWidget {
     this.maxWidth,
     this.padding,
   });
+
   /// Empty state variant (pre-built)
   final EmptyStateVariant? variant;
 
@@ -153,7 +153,8 @@ class EmptyState extends StatelessWidget {
 
               // Action button
               if (onAction != null &&
-                  (config.actionLabel != null || config.actionLabelKhmer != null))
+                  (config.actionLabel != null ||
+                      config.actionLabelKhmer != null))
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -420,12 +421,12 @@ class EmptyState extends StatelessWidget {
     properties.add(StringProperty('actionLabelKhmer', actionLabelKhmer));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onAction', onAction));
     properties.add(DoubleProperty('maxWidth', maxWidth));
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
+    properties
+        .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
   }
 }
 
 class _EmptyStateConfig {
-
   const _EmptyStateConfig({
     this.title,
     this.titleKhmer,

@@ -213,9 +213,7 @@ class _POSScreenState extends State<POSScreen> {
       ),
 
       // Bottom cart bar for phone layout
-      bottomNavigationBar: isTablet
-          ? null
-          : _buildBottomCartBar(),
+      bottomNavigationBar: isTablet ? null : _buildBottomCartBar(),
     );
   }
 
@@ -345,12 +343,14 @@ class _POSScreenState extends State<POSScreen> {
                   )
                 : ListView.separated(
                     itemCount: _cartItems.length,
-                    separatorBuilder: (context, index) => const Divider(height: 1),
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: 1),
                     itemBuilder: (context, index) {
                       final item = _cartItems[index];
                       return CartItemTile(
                         item: item,
-                        onQuantityChanged: (qty) => _updateQuantity(item.id, qty),
+                        onQuantityChanged: (qty) =>
+                            _updateQuantity(item.id, qty),
                         onRemoved: () => _removeFromCart(item.id),
                       );
                     },
@@ -492,15 +492,17 @@ class _POSScreenState extends State<POSScreen> {
   // Actions
   void _addToCart(ProductCardData product) {
     setState(() {
-      _cartItems.add(CartItemData(
-        id: 'c${DateTime.now().millisecondsSinceEpoch}',
-        productId: product.id,
-        name: product.name,
-        nameKhmer: product.nameKhmer,
-        unitPriceKHR: product.priceKHR,
-        unitPriceUSD: product.priceUSD,
-        quantity: 1,
-      ),);
+      _cartItems.add(
+        CartItemData(
+          id: 'c${DateTime.now().millisecondsSinceEpoch}',
+          productId: product.id,
+          name: product.name,
+          nameKhmer: product.nameKhmer,
+          unitPriceKHR: product.priceKHR,
+          unitPriceUSD: product.priceUSD,
+          quantity: 1,
+        ),
+      );
     });
 
     // Haptic feedback
@@ -537,7 +539,7 @@ class _POSScreenState extends State<POSScreen> {
   }
 
   void _clearCart() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ConfirmationDialog(
         title: 'Clear Cart?',
@@ -558,7 +560,7 @@ class _POSScreenState extends State<POSScreen> {
   void _checkout() {
     // Navigate to checkout screen
     // For demo, show success dialog
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Checkout Success'),
@@ -604,7 +606,7 @@ class _POSScreenState extends State<POSScreen> {
 
   void _showProductDetails(ProductCardData product) {
     // Show product details dialog
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(product.nameKhmer ?? product.name),
@@ -643,7 +645,7 @@ class _POSScreenState extends State<POSScreen> {
   }
 
   void _showSyncDialog() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Sync Status'),

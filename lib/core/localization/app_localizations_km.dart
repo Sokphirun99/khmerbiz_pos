@@ -399,6 +399,9 @@ class AppLocalizationsKm extends AppLocalizations {
   String get customerHistory => 'ប្រវត្តិការទិញ';
 
   @override
+  String get inventoryManagement => 'ស្តុក';
+
+  @override
   String get stockLevel => 'កម្រិតស្តុក';
 
   @override
@@ -442,6 +445,9 @@ class AppLocalizationsKm extends AppLocalizations {
 
   @override
   String get exportReport => 'នាំចេញរបាយការណ៍';
+
+  @override
+  String get settingsManagement => 'ការកំណត់';
 
   @override
   String get generalSettings => 'ការកំណត់ទូទៅ';
@@ -526,4 +532,102 @@ class AppLocalizationsKm extends AppLocalizations {
 
   @override
   String get notificationSyncFailed => 'សមកាលកម្មបរាជ័យ';
+
+  @override
+  String get loginSelectStaff => 'ជ្រើសរើសបុគ្គលិក';
+
+  @override
+  String get loginEnterPin => 'បញ្ចូល PIN';
+
+  @override
+  String get loginWrongPin => 'PIN ខុស។ សាកម្ដងទៀត។';
+
+  @override
+  String get loginLockedOut => 'ព្យាយាមច្រើនដងពេក។ សូមរង់ចាំ។';
+
+  @override
+  String get cartDiscount => 'បញ្ចុះតម្លៃ';
+
+  @override
+  String get cartTax => 'ពន្ធ';
+
+  @override
+  String get cartSubtotal => 'សរុបរង';
+
+  @override
+  String cartItemCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count មុខទំនិញ',
+      one: '១ មុខទំនិញ',
+      zero: 'គ្មានមុខទំនិញ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get checkoutSuccess => 'ការទូទាត់បានជោគជ័យ!';
+
+  @override
+  String get checkoutSuccessKhmer => 'ការទូទាត់បានជោគជ័យ!';
+
+  @override
+  String get newSale => 'ការលក់ថ្មី';
+
+  @override
+  String get scanToPay => 'ស្កែនដើម្បីបង់ប្រាក់';
+
+  @override
+  String get waitingPayment => 'កំពុងរង់ចាំការទូទាត់...';
+
+  @override
+  String get paymentTimeout => 'ការទូទាត់ផុតកំណត់។ សាកម្ដងទៀត។';
+
+  @override
+  String get offline => 'អុហ្វឡាញ';
+
+  @override
+  String get offlineMode => 'របៀបអុហ្វឡាញ';
+
+  @override
+  String pendingSync(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count កំពុងរង់ចាំ',
+      one: '១ កំពុងរង់ចាំ',
+      zero: 'សមកាលកម្មទាំងអស់',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String lowStockCount(int count) {
+    return '$count មុខទំនិញស្តុកទាប';
+  }
+
+  @override
+  String get searchProducts => 'ស្វែងរកផលិតផល...';
+
+  @override
+  String get scanBarcode => 'ស្កែនបារកូដ';
+
+  @override
+  String get stockAdjust => 'កែតម្រូវស្តុក';
+
+  @override
+  String get thankYou => 'អរគុណ!';
+
+  @override
+  String get receiptFooter => 'អរគុណសម្រាប់ការទិញទំនិញជាមួយយើង!';
+
+  @override
+  String get currencyKHR => 'រៀល';
+
+  @override
+  String get currencyUSD => 'ដុល្លារ';
+
+  @override
+  String get exchangeRate => 'អត្រាប្ដូរប្រាក់';
 }
