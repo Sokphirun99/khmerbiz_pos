@@ -43,6 +43,7 @@ build/
 *.ipr
 *.iws
 .vscode/
+.qwen/
 *.sublime-project
 *.sublime-workspace
 
