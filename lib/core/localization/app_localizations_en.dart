@@ -375,6 +375,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get paymentFailed => 'Payment Failed';
 
   @override
+  String get cashier => 'Cashier';
+
+  @override
   String get customer => 'Customer';
 
   @override

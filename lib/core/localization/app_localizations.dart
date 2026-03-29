@@ -830,6 +830,12 @@ abstract class AppLocalizations {
   /// **'Payment Failed'**
   String get paymentFailed;
 
+  /// No description provided for @cashier.
+  ///
+  /// In en, this message translates to:
+  /// **'Cashier'**
+  String get cashier;
+
   /// No description provided for @customer.
   ///
   /// In en, this message translates to:

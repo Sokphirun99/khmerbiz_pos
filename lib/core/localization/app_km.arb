@@ -132,6 +132,8 @@
   "paymentCompleted": "បានជោគជ័យ",
   "paymentFailed": "បរាជ័យ",
 
+  "cashier": "បេឡាករ",
+
   "customer": "អតិថិជន",
   "customerName": "ឈ្មោះអតិថិជន",
   "customerPhone": "លេខទូរស័ព្ទ",

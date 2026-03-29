@@ -132,6 +132,7 @@
   "paymentCompleted": "Payment Completed",
   "paymentFailed": "Payment Failed",
 
+  "cashier": "Cashier",
   "customer": "Customer",
   "customerName": "Customer Name",
   "customerPhone": "Phone Number",

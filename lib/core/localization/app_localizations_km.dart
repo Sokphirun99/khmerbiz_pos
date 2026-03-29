@@ -375,6 +375,9 @@ class AppLocalizationsKm extends AppLocalizations {
   String get paymentFailed => 'បរាជ័យ';
 
   @override
+  String get cashier => 'បេឡាករ';
+
+  @override
   String get customer => 'អតិថិជន';
 
   @override

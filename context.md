@@ -117,7 +117,7 @@ final class AuthBloc extends Bloc<AuthEvent, AuthState> { ... }
 **Implementation:**
 - `CurrencyFormatter` utility class
 - Global singleton `currencyFormatter`
-- Extension methods on `double` and `int`
+- extension methods on `double` and `int`
 - Exchange rate configurable via settings
 
 ### 5. JWT-Based Authentication
@@ -653,18 +653,41 @@ dependencies:
 - **Atomic Operations Design**: Hardened `processSale` and `adjustStock` inside Drift transactions.
 - **Strict Domain mapping**: Used pure Dart (`Equatable`) without Flutter bindings or generated `freezed` tags. Drift models are converted manually at boundary points (RepositoryImpls).
 - **Functional Error Handling**: Introduced `fpdart` to enforce operations resolving to `Either<Failure, Model>` inside Repository definitions.
+- **Cart & Checkout Architecture**: Integrated `CartBloc` to track real-time subtotal, taxes, constraints on discounts, and robust stock verifications that perform fresh database checks right before emitting `CartCheckoutSuccess`. The entire UI flow transitions via a `BlocConsumer`. 
 
 ### Package Versions Locked
 - `sqlcipher_flutter_libs`: ^0.7.0+eol
 - `fpdart`: ^1.1.0
+- `uuid`: ^4.2.2
 
 ### Deviations from the prompt
 - Merged some DAOs inside the central Drift `database.dart` setup configuration via `@DriftDatabase(daos: [...])`. 
 - Since `sync_queue` payloads are `TEXT`, serialization inside Drift or early stage was deferred entirely to Repository handling instead. 
+- Integrated Checkout Logic into a standalone `CheckoutScreen` handling phone-specific flow directly instead of merging entirely into a singular `pos_screen.dart` to maintain distinct responsibility, whereas Tablet layout maps right alongside POS layout conceptually. 
 
 ### Open questions for next session
 1. **Repository/DI wiring**: Since many DAOs have been created, does the frontend or Injectable pipeline assume a specific lifecycle (like `Singleton` vs `LazySingleton` on Database access points)?
 2. **Product Syncing Mechanism**: Before implementing WorkManager sync loops, should we create an endpoint to consume synced chunks?
 3. **Transaction Sequencing Edge Case**: How should receipt sequence handle counting if today's transaction count gets permanently deleted from the mobile SQLite instance? 
+4. **Printer Abstraction**: How will auto-print be triggered directly from the success UI state transparently without UI blocking?
 
-*This document is continuously updated to track system evolution.*
+---
+
+## Cart and Checkout Architecture Update (2026-03-30)
+
+### Key Architectural Decisions Made
+- **CartBloc as Source of Truth**: Evaluated calculations like subtotals and dynamic discounts internally within the `CartBloc`. The Bloc explicitly manages total USD generation with a mock/exchange rate repository call logic before storing.
+- **Stock Constraint Integrity Validation**: Validated real-time stock limitations twice: optimally inside the `AddToCart` event as warnings and rigidly during `ProcessCheckout` using a fresh `ProductRepository` fetch. 
+
+### Package Versions Locked
+- `lottie`: ^3.3.2 
+
+### Deviations from the prompt
+- Used `double` natively on internal item logic instead of strict mapping because Dart inherently relies upon them for UI bindings. Handled exactitude by mapping rounding (`total = total.roundToDouble()`) prior to state emission.
+- Did not integrate a `lottie` checkmark asset properly into `checkout_success_screen.dart` via `Lottie.asset` due to the lack of an existing correct `.json`. Utilized `AnimatedBuilder` with `ColorTween` to provide the requested visual flash instead.
+- Screen brightness adjustment for Checkout Success deferred until adding a brightness plugin could be validated. Currently using system levels. 
+
+### Open questions for next session
+1. **Lottie vs Flutter native Animations**: Would you like to keep the native Flutter `AnimationController` for checkout success, or should we locate/generate a `.json` lottie file to insert the bouncy checkmark?
+2. **Printer Abstraction Details**: The success screen auto-navigates after 30s as requested. Which specific flutter printing library (like `esc_pos_bluetooth` or `printing`) should be used for the non-blocking print operation?
+3. **Multi-Payment Edge Cases**: How should partial deposits or split payments work if the user pays via multiple PaymentMethods at once (e.g. half cash, half KHQR)?
