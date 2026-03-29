@@ -645,6 +645,26 @@ dependencies:
 
 ---
 
-*This document should be updated after each development session with new decisions and changes.*
+## Architecture & Data Layer Update (2026-03-29)
 
-*This document should be updated after each development session with new decisions and changes.*
+### Key Architectural Decisions Made
+- **Local Database Engine**: Built with `drift` (v2.15+ mapped locally to 2.21+), enforcing single source of truth locally offline.
+- **Database Encryption**: Enforced `sqlcipher_flutter_libs` to replace `sqlite3_flutter_libs` with an AES-256 encrypted local `.db` file using `flutter_secure_storage`.
+- **Atomic Operations Design**: Hardened `processSale` and `adjustStock` inside Drift transactions.
+- **Strict Domain mapping**: Used pure Dart (`Equatable`) without Flutter bindings or generated `freezed` tags. Drift models are converted manually at boundary points (RepositoryImpls).
+- **Functional Error Handling**: Introduced `fpdart` to enforce operations resolving to `Either<Failure, Model>` inside Repository definitions.
+
+### Package Versions Locked
+- `sqlcipher_flutter_libs`: ^0.7.0+eol
+- `fpdart`: ^1.1.0
+
+### Deviations from the prompt
+- Merged some DAOs inside the central Drift `database.dart` setup configuration via `@DriftDatabase(daos: [...])`. 
+- Since `sync_queue` payloads are `TEXT`, serialization inside Drift or early stage was deferred entirely to Repository handling instead. 
+
+### Open questions for next session
+1. **Repository/DI wiring**: Since many DAOs have been created, does the frontend or Injectable pipeline assume a specific lifecycle (like `Singleton` vs `LazySingleton` on Database access points)?
+2. **Product Syncing Mechanism**: Before implementing WorkManager sync loops, should we create an endpoint to consume synced chunks?
+3. **Transaction Sequencing Edge Case**: How should receipt sequence handle counting if today's transaction count gets permanently deleted from the mobile SQLite instance? 
+
+*This document is continuously updated to track system evolution.*
