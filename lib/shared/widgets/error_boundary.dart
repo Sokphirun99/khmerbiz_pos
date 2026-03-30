@@ -29,12 +29,20 @@ final class ErrorBoundary extends StatefulWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<
-            Widget Function(Object error, StackTrace stackTrace)?>.has(
-        'errorBuilder', errorBuilder,),);
-    properties.add(ObjectFlagProperty<
-        void Function(
-            Object error, StackTrace stackTrace,)?>.has('onError', onError),);
+    properties.add(
+      ObjectFlagProperty<
+          Widget Function(Object error, StackTrace stackTrace)?>.has(
+        'errorBuilder',
+        errorBuilder,
+      ),
+    );
+    properties.add(
+      ObjectFlagProperty<
+          void Function(
+            Object error,
+            StackTrace stackTrace,
+          )?>.has('onError', onError),
+    );
   }
 }
 
@@ -152,9 +160,13 @@ class _ErrorBoundaryScope extends InheritedWidget {
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
-    properties.add(ObjectFlagProperty<
-        void Function(
-            Object error, StackTrace stackTrace,)>.has('onError', onError),);
+    properties.add(
+      ObjectFlagProperty<
+          void Function(
+            Object error,
+            StackTrace stackTrace,
+          )>.has('onError', onError),
+    );
   }
 }
 

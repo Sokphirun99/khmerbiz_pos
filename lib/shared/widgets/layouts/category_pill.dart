@@ -329,13 +329,18 @@ class CategoryPillRow extends StatelessWidget {
         .add(IterableProperty<CategoryPillData>('categories', categories));
     properties.add(StringProperty('selectedId', selectedId));
     properties.add(
-        ObjectFlagProperty<ValueChanged<String>>.has('onSelected', onSelected),);
+      ObjectFlagProperty<ValueChanged<String>>.has('onSelected', onSelected),
+    );
     properties.add(DiagnosticsProperty<bool>('showCount', showCount));
     properties.add(DoubleProperty('pillHeight', pillHeight));
     properties
         .add(DiagnosticsProperty<EdgeInsetsGeometry?>('padding', padding));
-    properties.add(DiagnosticsProperty<ScrollController?>(
-        'scrollController', scrollController,),);
+    properties.add(
+      DiagnosticsProperty<ScrollController?>(
+        'scrollController',
+        scrollController,
+      ),
+    );
   }
 }
 
@@ -385,8 +390,12 @@ class CategoryPillRowWithAll extends StatelessWidget {
     properties
         .add(IterableProperty<CategoryPillData>('categories', categories));
     properties.add(StringProperty('selectedId', selectedId));
-    properties.add(ObjectFlagProperty<ValueChanged<String?>>.has(
-        'onSelected', onSelected,),);
+    properties.add(
+      ObjectFlagProperty<ValueChanged<String?>>.has(
+        'onSelected',
+        onSelected,
+      ),
+    );
     properties.add(StringProperty('allLabel', allLabel));
     properties.add(StringProperty('allLabelKhmer', allLabelKhmer));
     properties.add(DiagnosticsProperty<bool>('showCount', showCount));

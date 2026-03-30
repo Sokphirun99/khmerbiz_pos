@@ -170,38 +170,38 @@ final class ApiClient {
   void _logRequest(RequestOptions options) {
     _debugLog(
       '🌐 ${_formatLogEntry({
-        'type': 'request',
-        'method': options.method,
-        'path': options.path,
-        'headers': _sanitizeHeaders(options.headers),
-        'query': _sanitizeData(options.queryParameters),
-        'body': _sanitizeData(options.data),
-      })}',
+            'type': 'request',
+            'method': options.method,
+            'path': options.path,
+            'headers': _sanitizeHeaders(options.headers),
+            'query': _sanitizeData(options.queryParameters),
+            'body': _sanitizeData(options.data),
+          })}',
     );
   }
 
   void _logResponse(Response<dynamic> response) {
     _debugLog(
       '✅ ${_formatLogEntry({
-        'type': 'response',
-        'method': response.requestOptions.method,
-        'path': response.requestOptions.path,
-        'statusCode': response.statusCode,
-        'body': _sanitizeData(response.data),
-      })}',
+            'type': 'response',
+            'method': response.requestOptions.method,
+            'path': response.requestOptions.path,
+            'statusCode': response.statusCode,
+            'body': _sanitizeData(response.data),
+          })}',
     );
   }
 
   void _logError(DioException error) {
     _debugLog(
       '❌ ${_formatLogEntry({
-        'type': 'error',
-        'method': error.requestOptions.method,
-        'path': error.requestOptions.path,
-        'statusCode': error.response?.statusCode,
-        'message': error.message,
-        'body': _sanitizeData(error.response?.data),
-      })}',
+            'type': 'error',
+            'method': error.requestOptions.method,
+            'path': error.requestOptions.path,
+            'statusCode': error.response?.statusCode,
+            'message': error.message,
+            'body': _sanitizeData(error.response?.data),
+          })}',
     );
   }
 

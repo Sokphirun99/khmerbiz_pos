@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class TransactionItem extends Equatable {
-
   const TransactionItem({
     required this.id,
     required this.transactionId,
@@ -11,7 +10,8 @@ class TransactionItem extends Equatable {
     required this.quantity,
     required this.unitPrice,
     required this.costPrice,
-    required this.subtotal, this.discountAmount = 0,
+    required this.subtotal,
+    this.discountAmount = 0,
     this.modifiers,
   });
   final String id;

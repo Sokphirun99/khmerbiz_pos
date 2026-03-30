@@ -5,47 +5,61 @@ import 'package:uuid/uuid.dart';
 part 'products_dao.g.dart';
 
 @DriftAccessor(tables: [Products, Categories])
-class ProductsDao extends DatabaseAccessor<AppDatabase> with _$ProductsDaoMixin {
+class ProductsDao extends DatabaseAccessor<AppDatabase>
+    with _$ProductsDaoMixin {
   ProductsDao(super.db);
 
   final Uuid _uuid = const Uuid();
 
   Stream<List<ProductModel>> watchAllActiveProducts() {
-    return (select(products)..where((tbl) => tbl.isActive.equals(true))).watch();
+    return (select(products)..where((tbl) => tbl.isActive.equals(true)))
+        .watch();
   }
 
   Stream<List<ProductModel>> watchProductsByCategory(String categoryId) {
-    return (select(products)..where((tbl) => tbl.isActive.equals(true) & tbl.categoryId.equals(categoryId))).watch();
+    return (select(products)
+          ..where((tbl) =>
+              tbl.isActive.equals(true) & tbl.categoryId.equals(categoryId)))
+        .watch();
   }
 
   Stream<List<ProductModel>> watchFeaturedProducts() {
-    return (select(products)..where((tbl) => tbl.isActive.equals(true) & tbl.isFeatured.equals(true))).watch();
+    return (select(products)
+          ..where(
+              (tbl) => tbl.isActive.equals(true) & tbl.isFeatured.equals(true)))
+        .watch();
   }
 
   Stream<List<ProductModel>> searchProducts(String query) {
     final lowerQuery = '%${query.toLowerCase()}%';
     return (select(products)
-          ..where((tbl) =>
-              tbl.isActive.equals(true) &
-              (tbl.nameKh.like(lowerQuery) |
-                  tbl.nameEn.like(lowerQuery) |
-                  tbl.barcode.like(lowerQuery)),))
+          ..where(
+            (tbl) =>
+                tbl.isActive.equals(true) &
+                (tbl.nameKh.like(lowerQuery) |
+                    tbl.nameEn.like(lowerQuery) |
+                    tbl.barcode.like(lowerQuery)),
+          ))
         .watch();
   }
 
   Future<ProductModel?> getProductByBarcode(String barcode) {
-    return (select(products)..where((tbl) => tbl.barcode.equals(barcode))).getSingleOrNull();
+    return (select(products)..where((tbl) => tbl.barcode.equals(barcode)))
+        .getSingleOrNull();
   }
 
   Future<ProductModel?> getProductById(String id) {
-    return (select(products)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
+    return (select(products)..where((tbl) => tbl.id.equals(id)))
+        .getSingleOrNull();
   }
 
   Future<List<ProductModel>> getLowStockProducts() {
     return (select(products)
-          ..where((tbl) =>
-              tbl.isActive.equals(true) &
-              tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold),))
+          ..where(
+            (tbl) =>
+                tbl.isActive.equals(true) &
+                tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold),
+          ))
         .get();
   }
 

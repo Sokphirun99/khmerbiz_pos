@@ -3,7 +3,6 @@ import 'package:khmerbiz_pos/domain/entities/modifier.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 class CartItem extends Equatable {
-
   const CartItem({
     required this.id,
     required this.productId,
@@ -20,7 +19,7 @@ class CartItem extends Equatable {
   final double unitPrice;
   final double costPrice;
   final List<Modifier> modifiers;
-  
+
   double get modifierTotal => modifiers.fold(0, (sum, m) => sum + m.price);
   double get lineTotal => (unitPrice * quantity) + modifierTotal;
 

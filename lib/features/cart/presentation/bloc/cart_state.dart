@@ -14,7 +14,6 @@ sealed class CartState extends Equatable {
 final class CartInitial extends CartState {}
 
 final class CartLoaded extends CartState {
-
   const CartLoaded({
     required this.items,
     required this.subtotal,
@@ -68,7 +67,8 @@ final class CartLoaded extends CartState {
       changeAmount: changeAmount ?? this.changeAmount,
       customer: clearCustomer ? null : (customer ?? this.customer),
       discountType: clearDiscount ? null : (discountType ?? this.discountType),
-      discountValue: clearDiscount ? null : (discountValue ?? this.discountValue),
+      discountValue:
+          clearDiscount ? null : (discountValue ?? this.discountValue),
       isCheckingOut: isCheckingOut ?? this.isCheckingOut,
       stockWarnings: stockWarnings ?? this.stockWarnings,
     );
@@ -92,7 +92,6 @@ final class CartLoaded extends CartState {
 }
 
 final class CartCheckoutSuccess extends CartState {
-
   const CartCheckoutSuccess({
     required this.transactionId,
     required this.receiptNumber,
@@ -123,7 +122,6 @@ final class CartCheckoutSuccess extends CartState {
 }
 
 final class CartCheckoutFailure extends CartState {
-
   const CartCheckoutFailure({required this.failure});
   final Failure failure;
 

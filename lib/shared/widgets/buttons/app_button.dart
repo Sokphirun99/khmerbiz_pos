@@ -241,7 +241,8 @@ class _AppButtonState extends State<AppButton>
           decoration: BoxDecoration(
             color: _getBackgroundColor(effectiveState),
             borderRadius: BorderRadius.circular(
-                widget.borderRadius ?? AppSpacing.radiusMedium,),
+              widget.borderRadius ?? AppSpacing.radiusMedium,
+            ),
             border: widget.type == AppButtonType.ghost ||
                     widget.type == AppButtonType.secondary
                 ? Border.all(

@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:khmerbiz_pos/domain/entities/daily_summary.dart';
 
 class WeeklySummary extends Equatable {
-
   const WeeklySummary({
     required this.weekStart,
     required this.weekEnd,

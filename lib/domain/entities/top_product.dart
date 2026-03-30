@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 class TopProduct extends Equatable {
-
   const TopProduct({
     required this.product,
     required this.quantitySold,

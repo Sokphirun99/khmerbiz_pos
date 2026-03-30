@@ -1,10 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class ExchangeRate extends Equatable {
-
   const ExchangeRate({
     required this.id,
-    required this.rate, required this.source, required this.fetchedAt, this.baseCurrency = 'KHR',
+    required this.rate,
+    required this.source,
+    required this.fetchedAt,
+    this.baseCurrency = 'KHR',
     this.targetCurrency = 'USD',
     this.isActive = true,
   });

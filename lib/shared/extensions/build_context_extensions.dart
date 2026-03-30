@@ -89,8 +89,11 @@ extension BuildContextMediaQueryExtension on BuildContext {
 /// Extension on BuildContext for navigation.
 extension BuildContextNavigationExtension on BuildContext {
   /// Show a snackbar.
-  void showSnackBar(String message,
-      {Duration? duration, SnackBarAction? action,}) {
+  void showSnackBar(
+    String message, {
+    Duration? duration,
+    SnackBarAction? action,
+  }) {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
         content: Text(message),

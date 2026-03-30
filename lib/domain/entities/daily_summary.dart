@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class DailySummary extends Equatable {
-
   const DailySummary({
     required this.date,
     this.totalTransactions = 0,

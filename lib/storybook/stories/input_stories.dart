@@ -10,11 +10,11 @@ class InputStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
-        Text('Inputs', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        Text('Inputs',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         SizedBox(height: AppSpacing.base),
         Text('Text fields, dropdowns, and switch inputs.'),
         SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'Text Field',
           description: 'Standard text input.',

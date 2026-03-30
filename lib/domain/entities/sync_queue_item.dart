@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 class SyncQueueItem extends Equatable {
-
   const SyncQueueItem({
     required this.id,
     required this.operationType,
     required this.entityType,
     required this.entityId,
     required this.payload,
-    required this.createdAt, this.attemptCount = 0,
+    required this.createdAt,
+    this.attemptCount = 0,
     this.lastAttemptAt,
     this.status = 'pending',
     this.errorMessage,

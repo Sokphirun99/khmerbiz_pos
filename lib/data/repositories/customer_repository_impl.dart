@@ -8,7 +8,6 @@ import 'package:khmerbiz_pos/domain/repositories/customer_repository.dart';
 
 @LazySingleton(as: CustomerRepository)
 class CustomerRepositoryImpl implements CustomerRepository {
-
   CustomerRepositoryImpl(this._dao);
   final CustomersDao _dao;
 
@@ -48,7 +47,8 @@ class CustomerRepositoryImpl implements CustomerRepository {
   }
 
   @override
-  Future<Either<Failure, void>> updateLoyaltyPoints(String customerId, double pointsToAdd) async {
+  Future<Either<Failure, void>> updateLoyaltyPoints(
+      String customerId, double pointsToAdd) async {
     try {
       await _dao.updateLoyaltyPoints(customerId, pointsToAdd);
       return right(null);

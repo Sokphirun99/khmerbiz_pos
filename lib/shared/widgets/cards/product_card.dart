@@ -495,11 +495,16 @@ class _ProductCardState extends State<ProductCard>
         .add(DiagnosticsProperty<ProductCardData>('product', widget.product));
     properties
         .add(ObjectFlagProperty<VoidCallback?>.has('onTap', widget.onTap));
-    properties.add(ObjectFlagProperty<VoidCallback?>.has(
-        'onLongPress', widget.onLongPress,),);
+    properties.add(
+      ObjectFlagProperty<VoidCallback?>.has(
+        'onLongPress',
+        widget.onLongPress,
+      ),
+    );
     properties.add(DiagnosticsProperty<bool>('isSelected', widget.isSelected));
     properties.add(
-        DiagnosticsProperty<bool>('showStockBadge', widget.showStockBadge),);
+      DiagnosticsProperty<bool>('showStockBadge', widget.showStockBadge),
+    );
     properties
         .add(DiagnosticsProperty<bool>('showAddButton', widget.showAddButton));
     properties.add(DoubleProperty('width', widget.width));

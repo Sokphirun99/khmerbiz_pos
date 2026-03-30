@@ -9,7 +9,6 @@ import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 
 @LazySingleton(as: ProductRepository)
 class ProductRepositoryImpl implements ProductRepository {
-
   ProductRepositoryImpl(this._dao);
   final ProductsDao _dao;
 
@@ -43,16 +42,19 @@ class ProductRepositoryImpl implements ProductRepository {
     return _dao.watchAllActiveProducts().map((models) {
       return right<Failure, List<Product>>(models.map(_mapToDomain).toList());
     }).handleError((error) {
-      return left<Failure, List<Product>>(CacheFailure.defaultError(details: error.toString()));
+      return left<Failure, List<Product>>(
+          CacheFailure.defaultError(details: error.toString()));
     });
   }
 
   @override
-  Stream<Either<Failure, List<Product>>> watchProductsByCategory(String categoryId) {
+  Stream<Either<Failure, List<Product>>> watchProductsByCategory(
+      String categoryId) {
     return _dao.watchProductsByCategory(categoryId).map((models) {
       return right<Failure, List<Product>>(models.map(_mapToDomain).toList());
     }).handleError((error) {
-      return left<Failure, List<Product>>(CacheFailure.defaultError(details: error.toString()));
+      return left<Failure, List<Product>>(
+          CacheFailure.defaultError(details: error.toString()));
     });
   }
 
@@ -61,7 +63,8 @@ class ProductRepositoryImpl implements ProductRepository {
     return _dao.watchFeaturedProducts().map((models) {
       return right<Failure, List<Product>>(models.map(_mapToDomain).toList());
     }).handleError((error) {
-      return left<Failure, List<Product>>(CacheFailure.defaultError(details: error.toString()));
+      return left<Failure, List<Product>>(
+          CacheFailure.defaultError(details: error.toString()));
     });
   }
 
@@ -70,7 +73,8 @@ class ProductRepositoryImpl implements ProductRepository {
     return _dao.searchProducts(query).map((models) {
       return right<Failure, List<Product>>(models.map(_mapToDomain).toList());
     }).handleError((error) {
-      return left<Failure, List<Product>>(CacheFailure.defaultError(details: error.toString()));
+      return left<Failure, List<Product>>(
+          CacheFailure.defaultError(details: error.toString()));
     });
   }
 
@@ -107,16 +111,18 @@ class ProductRepositoryImpl implements ProductRepository {
   @override
   Future<Either<Failure, String>> createProduct(Product product) async {
     try {
-      final id = await _dao.insertProduct(ProductsCompanion(
-        id: product.id.isNotEmpty ? Value(product.id) : const Value.absent(),
-        nameKh: Value(product.nameKh),
-        nameEn: Value(product.nameEn),
-        categoryId: Value(product.categoryId),
-        retailPrice: Value(product.retailPrice),
-        costPrice: Value(product.costPrice),
-        updatedAt: Value(DateTime.now()),
-        createdAt: Value(DateTime.now()),
-      ),);
+      final id = await _dao.insertProduct(
+        ProductsCompanion(
+          id: product.id.isNotEmpty ? Value(product.id) : const Value.absent(),
+          nameKh: Value(product.nameKh),
+          nameEn: Value(product.nameEn),
+          categoryId: Value(product.categoryId),
+          retailPrice: Value(product.retailPrice),
+          costPrice: Value(product.costPrice),
+          updatedAt: Value(DateTime.now()),
+          createdAt: Value(DateTime.now()),
+        ),
+      );
       return right(id);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
@@ -127,13 +133,15 @@ class ProductRepositoryImpl implements ProductRepository {
   Future<Either<Failure, void>> updateProduct(Product product) async {
     try {
       // Basic implementation mapping
-      await _dao.updateProduct(ProductsCompanion(
-        id: Value(product.id),
-        nameKh: Value(product.nameKh),
-        nameEn: Value(product.nameEn),
-        retailPrice: Value(product.retailPrice),
-        updatedAt: Value(DateTime.now()),
-      ),);
+      await _dao.updateProduct(
+        ProductsCompanion(
+          id: Value(product.id),
+          nameKh: Value(product.nameKh),
+          nameEn: Value(product.nameEn),
+          retailPrice: Value(product.retailPrice),
+          updatedAt: Value(DateTime.now()),
+        ),
+      );
       return right(null);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
@@ -145,7 +153,7 @@ class ProductRepositoryImpl implements ProductRepository {
     try {
       await _dao.softDeleteProduct(id);
       return right(null);
-    } catch(e) {
+    } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
   }

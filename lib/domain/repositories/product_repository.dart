@@ -4,7 +4,8 @@ import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 abstract class ProductRepository {
   Stream<Either<Failure, List<Product>>> watchAllActiveProducts();
-  Stream<Either<Failure, List<Product>>> watchProductsByCategory(String categoryId);
+  Stream<Either<Failure, List<Product>>> watchProductsByCategory(
+      String categoryId);
   Stream<Either<Failure, List<Product>>> watchFeaturedProducts();
   Stream<Either<Failure, List<Product>>> searchProducts(String query);
   Future<Either<Failure, Product?>> getProductByBarcode(String barcode);

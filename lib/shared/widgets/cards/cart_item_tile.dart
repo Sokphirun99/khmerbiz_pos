@@ -113,8 +113,12 @@ class CartItemTile extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(DiagnosticsProperty<CartItemData>('item', item));
-    properties.add(ObjectFlagProperty<OnQuantityChanged?>.has(
-        'onQuantityChanged', onQuantityChanged,),);
+    properties.add(
+      ObjectFlagProperty<OnQuantityChanged?>.has(
+        'onQuantityChanged',
+        onQuantityChanged,
+      ),
+    );
     properties
         .add(ObjectFlagProperty<VoidCallback?>.has('onRemoved', onRemoved));
     properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
@@ -214,7 +218,8 @@ class _CartItemTileState extends State<CartItemTile> {
               builder: (context) => AlertDialog(
                 title: const Text('Remove Item?'),
                 content: Text(
-                    'Remove "${widget.item.nameKhmer ?? widget.item.name}" from cart?',),
+                  'Remove "${widget.item.nameKhmer ?? widget.item.name}" from cart?',
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),

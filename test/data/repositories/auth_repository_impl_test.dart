@@ -32,13 +32,15 @@ void main() {
   }
 
   group('AuthRepositoryImpl.login', () {
-    test('upgrades legacy plaintext PIN storage after successful login', () async {
+    test('upgrades legacy plaintext PIN storage after successful login',
+        () async {
       await insertUser(pinHash: '1234');
 
       final result = await repository.login(username: 'admin', pin: '1234');
 
       result.match(
-        (failure) => fail('Expected login to succeed, got ${failure.messageEn}'),
+        (failure) =>
+            fail('Expected login to succeed, got ${failure.messageEn}'),
         (user) {
           expect(user.id, isNotEmpty);
           expect(user.username, 'admin');

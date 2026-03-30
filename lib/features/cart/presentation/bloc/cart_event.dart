@@ -12,7 +12,6 @@ sealed class CartEvent extends Equatable {
 }
 
 final class AddToCart extends CartEvent {
-
   const AddToCart({required this.product, this.quantity = 1.0});
   final Product product;
   final double quantity;
@@ -22,7 +21,6 @@ final class AddToCart extends CartEvent {
 }
 
 final class RemoveFromCart extends CartEvent {
-
   const RemoveFromCart({required this.productId});
   final String productId;
 
@@ -31,7 +29,6 @@ final class RemoveFromCart extends CartEvent {
 }
 
 final class UpdateQuantity extends CartEvent {
-
   const UpdateQuantity({required this.productId, required this.quantity});
   final String productId;
   final double quantity;
@@ -41,7 +38,6 @@ final class UpdateQuantity extends CartEvent {
 }
 
 final class UpdateModifiers extends CartEvent {
-
   const UpdateModifiers({required this.productId, required this.modifiers});
   final String productId;
   final List<Modifier> modifiers;
@@ -51,7 +47,6 @@ final class UpdateModifiers extends CartEvent {
 }
 
 final class ApplyDiscount extends CartEvent {
-
   const ApplyDiscount({required this.type, required this.value});
   final DiscountType type;
   final double value;
@@ -63,7 +58,6 @@ final class ApplyDiscount extends CartEvent {
 final class RemoveDiscount extends CartEvent {}
 
 final class SetCustomer extends CartEvent {
-
   const SetCustomer({this.customer});
   final Customer? customer;
 
@@ -74,7 +68,6 @@ final class SetCustomer extends CartEvent {
 final class ClearCart extends CartEvent {}
 
 final class ProcessCheckout extends CartEvent {
-
   const ProcessCheckout({required this.method, this.cashReceived});
   final PaymentMethod method;
   final double? cashReceived;

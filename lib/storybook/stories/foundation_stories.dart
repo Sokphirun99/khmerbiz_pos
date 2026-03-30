@@ -13,11 +13,12 @@ class FoundationStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
-        const Text('Foundation', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        const Text('Foundation',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.base),
-        const Text('Core design tokens including Colors, Spacing, and Typography.'),
+        const Text(
+            'Core design tokens including Colors, Spacing, and Typography.'),
         const SizedBox(height: AppSpacing.xl),
-
         const StorySection(
           title: 'Brand Colors',
           description: 'Primary and accent brand colors.',
@@ -30,7 +31,6 @@ class FoundationStories extends StatelessWidget {
             _ColorSwatch('Accent Dark', AppColors.accentDark),
           ],
         ),
-
         const StorySection(
           title: 'Semantic Colors',
           description: 'State colors for success, warning, error, info.',
@@ -41,7 +41,6 @@ class FoundationStories extends StatelessWidget {
             _ColorSwatch('Info', AppColors.info),
           ],
         ),
-
         const StorySection(
           title: 'Background & Surface',
           children: [
@@ -50,7 +49,6 @@ class FoundationStories extends StatelessWidget {
             _ColorSwatch('Surface Alt', AppColors.surfaceAlt),
           ],
         ),
-
         const StorySection(
           title: 'Text Colors',
           children: [
@@ -60,7 +58,6 @@ class FoundationStories extends StatelessWidget {
             _ColorSwatch('Text Disabled', AppColors.textDisabled),
           ],
         ),
-
         StorySection(
           title: 'Typography (Headlines)',
           children: [
@@ -69,13 +66,15 @@ class FoundationStories extends StatelessWidget {
             Text('Headline Small', style: AppTextStyles.headlineSmall),
           ],
         ),
-
         StorySection(
           title: 'Typography (Body)',
           children: [
-            Text('Body Large - For primary content', style: AppTextStyles.bodyLarge),
-            Text('Body Medium - For secondary info', style: AppTextStyles.bodyMedium),
-            Text('Body Small - For labels and hints', style: AppTextStyles.bodySmall),
+            Text('Body Large - For primary content',
+                style: AppTextStyles.bodyLarge),
+            Text('Body Medium - For secondary info',
+                style: AppTextStyles.bodyMedium),
+            Text('Body Small - For labels and hints',
+                style: AppTextStyles.bodySmall),
           ],
         ),
       ],
@@ -85,7 +84,7 @@ class FoundationStories extends StatelessWidget {
 
 class _ColorSwatch extends StatelessWidget {
   const _ColorSwatch(this.label, this.color);
-  
+
   final String label;
   final Color color;
 
@@ -102,7 +101,8 @@ class _ColorSwatch extends StatelessWidget {
             shape: BoxShape.circle,
             border: Border.all(color: AppColors.borderLight, width: 2),
             boxShadow: const [
-              BoxShadow(color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2)),
+              BoxShadow(
+                  color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2)),
             ],
           ),
         ),
@@ -110,8 +110,8 @@ class _ColorSwatch extends StatelessWidget {
         SizedBox(
           width: 80,
           child: Text(
-            label, 
-            style: AppTextStyles.bodySmall, 
+            label,
+            style: AppTextStyles.bodySmall,
             textAlign: TextAlign.center,
           ),
         ),

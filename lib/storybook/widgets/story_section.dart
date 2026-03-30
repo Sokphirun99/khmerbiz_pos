@@ -7,7 +7,9 @@ import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
 class StorySection extends StatelessWidget {
   const StorySection({
-    required this.title, required this.children, super.key,
+    required this.title,
+    required this.children,
+    super.key,
     this.description,
   });
 
@@ -25,7 +27,9 @@ class StorySection extends StatelessWidget {
           Text(title, style: AppTextStyles.headlineMedium),
           if (description != null) ...[
             const SizedBox(height: AppSpacing.xs),
-            Text(description!, style: AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary)),
+            Text(description!,
+                style: AppTextStyles.bodyMedium
+                    .copyWith(color: AppColors.textSecondary)),
           ],
           const SizedBox(height: AppSpacing.base),
           Container(

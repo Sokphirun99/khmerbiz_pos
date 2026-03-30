@@ -95,7 +95,8 @@ class NumPad extends StatefulWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(
-        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+      ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),
+    );
     properties
         .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));
@@ -388,7 +389,8 @@ class CompactNumPad extends StatelessWidget {
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {
     super.debugFillProperties(properties);
     properties.add(
-        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+      ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),
+    );
     properties
         .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));
@@ -434,7 +436,8 @@ class NumPadWithDisplay extends StatefulWidget {
     properties.add(StringProperty('label', label));
     properties.add(StringProperty('labelKhmer', labelKhmer));
     properties.add(
-        ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),);
+      ObjectFlagProperty<OnDigitTapped?>.has('onDigitTapped', onDigitTapped),
+    );
     properties
         .add(ObjectFlagProperty<OnBackspace?>.has('onBackspace', onBackspace));
     properties.add(ObjectFlagProperty<OnConfirm?>.has('onConfirm', onConfirm));

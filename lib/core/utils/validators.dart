@@ -135,7 +135,9 @@ final class Validators {
   /// [originalPassword] - The original password to match
   /// Returns [ValidationFailure] if not matching, null otherwise
   static ValidationFailure? passwordConfirm(
-      String? value, String originalPassword,) {
+    String? value,
+    String originalPassword,
+  ) {
     if (value == null || value.isEmpty) {
       return ValidationFailure.requiredField('Password confirmation');
     }

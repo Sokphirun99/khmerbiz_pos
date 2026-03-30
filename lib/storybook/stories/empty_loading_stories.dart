@@ -10,11 +10,11 @@ class EmptyLoadingStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
-        Text('Empty & Loading', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        Text('Empty & Loading',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         SizedBox(height: AppSpacing.base),
         Text('States for empty data or loading screens.'),
         SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'Empty State',
           description: 'Used when lists or screens have no data.',

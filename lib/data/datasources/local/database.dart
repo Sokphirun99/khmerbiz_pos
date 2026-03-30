@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:khmerbiz_pos/data/datasources/local/connection/connection_stub.dart'
+    if (dart.library.io) 'package:khmerbiz_pos/data/datasources/local/connection/connection_mobile.dart'
+    if (dart.library.js_interop) 'package:khmerbiz_pos/data/datasources/local/connection/connection_web.dart';
 import 'package:khmerbiz_pos/data/datasources/local/daos/customers_dao.dart';
 import 'package:khmerbiz_pos/data/datasources/local/daos/inventory_dao.dart';
 import 'package:khmerbiz_pos/data/datasources/local/daos/products_dao.dart';
 import 'package:khmerbiz_pos/data/datasources/local/daos/sync_queue_dao.dart';
 import 'package:khmerbiz_pos/data/datasources/local/daos/transactions_dao.dart';
-import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 part 'database.g.dart';
@@ -54,7 +51,8 @@ class Categories extends Table {
 @DataClassName('ProductModel')
 @TableIndex(name: 'product_barcode_idx', columns: {#barcode})
 @TableIndex(name: 'product_category_idx', columns: {#categoryId})
-@TableIndex(name: 'product_active_featured_idx', columns: {#isActive, #isFeatured})
+@TableIndex(
+    name: 'product_active_featured_idx', columns: {#isActive, #isFeatured})
 @TableIndex(name: 'product_active_sort_idx', columns: {#isActive, #sortOrder})
 class Products extends Table {
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -157,7 +155,8 @@ class TransactionItems extends Table {
 }
 
 @DataClassName('InventoryLogModel')
-@TableIndex(name: 'inventory_log_product_time_idx', columns: {#productId, #timestamp})
+@TableIndex(
+    name: 'inventory_log_product_time_idx', columns: {#productId, #timestamp})
 @TableIndex(name: 'inventory_log_reason_idx', columns: {#reason})
 @TableIndex(name: 'inventory_log_staff_idx', columns: {#staffId})
 class InventoryLogs extends Table {
@@ -177,7 +176,9 @@ class InventoryLogs extends Table {
 }
 
 @DataClassName('SyncQueueModel')
-@TableIndex(name: 'sync_queue_status_priority_idx', columns: {#status, #priority, #createdAt})
+@TableIndex(
+    name: 'sync_queue_status_priority_idx',
+    columns: {#status, #priority, #createdAt})
 @TableIndex(name: 'sync_queue_entity_idx', columns: {#entityType, #entityId})
 class SyncQueue extends Table {
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -210,25 +211,28 @@ class ExchangeRates extends Table {
   Set<Column> get primaryKey => {id};
 }
 
-@DriftDatabase(tables: [
-  Users,
-  Categories,
-  Products,
-  Customers,
-  Transactions,
-  TransactionItems,
-  InventoryLogs,
-  SyncQueue,
-  ExchangeRates,
-], daos: [
-  ProductsDao,
-  TransactionsDao,
-  CustomersDao,
-  InventoryDao,
-  SyncQueueDao,
-],)
+@DriftDatabase(
+  tables: [
+    Users,
+    Categories,
+    Products,
+    Customers,
+    Transactions,
+    TransactionItems,
+    InventoryLogs,
+    SyncQueue,
+    ExchangeRates,
+  ],
+  daos: [
+    ProductsDao,
+    TransactionsDao,
+    CustomersDao,
+    InventoryDao,
+    SyncQueueDao,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  AppDatabase() : super(openConnection());
   AppDatabase.forTesting(QueryExecutor executor) : super(executor);
 
   @override
@@ -251,26 +255,4 @@ class AppDatabase extends _$AppDatabase {
       },
     );
   }
-}
-
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dbFolder.path, 'khmerbiz_pos.db'));
-    
-    // Get encryption key from secure storage
-    const storage = FlutterSecureStorage();
-    var dbKey = await storage.read(key: 'db_encryption_key');
-    if (dbKey == null) {
-      dbKey = const Uuid().v4();
-      await storage.write(key: 'db_encryption_key', value: dbKey);
-    }
-    
-    return NativeDatabase(
-      file,
-      setup: (db) {
-        db.execute("PRAGMA key = '$dbKey'");
-      },
-    );
-  });
 }

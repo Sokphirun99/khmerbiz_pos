@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 
 class User extends Equatable {
-
   const User({
     required this.id,
     required this.username,
     required this.fullNameKh,
     required this.fullNameEn,
     required this.role,
-    required this.createdAt, this.avatarPath,
+    required this.createdAt,
+    this.avatarPath,
     this.isActive = true,
     this.lastLoginAt,
   });

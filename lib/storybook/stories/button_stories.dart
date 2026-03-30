@@ -11,11 +11,11 @@ class ButtonStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
-        const Text('Buttons', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        const Text('Buttons',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.base),
         const Text('AppButton variants, states, and sizes.'),
         const SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'Primary Button',
           description: 'Used for main CTAs (e.g. Checkout, Pay).',
@@ -41,7 +41,6 @@ class ButtonStories extends StatelessWidget {
             ),
           ],
         ),
-
         StorySection(
           title: 'Secondary Button',
           description: 'Used for secondary actions (e.g. Save, Add Note).',
@@ -59,7 +58,6 @@ class ButtonStories extends StatelessWidget {
             ),
           ],
         ),
-
         StorySection(
           title: 'Ghost & Danger Buttons',
           description: 'Ghost for Back/Cancel. Danger for destructive actions.',

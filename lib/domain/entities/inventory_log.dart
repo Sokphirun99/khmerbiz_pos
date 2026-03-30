@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class InventoryLog extends Equatable {
-
   const InventoryLog({
     required this.id,
     required this.productId,
@@ -9,7 +8,9 @@ class InventoryLog extends Equatable {
     required this.stockBefore,
     required this.stockAfter,
     required this.reason,
-    required this.staffId, required this.timestamp, this.referenceId,
+    required this.staffId,
+    required this.timestamp,
+    this.referenceId,
     this.notes,
   });
   final String id;

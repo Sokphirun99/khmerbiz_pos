@@ -284,7 +284,8 @@ final class AppRouter {
                   builder: (context, state) {
                     final id = state.pathParameters['id'] ?? '';
                     return PlaceholderTransactionDetailScreen(
-                        transactionId: id,);
+                      transactionId: id,
+                    );
                   },
                 ),
               ],
@@ -522,7 +523,8 @@ class PlaceholderForgotPasswordScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Forgot Password')),
       body: const Center(
-          child: Text('Forgot Password Screen - To be implemented'),),
+        child: Text('Forgot Password Screen - To be implemented'),
+      ),
     );
   }
 }
@@ -539,13 +541,21 @@ class PlaceholderMainScaffold extends StatelessWidget {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.point_of_sale), label: 'POS',),
+            icon: Icon(Icons.point_of_sale),
+            label: 'POS',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.inventory), label: 'Products',),
+            icon: Icon(Icons.inventory),
+            label: 'Products',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.receipt_long), label: 'Transactions',),
+            icon: Icon(Icons.receipt_long),
+            label: 'Transactions',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: 'Settings',),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
         onTap: (index) {
           switch (index) {
@@ -674,8 +684,10 @@ class PlaceholderTransactionsScreen extends StatelessWidget {
 }
 
 class PlaceholderTransactionDetailScreen extends StatelessWidget {
-  const PlaceholderTransactionDetailScreen(
-      {required this.transactionId, super.key,});
+  const PlaceholderTransactionDetailScreen({
+    required this.transactionId,
+    super.key,
+  });
   final String transactionId;
 
   @override

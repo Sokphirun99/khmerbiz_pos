@@ -443,7 +443,8 @@ final class AppTheme {
       modalBarrierColor: AppColors.overlay,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppSpacing.radiusExtraLarge),),
+          top: Radius.circular(AppSpacing.radiusExtraLarge),
+        ),
       ),
       clipBehavior: Clip.antiAlias,
     );
@@ -777,7 +778,8 @@ final class AppTheme {
       modalBarrierColor: AppColors.darkOverlay,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
-            top: Radius.circular(AppSpacing.radiusExtraLarge),),
+          top: Radius.circular(AppSpacing.radiusExtraLarge),
+        ),
       ),
       clipBehavior: Clip.antiAlias,
     );

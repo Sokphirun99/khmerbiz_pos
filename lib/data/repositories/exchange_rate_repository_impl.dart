@@ -8,7 +8,6 @@ import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
 
 @LazySingleton(as: ExchangeRateRepository)
 class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
-
   ExchangeRateRepositoryImpl(this._db);
   final AppDatabase _db;
   double _cachedRate = 4100.0; // Default KHR/USD rate
@@ -23,7 +22,8 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
           .getSingleOrNull();
 
       if (rateModel == null) {
-        return left(CacheFailure.defaultError(details: 'No exchange rate found'));
+        return left(
+            CacheFailure.defaultError(details: 'No exchange rate found'));
       }
 
       return right(ExchangeRate(

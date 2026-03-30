@@ -17,9 +17,13 @@ import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity_tx;
 
 class MockTransactionRepository extends Mock implements TransactionRepository {}
+
 class MockProductRepository extends Mock implements ProductRepository {}
+
 class MockAuthRepository extends Mock implements AuthRepository {}
-class MockExchangeRateRepository extends Mock implements ExchangeRateRepository {}
+
+class MockExchangeRateRepository extends Mock
+    implements ExchangeRateRepository {}
 
 class FakeTransaction extends Fake implements entity_tx.Transaction {}
 
@@ -94,7 +98,8 @@ void main() {
             .having((s) => s.items.length, 'items count', 1)
             .having((s) => s.items.first.productId, 'product id', 'p1')
             .having((s) => s.subtotal, 'subtotal', 10000.0)
-            .having((s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true),
+            .having(
+                (s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true),
       ],
     );
 
@@ -105,8 +110,10 @@ void main() {
       expect: () => [
         isA<CartLoaded>()
             .having((s) => s.items.length, 'items count', 1)
-            .having((s) => s.stockWarnings?.containsKey('p2'), 'has warning', true)
-            .having((s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock'),
+            .having(
+                (s) => s.stockWarnings?.containsKey('p2'), 'has warning', true)
+            .having(
+                (s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock'),
       ],
     );
   });
@@ -122,13 +129,15 @@ void main() {
       },
       act: (bloc) {
         bloc.add(AddToCart(product: testProduct)); // 10000
-        bloc.add(const ApplyDiscount(type: DiscountType.percent, value: 10)); // 10% -> 1000
+        bloc.add(const ApplyDiscount(
+            type: DiscountType.percent, value: 10)); // 10% -> 1000
       },
       skip: 1, // Skip AddToCart state
       expect: () => [
         isA<CartLoaded>()
             .having((s) => s.discountAmount, 'discount amount', 1000.0)
-            .having((s) => s.taxAmount, 'tax on remaining', 900.0) // (10000 - 1000) * 0.1
+            .having((s) => s.taxAmount, 'tax on remaining',
+                900.0) // (10000 - 1000) * 0.1
             .having((s) => s.total, 'total', 9900.0),
       ],
     );
@@ -158,11 +167,13 @@ void main() {
             .thenAnswer((_) async => Right(testProduct));
         when(() => mockAuthRepository.getCurrentUser())
             .thenAnswer((_) async => Right(testUser));
-        when(() => mockTransactionRepository.processSale(
+        when(
+          () => mockTransactionRepository.processSale(
             transaction: any(named: 'transaction'),
-            items: any(named: 'items'),),)
-            .thenAnswer((_) async => const Right('txn-123'));
-        
+            items: any(named: 'items'),
+          ),
+        ).thenAnswer((_) async => const Right('txn-123'));
+
         return cartBloc;
       },
       act: (bloc) {
@@ -171,18 +182,21 @@ void main() {
       },
       skip: 1, // Skip AddToCart
       expect: () => [
-        isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', true),
+        isA<CartLoaded>()
+            .having((s) => s.isCheckingOut, 'is checking out', true),
         isA<CartCheckoutSuccess>()
             .having((s) => s.transactionId, 'txn id', 'txn-123')
-            .having((s) => s.totalAmount, 'total amount', 11000.0), // 10000 + 1000 tax
+            .having((s) => s.totalAmount, 'total amount',
+                11000.0), // 10000 + 1000 tax
       ],
     );
 
     blocTest<CartBloc, CartState>(
       'emits failure when product stock is insufficient during checkout',
       build: () {
-        when(() => mockProductRepository.getProductById('p1'))
-            .thenAnswer((_) async => Right(testProduct.copyWithStock(0))); // Stale cart vs DB
+        when(() => mockProductRepository.getProductById('p1')).thenAnswer(
+            (_) async =>
+                Right(testProduct.copyWithStock(0))); // Stale cart vs DB
         return cartBloc;
       },
       act: (bloc) {
@@ -191,9 +205,11 @@ void main() {
       },
       skip: 1,
       expect: () => [
-        isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', true),
+        isA<CartLoaded>()
+            .having((s) => s.isCheckingOut, 'is checking out', true),
         isA<CartCheckoutFailure>(),
-        isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', false),
+        isA<CartLoaded>()
+            .having((s) => s.isCheckingOut, 'is checking out', false),
       ],
     );
 
@@ -204,11 +220,14 @@ void main() {
             .thenAnswer((_) async => Right(testProduct));
         when(() => mockAuthRepository.getCurrentUser())
             .thenAnswer((_) async => Right(testUser));
-        when(() => mockTransactionRepository.processSale(
+        when(
+          () => mockTransactionRepository.processSale(
             transaction: any(named: 'transaction'),
-            items: any(named: 'items'),),)
-            .thenAnswer((_) async => Left(CacheFailure.defaultError(details: 'DB Crash')));
-        
+            items: any(named: 'items'),
+          ),
+        ).thenAnswer(
+            (_) async => Left(CacheFailure.defaultError(details: 'DB Crash')));
+
         return cartBloc;
       },
       act: (bloc) {
@@ -217,9 +236,11 @@ void main() {
       },
       skip: 1,
       expect: () => [
-        isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', true),
+        isA<CartLoaded>()
+            .having((s) => s.isCheckingOut, 'is checking out', true),
         isA<CartCheckoutFailure>(),
-        isA<CartLoaded>().having((s) => s.isCheckingOut, 'is checking out', false),
+        isA<CartLoaded>()
+            .having((s) => s.isCheckingOut, 'is checking out', false),
       ],
     );
   });

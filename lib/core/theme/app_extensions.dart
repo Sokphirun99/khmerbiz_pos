@@ -421,7 +421,9 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
 
   @override
   AppSpacingExtension lerp(
-      ThemeExtension<AppSpacingExtension> other, double t,) {
+    ThemeExtension<AppSpacingExtension> other,
+    double t,
+  ) {
     if (other is! AppSpacingExtension) {
       return this;
     }

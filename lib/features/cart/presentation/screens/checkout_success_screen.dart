@@ -30,7 +30,8 @@ class CheckoutSuccessScreen extends StatefulWidget {
   }
 }
 
-class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with SingleTickerProviderStateMixin {
+class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
+    with SingleTickerProviderStateMixin {
   int _countdown = 30;
   Timer? _timer;
   late AnimationController _flashController;
@@ -77,7 +78,8 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
     super.dispose();
   }
 
-  String _getLocalizedPaymentMethod(BuildContext context, PaymentMethod method) {
+  String _getLocalizedPaymentMethod(
+      BuildContext context, PaymentMethod method) {
     final l10n = AppLocalizations.of(context)!;
     switch (method) {
       case PaymentMethod.cash:
@@ -109,7 +111,8 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.check_circle, size: 100, color: AppColors.success),
+                    const Icon(Icons.check_circle,
+                        size: 100, color: AppColors.success),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       l10n.checkoutSuccess,
@@ -117,13 +120,14 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xl),
-                    
+
                     // Receipt Card
                     Container(
                       padding: const EdgeInsets.all(AppSpacing.lg),
                       decoration: BoxDecoration(
                         color: AppColors.surface,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusLarge),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusLarge),
                         boxShadow: [
                           BoxShadow(
                             color: AppColors.shadow.withOpacity(0.1),
@@ -148,7 +152,8 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                           ),
                           _buildReceiptRow(
                             l10n.paymentMethod,
-                            _getLocalizedPaymentMethod(context, widget.state.paymentMethod),
+                            _getLocalizedPaymentMethod(
+                                context, widget.state.paymentMethod),
                           ),
                           const Divider(height: AppSpacing.xl),
                           _buildReceiptRow(
@@ -177,7 +182,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                       },
                     ),
                     const SizedBox(height: AppSpacing.md),
-                    
+
                     // New Sale Button with countdown indicator
                     Stack(
                       alignment: Alignment.center,
@@ -200,7 +205,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
                         ),
                       ],
                     ),
-                    
+
                     const SizedBox(height: AppSpacing.md),
                     AppButton(
                       label: l10n.viewReceipt,
@@ -219,7 +224,8 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
     );
   }
 
-  Widget _buildReceiptRow(String label, String value, {bool isBold = false, bool isSubtitle = false}) {
+  Widget _buildReceiptRow(String label, String value,
+      {bool isBold = false, bool isSubtitle = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -228,15 +234,19 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
           if (label.isNotEmpty)
             Text(
               label,
-              style: isBold ? AppTextStyles.headlineSmall : AppTextStyles.bodyMedium,
+              style: isBold
+                  ? AppTextStyles.headlineSmall
+                  : AppTextStyles.bodyMedium,
             ),
           const SizedBox(width: AppSpacing.base),
           Expanded(
             child: Text(
               value,
-              style: isBold 
-                ? AppTextStyles.headlineSmall 
-                : (isSubtitle ? AppTextStyles.bodySmall : AppTextStyles.bodyMedium),
+              style: isBold
+                  ? AppTextStyles.headlineSmall
+                  : (isSubtitle
+                      ? AppTextStyles.bodySmall
+                      : AppTextStyles.bodyMedium),
               textAlign: TextAlign.right,
             ),
           ),

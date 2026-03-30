@@ -4,7 +4,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
-
 class AppToast {
   static void show(
     BuildContext context, {
@@ -26,7 +25,8 @@ class AppToast {
             Expanded(
               child: Text(
                 message,
-                style: AppTextStyles.bodyMedium.copyWith(color: AppColors.surface),
+                style:
+                    AppTextStyles.bodyMedium.copyWith(color: AppColors.surface),
               ),
             ),
           ],

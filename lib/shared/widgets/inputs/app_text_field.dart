@@ -205,9 +205,14 @@ class AppTextField extends StatefulWidget {
     properties.add(StringProperty('errorTextKhmer', errorTextKhmer));
     properties.add(StringProperty('value', value));
     properties.add(
-        ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged),);
-    properties.add(ObjectFlagProperty<ValueChanged<String>?>.has(
-        'onSubmitted', onSubmitted,),);
+      ObjectFlagProperty<ValueChanged<String>?>.has('onChanged', onChanged),
+    );
+    properties.add(
+      ObjectFlagProperty<ValueChanged<String>?>.has(
+        'onSubmitted',
+        onSubmitted,
+      ),
+    );
     properties.add(DiagnosticsProperty<IconData?>('prefixIcon', prefixIcon));
     properties.add(StringProperty('prefixText', prefixText));
     properties.add(DiagnosticsProperty<IconData?>('suffixIcon', suffixIcon));
@@ -218,17 +223,30 @@ class AppTextField extends StatefulWidget {
     properties.add(IntProperty('maxLines', maxLines));
     properties.add(IntProperty('minLines', minLines));
     properties.add(IntProperty('maxLength', maxLength));
-    properties.add(IterableProperty<TextInputFormatter>(
-        'inputFormatters', inputFormatters,),);
+    properties.add(
+      IterableProperty<TextInputFormatter>(
+        'inputFormatters',
+        inputFormatters,
+      ),
+    );
     properties.add(DiagnosticsProperty<FocusNode?>('focusNode', focusNode));
     properties.add(
-        DiagnosticsProperty<TextEditingController?>('controller', controller),);
+      DiagnosticsProperty<TextEditingController?>('controller', controller),
+    );
     properties.add(DiagnosticsProperty<bool>('autofocus', autofocus));
     properties.add(DiagnosticsProperty<bool>('obscureText', obscureText));
-    properties.add(EnumProperty<TextCapitalization>(
-        'textCapitalization', textCapitalization,),);
-    properties.add(DiagnosticsProperty<EdgeInsetsGeometry?>(
-        'contentPadding', contentPadding,),);
+    properties.add(
+      EnumProperty<TextCapitalization>(
+        'textCapitalization',
+        textCapitalization,
+      ),
+    );
+    properties.add(
+      DiagnosticsProperty<EdgeInsetsGeometry?>(
+        'contentPadding',
+        contentPadding,
+      ),
+    );
   }
 }
 

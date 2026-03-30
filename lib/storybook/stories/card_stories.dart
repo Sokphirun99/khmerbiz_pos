@@ -10,11 +10,11 @@ class CardStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
-        Text('Cards', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        Text('Cards',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         SizedBox(height: AppSpacing.base),
         Text('Product, Dashboard, and generic cards.'),
         SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'Product Card',
           description: 'A standard product card for grid view.',

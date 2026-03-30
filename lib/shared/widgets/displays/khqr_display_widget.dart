@@ -10,7 +10,8 @@ enum KhqrState { generating, ready, success, timeout, offline }
 
 class KhqrDisplayWidget extends StatelessWidget {
   const KhqrDisplayWidget({
-    required this.state, super.key,
+    required this.state,
+    super.key,
     this.qrString,
     this.onRetry,
   });
@@ -58,11 +59,13 @@ class KhqrDisplayWidget extends StatelessWidget {
               height: 200,
               color: AppColors.surfaceAlt,
               child: const Center(
-                child: Icon(Icons.qr_code_2, size: 120, color: AppColors.textPrimary),
+                child: Icon(Icons.qr_code_2,
+                    size: 120, color: AppColors.textPrimary),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
-            Text('Scan to pay with any supported app', style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
+            Text('Scan to pay with any supported app',
+                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
           ],
         );
       case KhqrState.success:
@@ -94,7 +97,8 @@ class KhqrDisplayWidget extends StatelessWidget {
             const SizedBox(height: AppSpacing.md),
             Text('Offline Mode', style: AppTextStyles.headlineSmall),
             const SizedBox(height: AppSpacing.sm),
-            Text('Cannot generate KHQR without internet connection.', style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
+            Text('Cannot generate KHQR without internet connection.',
+                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
             const SizedBox(height: AppSpacing.lg),
             if (onRetry != null)
               OutlinedButton(

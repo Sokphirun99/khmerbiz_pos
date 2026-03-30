@@ -8,7 +8,6 @@ import 'package:khmerbiz_pos/domain/repositories/sync_queue_repository.dart';
 
 @LazySingleton(as: SyncQueueRepository)
 class SyncQueueRepositoryImpl implements SyncQueueRepository {
-
   SyncQueueRepositoryImpl(this._dao);
   final SyncQueueDao _dao;
 
@@ -32,11 +31,13 @@ class SyncQueueRepositoryImpl implements SyncQueueRepository {
   Stream<Either<Failure, int>> watchPendingCount() {
     return _dao.watchPendingCount().map((count) {
       return right<Failure, int>(count);
-    }).handleError((err) => left<Failure, int>(CacheFailure.defaultError(details: err.toString())));
+    }).handleError((err) =>
+        left<Failure, int>(CacheFailure.defaultError(details: err.toString())));
   }
 
   @override
-  Future<Either<Failure, List<SyncQueueItem>>> getPendingItems({int limit = 10}) async {
+  Future<Either<Failure, List<SyncQueueItem>>> getPendingItems(
+      {int limit = 10}) async {
     try {
       final items = await _dao.getPendingItems(limit: limit);
       return right(items.map(_mapToDomain).toList());
@@ -66,7 +67,8 @@ class SyncQueueRepositoryImpl implements SyncQueueRepository {
   }
 
   @override
-  Future<Either<Failure, void>> markFailed(String id, String errorMessage) async {
+  Future<Either<Failure, void>> markFailed(
+      String id, String errorMessage) async {
     try {
       await _dao.markFailed(id, errorMessage);
       return right(null);

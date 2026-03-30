@@ -1,12 +1,12 @@
 import 'package:equatable/equatable.dart';
 
 class Customer extends Equatable {
-
   const Customer({
     required this.id,
     required this.phone,
     required this.name,
-    required this.createdAt, this.email,
+    required this.createdAt,
+    this.email,
     this.loyaltyPoints = 0,
     this.totalSpent = 0,
     this.totalTransactions = 0,

@@ -2,18 +2,19 @@ import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
-import 'package:khmerbiz_pos/data/datasources/local/daos/transactions_dao.dart' hide TransactionWithItems;
+import 'package:khmerbiz_pos/data/datasources/local/daos/transactions_dao.dart'
+    hide TransactionWithItems;
 import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:khmerbiz_pos/domain/entities/daily_summary.dart';
 import 'package:khmerbiz_pos/domain/entities/top_product.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity;
-import 'package:khmerbiz_pos/domain/entities/transaction_item.dart' as entityItem;
+import 'package:khmerbiz_pos/domain/entities/transaction_item.dart'
+    as entityItem;
 import 'package:khmerbiz_pos/domain/entities/weekly_summary.dart';
 import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
 
 @LazySingleton(as: TransactionRepository)
 class TransactionRepositoryImpl implements TransactionRepository {
-
   TransactionRepositoryImpl(this._dao);
   final TransactionsDao _dao;
 
@@ -86,18 +87,23 @@ class TransactionRepositoryImpl implements TransactionRepository {
         createdAt: Value(DateTime.now()),
       );
 
-      final itemsCompanion = items.map((item) => TransactionItemsCompanion(
-        productId: Value(item.productId),
-        productNameSnapshot: Value(item.productNameSnapshot),
-        productNameEnSnapshot: Value(item.productNameEnSnapshot),
-        quantity: Value(item.quantity),
-        unitPrice: Value(item.unitPrice),
-        costPrice: Value(item.costPrice),
-        subtotal: Value(item.subtotal),
-        discountAmount: Value(item.discountAmount),
-      ),).toList();
+      final itemsCompanion = items
+          .map(
+            (item) => TransactionItemsCompanion(
+              productId: Value(item.productId),
+              productNameSnapshot: Value(item.productNameSnapshot),
+              productNameEnSnapshot: Value(item.productNameEnSnapshot),
+              quantity: Value(item.quantity),
+              unitPrice: Value(item.unitPrice),
+              costPrice: Value(item.costPrice),
+              subtotal: Value(item.subtotal),
+              discountAmount: Value(item.discountAmount),
+            ),
+          )
+          .toList();
 
-      final txId = await _dao.processSale(transaction: txCompanion, items: itemsCompanion);
+      final txId = await _dao.processSale(
+          transaction: txCompanion, items: itemsCompanion);
       return right(txId);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
@@ -107,26 +113,34 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Stream<Either<Failure, List<entity.Transaction>>> watchTodayTransactions() {
     return _dao.watchTodayTransactions().map((models) {
-      return right<Failure, List<entity.Transaction>>(models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(CacheFailure.defaultError(details: err.toString())));
+      return right<Failure, List<entity.Transaction>>(
+          models.map(_mapToDomain).toList());
+    }).handleError((err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString())));
   }
 
   @override
-  Stream<Either<Failure, List<entity.Transaction>>> watchTransactionsByDateRange(DateTime start, DateTime end) {
+  Stream<Either<Failure, List<entity.Transaction>>>
+      watchTransactionsByDateRange(DateTime start, DateTime end) {
     return _dao.watchTransactionsByDateRange(start, end).map((models) {
-      return right<Failure, List<entity.Transaction>>(models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(CacheFailure.defaultError(details: err.toString())));
+      return right<Failure, List<entity.Transaction>>(
+          models.map(_mapToDomain).toList());
+    }).handleError((err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString())));
   }
 
   @override
-  Future<Either<Failure, TransactionWithItems>> getTransactionWithItems(String id) async {
+  Future<Either<Failure, TransactionWithItems>> getTransactionWithItems(
+      String id) async {
     try {
       final res = await _dao.getTransactionWithItems(id);
       if (res == null) return left(ServerFailure.notFound());
-      return right(TransactionWithItems(
-        transaction: _mapToDomain(res.transaction),
-        items: res.items.map(_mapItemToDomain).toList(),
-      ),);
+      return right(
+        TransactionWithItems(
+          transaction: _mapToDomain(res.transaction),
+          items: res.items.map(_mapItemToDomain).toList(),
+        ),
+      );
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
@@ -136,47 +150,55 @@ class TransactionRepositoryImpl implements TransactionRepository {
   Future<Either<Failure, DailySummary>> getDailySummary(DateTime date) async {
     try {
       final res = await _dao.getDailySummary(date);
-      return right(DailySummary(
-        date: res.date,
-        totalTransactions: res.totalTransactions,
-        totalRevenue: res.totalRevenue,
-        totalRevenueUSD: res.totalRevenueUSD,
-      ),);
+      return right(
+        DailySummary(
+          date: res.date,
+          totalTransactions: res.totalTransactions,
+          totalRevenue: res.totalRevenue,
+          totalRevenueUSD: res.totalRevenueUSD,
+        ),
+      );
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, WeeklySummary>> getWeeklySummary(DateTime weekStart) async {
+  Future<Either<Failure, WeeklySummary>> getWeeklySummary(
+      DateTime weekStart) async {
     try {
       final res = await _dao.getWeeklySummary(weekStart);
-      return right(WeeklySummary(
-        weekStart: weekStart,
-        weekEnd: weekStart.add(const Duration(days: 7)),
-        totalTransactions: res.totalTransactions,
-        totalRevenue: res.totalRevenue,
-        totalRevenueUSD: res.totalRevenueUSD,
-      ),);
+      return right(
+        WeeklySummary(
+          weekStart: weekStart,
+          weekEnd: weekStart.add(const Duration(days: 7)),
+          totalTransactions: res.totalTransactions,
+          totalRevenue: res.totalRevenue,
+          totalRevenueUSD: res.totalRevenueUSD,
+        ),
+      );
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, List<TopProduct>>> getTopProducts(DateTime start, DateTime end, int limit) async {
+  Future<Either<Failure, List<TopProduct>>> getTopProducts(
+      DateTime start, DateTime end, int limit) async {
     try {
       await _dao.getTopProducts(start, end, limit);
       // In a real app we would map productId to full Product domain entities, since getTopProducts returns them.
       // We will skip actual product mapping to avoid creating an n+1 query here just for the skeleton
-      return right([]); // To correctly implement, fetch Products via ProductRepository.
+      return right(
+          []); // To correctly implement, fetch Products via ProductRepository.
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
   }
 
   @override
-  Future<Either<Failure, void>> voidTransaction(String id, String staffId) async {
+  Future<Either<Failure, void>> voidTransaction(
+      String id, String staffId) async {
     try {
       await _dao.voidTransaction(id, staffId);
       return right(null);
@@ -186,9 +208,12 @@ class TransactionRepositoryImpl implements TransactionRepository {
   }
 
   @override
-  Stream<Either<Failure, List<entity.Transaction>>> watchUnsyncedTransactions() {
+  Stream<Either<Failure, List<entity.Transaction>>>
+      watchUnsyncedTransactions() {
     return _dao.watchUnsyncedTransactions().map((models) {
-      return right<Failure, List<entity.Transaction>>(models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(CacheFailure.defaultError(details: err.toString())));
+      return right<Failure, List<entity.Transaction>>(
+          models.map(_mapToDomain).toList());
+    }).handleError((err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString())));
   }
 }

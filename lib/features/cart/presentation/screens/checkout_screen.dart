@@ -56,7 +56,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         }
       },
       builder: (context, state) {
-        if (state is CartInitial || (state is CartLoaded && state.items.isEmpty)) {
+        if (state is CartInitial ||
+            (state is CartLoaded && state.items.isEmpty)) {
           return Scaffold(
             appBar: AppBar(title: const Text('Cart / រទេះ')),
             body: Center(
@@ -78,8 +79,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Expanded(
                     flex: 6,
                     child: ColoredBox(
-                        color: AppColors.surfaceAlt,
-                        child: const Center(child: Text('ProductListScreen Placeholder')),),
+                      color: AppColors.surfaceAlt,
+                      child: const Center(
+                          child: Text('ProductListScreen Placeholder')),
+                    ),
                   ),
                   const VerticalDivider(width: 1),
                   SizedBox(
@@ -147,7 +150,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   name: item.product.nameEn,
                   nameKhmer: item.product.nameKh,
                   unitPriceKHR: item.unitPrice,
-                  unitPriceUSD: item.unitPrice / 4000, // Approximate USD for display if needed
+                  unitPriceUSD: item.unitPrice /
+                      4000, // Approximate USD for display if needed
                   quantity: item.quantity.toInt(),
                 ),
                 onQuantityChanged: (qty) {
@@ -171,7 +175,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         // Discount Row
         Padding(
           padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.base, vertical: AppSpacing.sm,),
+            horizontal: AppSpacing.base,
+            vertical: AppSpacing.sm,
+          ),
           child: Row(
             children: [
               Expanded(
@@ -183,7 +189,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onTap: () {
                     // Just applying a fixed 10% for now
                     context.read<CartBloc>().add(
-                        const ApplyDiscount(type: DiscountType.percent, value: 10),);
+                          const ApplyDiscount(
+                              type: DiscountType.percent, value: 10),
+                        );
                   },
                 ),
               ),
@@ -191,7 +199,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 const SizedBox(width: AppSpacing.sm),
                 IconButton(
                   icon: const Icon(Icons.close),
-                  onPressed: () => context.read<CartBloc>().add(RemoveDiscount()),
+                  onPressed: () =>
+                      context.read<CartBloc>().add(RemoveDiscount()),
                 ),
               ],
             ],
@@ -211,7 +220,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               if (state.discountAmount > 0)
                 _buildSummaryRow(
                   'Discount:',
-                  PriceCompact(amountKHR: state.discountAmount, color: AppColors.error),
+                  PriceCompact(
+                      amountKHR: state.discountAmount, color: AppColors.error),
                 ),
               _buildSummaryRow(
                 'Tax (10%):',
@@ -247,22 +257,26 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               PaymentMethodButton(
                 method: PaymentMethodType.cash,
                 isSelected: _selectedPaymentMethod == PaymentMethod.cash,
-                onTap: () => setState(() => _selectedPaymentMethod = PaymentMethod.cash),
+                onTap: () =>
+                    setState(() => _selectedPaymentMethod = PaymentMethod.cash),
               ),
               PaymentMethodButton(
                 method: PaymentMethodType.khqr,
                 isSelected: _selectedPaymentMethod == PaymentMethod.khqr,
-                onTap: () => setState(() => _selectedPaymentMethod = PaymentMethod.khqr),
+                onTap: () =>
+                    setState(() => _selectedPaymentMethod = PaymentMethod.khqr),
               ),
               PaymentMethodButton(
                 method: PaymentMethodType.bankTransfer,
                 isSelected: _selectedPaymentMethod == PaymentMethod.aba,
-                onTap: () => setState(() => _selectedPaymentMethod = PaymentMethod.aba),
+                onTap: () =>
+                    setState(() => _selectedPaymentMethod = PaymentMethod.aba),
               ),
               PaymentMethodButton(
                 method: PaymentMethodType.wing,
                 isSelected: _selectedPaymentMethod == PaymentMethod.wing,
-                onTap: () => setState(() => _selectedPaymentMethod = PaymentMethod.wing),
+                onTap: () =>
+                    setState(() => _selectedPaymentMethod = PaymentMethod.wing),
               ),
             ],
           ),
@@ -313,12 +327,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 (_selectedPaymentMethod == PaymentMethod.cash &&
                     (_cashReceived == null || _cashReceived! < state.total)),
             onTap: () {
-              context.read<CartBloc>().add(ProcessCheckout(
-                    method: _selectedPaymentMethod,
-                    cashReceived: _selectedPaymentMethod == PaymentMethod.cash
-                        ? _cashReceived
-                        : null,
-                  ),);
+              context.read<CartBloc>().add(
+                    ProcessCheckout(
+                      method: _selectedPaymentMethod,
+                      cashReceived: _selectedPaymentMethod == PaymentMethod.cash
+                          ? _cashReceived
+                          : null,
+                    ),
+                  );
             },
           ),
         ),

@@ -11,16 +11,15 @@ class KhqrStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
-        Text('KHQR', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        Text('KHQR',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         SizedBox(height: AppSpacing.base),
         Text('Dynamic KHQR payment displays.'),
         SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'Generating State',
           children: [KhqrDisplayWidget(state: KhqrState.generating)],
         ),
-        
         StorySection(
           title: 'Ready State',
           children: [KhqrDisplayWidget(state: KhqrState.ready)],

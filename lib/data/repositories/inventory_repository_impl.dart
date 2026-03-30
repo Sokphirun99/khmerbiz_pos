@@ -8,7 +8,6 @@ import 'package:khmerbiz_pos/domain/repositories/inventory_repository.dart';
 
 @LazySingleton(as: InventoryRepository)
 class InventoryRepositoryImpl implements InventoryRepository {
-
   InventoryRepositoryImpl(this._dao);
   final InventoryDao _dao;
 
@@ -28,10 +27,13 @@ class InventoryRepositoryImpl implements InventoryRepository {
   }
 
   @override
-  Stream<Either<Failure, List<InventoryLog>>> watchProductHistory(String productId) {
+  Stream<Either<Failure, List<InventoryLog>>> watchProductHistory(
+      String productId) {
     return _dao.watchProductHistory(productId).map((models) {
-      return right<Failure, List<InventoryLog>>(models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<InventoryLog>>(CacheFailure.defaultError(details: err.toString())));
+      return right<Failure, List<InventoryLog>>(
+          models.map(_mapToDomain).toList());
+    }).handleError((err) => left<Failure, List<InventoryLog>>(
+        CacheFailure.defaultError(details: err.toString())));
   }
 
   @override

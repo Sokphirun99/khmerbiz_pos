@@ -40,7 +40,8 @@ class _StorybookScreenState extends State<StorybookScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('LDSG Storybook', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('LDSG Storybook',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.onPrimary,
       ),
@@ -76,7 +77,8 @@ class _StorybookScreenState extends State<StorybookScreen> {
             decoration: const BoxDecoration(color: AppColors.primary),
             child: Text(
               'LDSG Storybook',
-              style: AppTextStyles.headlineMedium.copyWith(color: AppColors.onPrimary),
+              style: AppTextStyles.headlineMedium
+                  .copyWith(color: AppColors.onPrimary),
             ),
           ),
         ...StoryLayer.values.map(
@@ -84,8 +86,12 @@ class _StorybookScreenState extends State<StorybookScreen> {
             title: Text(
               layer.label,
               style: AppTextStyles.bodyMedium.copyWith(
-                fontWeight: _selectedLayer == layer ? FontWeight.bold : FontWeight.normal,
-                color: _selectedLayer == layer ? AppColors.primary : AppColors.textPrimary,
+                fontWeight: _selectedLayer == layer
+                    ? FontWeight.bold
+                    : FontWeight.normal,
+                color: _selectedLayer == layer
+                    ? AppColors.primary
+                    : AppColors.textPrimary,
               ),
             ),
             selected: _selectedLayer == layer,

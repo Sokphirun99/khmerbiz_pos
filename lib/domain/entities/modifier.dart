@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class Modifier extends Equatable {
-
   const Modifier({
     required this.name,
     this.price = 0,

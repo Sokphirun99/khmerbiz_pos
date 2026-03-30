@@ -77,9 +77,12 @@ final class NetworkInfoImpl implements NetworkInfo {
 
   ConnectionType _mapResults(List<ConnectivityResult> results) {
     if (results.contains(ConnectivityResult.wifi)) return ConnectionType.wifi;
-    if (results.contains(ConnectivityResult.mobile)) return ConnectionType.mobile;
-    if (results.contains(ConnectivityResult.ethernet)) return ConnectionType.ethernet;
-    if (results.contains(ConnectivityResult.bluetooth)) return ConnectionType.bluetooth;
+    if (results.contains(ConnectivityResult.mobile))
+      return ConnectionType.mobile;
+    if (results.contains(ConnectivityResult.ethernet))
+      return ConnectionType.ethernet;
+    if (results.contains(ConnectivityResult.bluetooth))
+      return ConnectionType.bluetooth;
     if (results.contains(ConnectivityResult.vpn)) return ConnectionType.vpn;
     if (results.contains(ConnectivityResult.none)) return ConnectionType.none;
     return ConnectionType.unknown;

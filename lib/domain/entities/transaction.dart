@@ -1,13 +1,17 @@
 import 'package:equatable/equatable.dart';
 
 class Transaction extends Equatable {
-
   const Transaction({
     required this.id,
     required this.receiptNumber,
     required this.transactionDate,
     required this.staffId,
-    required this.subtotal, required this.totalAmount, required this.totalAmountUSD, required this.paymentMethod, required this.createdAt, this.customerId,
+    required this.subtotal,
+    required this.totalAmount,
+    required this.totalAmountUSD,
+    required this.paymentMethod,
+    required this.createdAt,
+    this.customerId,
     this.discountType,
     this.discountValue = 0,
     this.discountAmount = 0,

@@ -10,11 +10,11 @@ class FeedbackStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
-        const Text('Feedback', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        const Text('Feedback',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         const SizedBox(height: AppSpacing.base),
         const Text('Toasts, Snackbars, and dialogs.'),
         const SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'App Toast',
           description: 'Temporary floating feedback.',

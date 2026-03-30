@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 
 class Category extends Equatable {
-
   const Category({
     required this.id,
     required this.nameKh,

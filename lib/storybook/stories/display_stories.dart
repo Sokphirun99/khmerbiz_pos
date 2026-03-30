@@ -10,11 +10,11 @@ class DisplayStories extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
-        Text('Displays', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+        Text('Displays',
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
         SizedBox(height: AppSpacing.base),
         Text('Data display components like badges, avatars, generic stats.'),
         SizedBox(height: AppSpacing.xl),
-
         StorySection(
           title: 'App Badge',
           description: 'Used for cart count or notifications.',

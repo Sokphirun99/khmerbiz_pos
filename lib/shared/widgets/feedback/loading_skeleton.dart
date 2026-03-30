@@ -269,7 +269,8 @@ class LoadingSkeleton extends StatelessWidget {
         lineCount,
         (index) => Padding(
           padding: EdgeInsets.only(
-              bottom: index < lineCount - 1 ? AppSpacing.sm : 0,),
+            bottom: index < lineCount - 1 ? AppSpacing.sm : 0,
+          ),
           child: Container(
             height: height ?? 14,
             width: width ?? (index == lineCount - 1 ? 100 : double.infinity),
