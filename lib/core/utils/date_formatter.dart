@@ -218,18 +218,17 @@ final class DateFormatter {
 
   /// Convert English digits to Khmer digits.
   String _convertToKhmerNumber(dynamic value) {
-    const enDigits = '0123456789';
-    const kmDigits = '០១២៣៤៥៦៧៨៩';
-
     final str = value.toString();
     final buffer = StringBuffer();
 
-    for (final char in str.split('')) {
-      final index = enDigits.indexOf(char);
-      if (index >= 0) {
-        buffer.write(kmDigits[index]);
+    for (int i = 0; i < str.length; i++) {
+      final codeUnit = str.codeUnitAt(i);
+      // English digits '0' (48) to '9' (57)
+      if (codeUnit >= 48 && codeUnit <= 57) {
+        // Offset to Khmer digits '០' (6112) is 6112 - 48 = 6064
+        buffer.writeCharCode(codeUnit + 6064);
       } else {
-        buffer.write(char);
+        buffer.writeCharCode(codeUnit);
       }
     }
 
