@@ -163,8 +163,8 @@ void main() {
     blocTest<CartBloc, CartState>(
       'emits success when all validations pass',
       build: () {
-        when(() => mockProductRepository.getProductById('p1'))
-            .thenAnswer((_) async => Right(testProduct));
+        when(() => mockProductRepository.getProductsByIds(['p1']))
+            .thenAnswer((_) async => Right([testProduct]));
         when(() => mockAuthRepository.getCurrentUser())
             .thenAnswer((_) async => Right(testUser));
         when(
@@ -194,9 +194,9 @@ void main() {
     blocTest<CartBloc, CartState>(
       'emits failure when product stock is insufficient during checkout',
       build: () {
-        when(() => mockProductRepository.getProductById('p1')).thenAnswer(
+        when(() => mockProductRepository.getProductsByIds(['p1'])).thenAnswer(
             (_) async =>
-                Right(testProduct.copyWithStock(0))); // Stale cart vs DB
+                Right([testProduct.copyWithStock(0)])); // Stale cart vs DB
         return cartBloc;
       },
       act: (bloc) {
@@ -216,8 +216,8 @@ void main() {
     blocTest<CartBloc, CartState>(
       'emits failure on DB error during processSale',
       build: () {
-        when(() => mockProductRepository.getProductById('p1'))
-            .thenAnswer((_) async => Right(testProduct));
+        when(() => mockProductRepository.getProductsByIds(['p1']))
+            .thenAnswer((_) async => Right([testProduct]));
         when(() => mockAuthRepository.getCurrentUser())
             .thenAnswer((_) async => Right(testUser));
         when(
