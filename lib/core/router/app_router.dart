@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:khmerbiz_pos/storybook/storybook_screen.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/product_list_screen.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/add_edit_product_screen.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/product_detail_screen.dart';
+import 'package:khmerbiz_pos/features/inventory/presentation/screens/inventory_screen.dart';
+import 'package:khmerbiz_pos/features/inventory/presentation/widgets/stock_adjustment_sheet.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 /// App router configuration using go_router.
 ///
@@ -229,27 +235,34 @@ final class AppRouter {
             GoRoute(
               path: products,
               name: productsName,
-              builder: (context, state) => const PlaceholderProductsScreen(),
+              builder: (context, state) => const ProductListScreen(),
               routes: [
                 GoRoute(
                   path: 'add',
                   name: productAddName,
-                  builder: (context, state) =>
-                      const PlaceholderProductFormScreen(),
+                  builder: (context, state) {
+                    final extra = state.extra;
+                    final barcode = extra is Map<String, dynamic>
+                        ? extra['barcode'] as String?
+                        : null;
+                    return AddEditProductScreen(initialBarcode: barcode);
+                  },
                 ),
                 GoRoute(
                   path: ':id',
                   name: productDetailName,
                   builder: (context, state) {
                     final id = state.pathParameters['id'] ?? '';
-                    return PlaceholderProductDetailScreen(productId: id);
+                    return ProductDetailScreen(productId: id);
                   },
                   routes: [
                     GoRoute(
                       path: 'edit',
                       name: productEditName,
-                      builder: (context, state) =>
-                          const PlaceholderProductFormScreen(),
+                      builder: (context, state) {
+                        final product = state.extra as Product?;
+                        return AddEditProductScreen(product: product);
+                      },
                     ),
                   ],
                 ),
@@ -260,13 +273,27 @@ final class AppRouter {
             GoRoute(
               path: inventory,
               name: inventoryName,
-              builder: (context, state) => const PlaceholderInventoryScreen(),
+              builder: (context, state) => const InventoryScreen(),
               routes: [
                 GoRoute(
                   path: 'adjust',
                   name: stockAdjustmentName,
-                  builder: (context, state) =>
-                      const PlaceholderStockAdjustmentScreen(),
+                  builder: (context, state) {
+                    final product = state.extra as Product?;
+                    if (product == null) {
+                      return const InventoryScreen();
+                    }
+                    return Scaffold(
+                      body: Builder(
+                        builder: (ctx) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            StockAdjustmentSheet.show(ctx, product);
+                          });
+                          return const SizedBox.shrink();
+                        },
+                      ),
+                    );
+                  },
                 ),
               ],
             ),

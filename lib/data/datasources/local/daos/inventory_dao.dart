@@ -18,15 +18,47 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
+  Future<List<InventoryLogModel>> getInventoryLogs({
+    String? productId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) {
+    final query = select(inventoryLogs)
+      ..orderBy([(t) => OrderingTerm.desc(t.timestamp)]);
+
+    if (productId != null) {
+      query.where((tbl) => tbl.productId.equals(productId));
+    }
+    if (startDate != null) {
+      query.where(
+          (tbl) => tbl.timestamp.isBiggerOrEqualValue(startDate));
+    }
+    if (endDate != null) {
+      query.where(
+          (tbl) => tbl.timestamp.isSmallerOrEqualValue(endDate));
+    }
+
+    return query.get();
+  }
+
+  Future<List<ProductModel>> getLowStockProducts() {
+    return (select(products)
+          ..where(
+            (tbl) =>
+                tbl.isActive.equals(true) &
+                tbl.stock.isSmallerOrEqual(tbl.lowStockThreshold),
+          ))
+        .get();
+  }
+
   Future<void> adjustStock({
     required String productId,
-    required double quantity, // delta
+    required double quantity,
     required String reason,
     required String staffId,
     String? notes,
   }) async {
     return db.transaction(() async {
-      // atomic: fetch current stock, insert log, update product stock
       final currentProduct = await (select(products)
             ..where((tbl) => tbl.id.equals(productId)))
           .getSingle();
@@ -34,11 +66,12 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
       final stockBefore = currentProduct.stock;
       final stockAfter = stockBefore + quantity;
 
-      // Update
       await (update(products)..where((tbl) => tbl.id.equals(productId)))
-          .write(ProductsCompanion(stock: Value(stockAfter)));
+          .write(ProductsCompanion(
+        stock: Value(stockAfter),
+        updatedAt: Value(DateTime.now()),
+      ));
 
-      // Log
       await into(inventoryLogs).insert(
         InventoryLogsCompanion(
           id: Value(_uuid.v4()),
