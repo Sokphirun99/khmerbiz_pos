@@ -56,15 +56,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   Future<bool> _verifyPin(UserModel userModel, String pin) async {
-    final hashedPin = _hashPin(pin);
-    if (userModel.pinHash == hashedPin) {
+    final secureHash = _secureHashPin(pin, userModel.id);
+    if (userModel.pinHash == secureHash) {
       return true;
     }
 
-    if (userModel.pinHash == pin) {
-      // Upgrade legacy plaintext PIN storage after the first successful login.
+    final weakHash = _hashPin(pin);
+    if (userModel.pinHash == weakHash || userModel.pinHash == pin) {
+      // Upgrade legacy weak hash or plaintext PIN storage to secure hash.
       await (_db.update(_db.users)..where((tbl) => tbl.id.equals(userModel.id)))
-          .write(UsersCompanion(pinHash: Value(hashedPin)));
+          .write(UsersCompanion(pinHash: Value(secureHash)));
       return true;
     }
 
@@ -87,5 +88,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   String _hashPin(String pin) {
     return 'sha256:${sha256.convert(utf8.encode(pin))}';
+  }
+
+  String _secureHashPin(String pin, String salt) {
+    var digest = sha256.convert(utf8.encode(pin + salt));
+    // 10,000 iterations for key stretching to protect short PINs against brute force
+    for (var i = 0; i < 10000; i++) {
+      digest = sha256.convert(utf8.encode(digest.toString() + salt));
+    }
+    return 'sha256_v2:${digest.toString()}';
   }
 }
