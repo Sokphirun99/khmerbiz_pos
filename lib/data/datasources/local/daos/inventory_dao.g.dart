@@ -8,4 +8,18 @@ mixin _$InventoryDaoMixin on DatabaseAccessor<AppDatabase> {
   $ProductsTable get products => attachedDatabase.products;
   $UsersTable get users => attachedDatabase.users;
   $InventoryLogsTable get inventoryLogs => attachedDatabase.inventoryLogs;
+  InventoryDaoManager get managers => InventoryDaoManager(this);
+}
+
+class InventoryDaoManager {
+  final _$InventoryDaoMixin _db;
+  InventoryDaoManager(this._db);
+  $$CategoriesTableTableManager get categories =>
+      $$CategoriesTableTableManager(_db.attachedDatabase, _db.categories);
+  $$ProductsTableTableManager get products =>
+      $$ProductsTableTableManager(_db.attachedDatabase, _db.products);
+  $$UsersTableTableManager get users =>
+      $$UsersTableTableManager(_db.attachedDatabase, _db.users);
+  $$InventoryLogsTableTableManager get inventoryLogs =>
+      $$InventoryLogsTableTableManager(_db.attachedDatabase, _db.inventoryLogs);
 }

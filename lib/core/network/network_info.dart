@@ -38,8 +38,8 @@ final class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isConnected async {
     try {
-      final result = await _connectivity.checkConnectivity();
-      return result != ConnectivityResult.none;
+      final results = await _connectivity.checkConnectivity();
+      return results.any((r) => r != ConnectivityResult.none);
     } catch (e) {
       return false;
     }
@@ -48,8 +48,8 @@ final class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isWifiConnected async {
     try {
-      final result = await _connectivity.checkConnectivity();
-      return result == ConnectivityResult.wifi;
+      final results = await _connectivity.checkConnectivity();
+      return results.contains(ConnectivityResult.wifi);
     } catch (e) {
       return false;
     }
@@ -58,8 +58,8 @@ final class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<bool> get isMobileDataConnected async {
     try {
-      final result = await _connectivity.checkConnectivity();
-      return result == ConnectivityResult.mobile;
+      final results = await _connectivity.checkConnectivity();
+      return results.contains(ConnectivityResult.mobile);
     } catch (e) {
       return false;
     }
@@ -68,33 +68,28 @@ final class NetworkInfoImpl implements NetworkInfo {
   @override
   Future<ConnectionType> get connectionType async {
     try {
-      final result = await _connectivity.checkConnectivity();
-
-      return switch (result) {
-        ConnectivityResult.wifi => ConnectionType.wifi,
-        ConnectivityResult.mobile => ConnectionType.mobile,
-        ConnectivityResult.ethernet => ConnectionType.ethernet,
-        ConnectivityResult.bluetooth => ConnectionType.bluetooth,
-        ConnectivityResult.none => ConnectionType.none,
-        _ => ConnectionType.unknown,
-      };
+      final results = await _connectivity.checkConnectivity();
+      return _mapResults(results);
     } catch (e) {
       return ConnectionType.unknown;
     }
   }
 
+  ConnectionType _mapResults(List<ConnectivityResult> results) {
+    if (results.contains(ConnectivityResult.wifi)) return ConnectionType.wifi;
+    if (results.contains(ConnectivityResult.mobile)) return ConnectionType.mobile;
+    if (results.contains(ConnectivityResult.ethernet)) return ConnectionType.ethernet;
+    if (results.contains(ConnectivityResult.bluetooth)) return ConnectionType.bluetooth;
+    if (results.contains(ConnectivityResult.vpn)) return ConnectionType.vpn;
+    if (results.contains(ConnectivityResult.none)) return ConnectionType.none;
+    return ConnectionType.unknown;
+  }
+
   @override
   Stream<ConnectionType> get onConnectivityChanged {
     return _connectivity.onConnectivityChanged
-        .map<ConnectionType>((ConnectivityResult result) {
-      return switch (result) {
-        ConnectivityResult.wifi => ConnectionType.wifi,
-        ConnectivityResult.mobile => ConnectionType.mobile,
-        ConnectivityResult.ethernet => ConnectionType.ethernet,
-        ConnectivityResult.bluetooth => ConnectionType.bluetooth,
-        ConnectivityResult.none => ConnectionType.none,
-        _ => ConnectionType.unknown,
-      };
+        .map<ConnectionType>((List<ConnectivityResult> results) {
+      return _mapResults(results);
     });
   }
 }

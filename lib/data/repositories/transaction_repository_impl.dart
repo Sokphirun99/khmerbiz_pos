@@ -166,7 +166,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<Either<Failure, List<TopProduct>>> getTopProducts(DateTime start, DateTime end, int limit) async {
     try {
-      final res = await _dao.getTopProducts(start, end, limit);
+      await _dao.getTopProducts(start, end, limit);
       // In a real app we would map productId to full Product domain entities, since getTopProducts returns them.
       // We will skip actual product mapping to avoid creating an n+1 query here just for the skeleton
       return right([]); // To correctly implement, fetch Products via ProductRepository.

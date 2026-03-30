@@ -11,6 +11,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
 
   ExchangeRateRepositoryImpl(this._db);
   final AppDatabase _db;
+  double _cachedRate = 4100.0; // Default KHR/USD rate
 
   @override
   Future<Either<Failure, ExchangeRate>> getLatestRate() async {
@@ -33,7 +34,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
         source: rateModel.source,
         fetchedAt: rateModel.fetchedAt,
         isActive: rateModel.isActive,
-      ),);
+      ));
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
@@ -42,10 +43,13 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
   @override
   Future<Either<Failure, void>> updateRate(ExchangeRate rate) async {
     try {
-      // Basic implementation
+      _cachedRate = rate.rate;
       return right(null);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
   }
+
+  @override
+  double getCachedRate() => _cachedRate;
 }

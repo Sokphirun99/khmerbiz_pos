@@ -1,8 +1,9 @@
 import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:khmerbiz_pos/core/localization/app_localizations.dart';
 
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
@@ -77,7 +78,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
   }
 
   String _getLocalizedPaymentMethod(BuildContext context, PaymentMethod method) {
-    final l10n = AppLocalizations.of(context);
+    final l10n = AppLocalizations.of(context)!;
     switch (method) {
       case PaymentMethod.cash:
         return l10n.paymentCash;
@@ -94,8 +95,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    
+    final l10n = AppLocalizations.of(context)!;
     return AnimatedBuilder(
       animation: _flashColorAnimation,
       builder: (context, child) {
@@ -228,14 +228,14 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen> with Sing
           if (label.isNotEmpty)
             Text(
               label,
-              style: isBold ? AppTextStyles.titleMedium : AppTextStyles.bodyMedium,
+              style: isBold ? AppTextStyles.headlineSmall : AppTextStyles.bodyMedium,
             ),
           const SizedBox(width: AppSpacing.base),
           Expanded(
             child: Text(
               value,
               style: isBold 
-                ? AppTextStyles.titleMedium 
+                ? AppTextStyles.headlineSmall 
                 : (isSubtitle ? AppTextStyles.bodySmall : AppTextStyles.bodyMedium),
               textAlign: TextAlign.right,
             ),
