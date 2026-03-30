@@ -217,26 +217,44 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     emit(currentState.copyWith(isCheckingOut: true));
 
     // Re-verify stock
-    for (final item in currentState.items) {
-      final productResult =
-          await _productRepository.getProductById(item.productId);
-      var stockSufficient = productResult.fold(
-        (l) => false,
-        (p) => p != null && p.stock >= item.quantity,
-      );
+    final productIds = currentState.items.map((item) => item.productId).toList();
+    final productsResult =
+        await _productRepository.getProductsByIds(productIds);
 
-      if (!stockSufficient) {
-        emit(
-          CartCheckoutFailure(
-            failure: ValidationFailure.custom(
-              messageEn: 'Insufficient stock for ${item.product.nameEn}',
-              messageKm: 'ស្តុកមិនគ្រប់គ្រាន់សម្រាប់ ${item.product.nameKh}',
-            ),
+    final List<String> errorMessagesEn = [];
+    final List<String> errorMessagesKm = [];
+
+    productsResult.fold(
+      (failure) {
+        errorMessagesEn.add('Error verifying stock');
+        errorMessagesKm.add('មានបញ្ហាក្នុងការត្រួតពិនិត្យស្តុក');
+      },
+      (products) {
+        final productMap = {for (var p in products) p.id: p};
+
+        for (final item in currentState.items) {
+          final product = productMap[item.productId];
+          final stockSufficient = product != null && product.stock >= item.quantity;
+
+          if (!stockSufficient) {
+            errorMessagesEn.add('Insufficient stock for ${item.product.nameEn}');
+            errorMessagesKm.add('ស្តុកមិនគ្រប់គ្រាន់សម្រាប់ ${item.product.nameKh}');
+          }
+        }
+      },
+    );
+
+    if (errorMessagesEn.isNotEmpty) {
+      emit(
+        CartCheckoutFailure(
+          failure: ValidationFailure.custom(
+            messageEn: errorMessagesEn.join(', '),
+            messageKm: errorMessagesKm.join(', '),
           ),
-        );
-        emit(currentState.copyWith(isCheckingOut: false));
-        return;
-      }
+        ),
+      );
+      emit(currentState.copyWith(isCheckingOut: false));
+      return;
     }
 
     // Get current user for staff info

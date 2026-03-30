@@ -53,6 +53,10 @@ class ProductsDao extends DatabaseAccessor<AppDatabase>
         .getSingleOrNull();
   }
 
+  Future<List<ProductModel>> getProductsByIds(List<String> ids) {
+    return (select(products)..where((tbl) => tbl.id.isIn(ids))).get();
+  }
+
   Future<List<ProductModel>> getLowStockProducts() {
     return (select(products)
           ..where(

@@ -89,6 +89,16 @@ class ProductRepositoryImpl implements ProductRepository {
   }
 
   @override
+  Future<Either<Failure, List<Product>>> getProductsByIds(List<String> ids) async {
+    try {
+      final list = await _dao.getProductsByIds(ids);
+      return right(list.map(_mapToDomain).toList());
+    } catch (e) {
+      return left(CacheFailure.defaultError(details: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, Product?>> getProductById(String id) async {
     try {
       final raw = await _dao.getProductById(id);
