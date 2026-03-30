@@ -361,6 +361,7 @@ class _CartItemTileState extends State<CartItemTile> {
         // Decrease button
         _buildStepperButton(
           icon: Icons.remove,
+          tooltip: 'Decrease quantity',
           onPressed: widget.item.quantity > widget.minQuantity
               ? () {
                   _decreaseQuantity();
@@ -392,6 +393,7 @@ class _CartItemTileState extends State<CartItemTile> {
         // Increase button
         _buildStepperButton(
           icon: Icons.add,
+          tooltip: 'Increase quantity',
           onPressed: widget.maxQuantity == 0 ||
                   widget.item.quantity < widget.maxQuantity
               ? () {
@@ -411,26 +413,35 @@ class _CartItemTileState extends State<CartItemTile> {
 
   Widget _buildStepperButton({
     required IconData icon,
+    String tooltip = '',
     VoidCallback? onPressed,
     void Function(LongPressStartDetails)? onLongPressStart,
     void Function(LongPressEndDetails)? onLongPressEnd,
   }) {
-    return GestureDetector(
-      onTap: onPressed,
-      onLongPressStart: onLongPressStart,
-      onLongPressEnd: onLongPressEnd,
-      child: Container(
-        width: AppSpacing.stepperButtonSize,
-        height: AppSpacing.stepperButtonSize,
-        decoration: BoxDecoration(
-          color: onPressed != null ? AppColors.primary : AppColors.border,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color:
-              onPressed != null ? AppColors.onPrimary : AppColors.textDisabled,
+    return Semantics(
+      button: true,
+      label: tooltip,
+      enabled: onPressed != null,
+      child: Tooltip(
+        message: tooltip,
+        child: GestureDetector(
+          onTap: onPressed,
+          onLongPressStart: onLongPressStart,
+          onLongPressEnd: onLongPressEnd,
+          child: Container(
+            width: AppSpacing.stepperButtonSize,
+            height: AppSpacing.stepperButtonSize,
+            decoration: BoxDecoration(
+              color: onPressed != null ? AppColors.primary : AppColors.border,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              size: 20,
+              color:
+                  onPressed != null ? AppColors.onPrimary : AppColors.textDisabled,
+            ),
+          ),
         ),
       ),
     );
