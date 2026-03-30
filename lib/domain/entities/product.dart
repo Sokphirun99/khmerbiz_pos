@@ -44,6 +44,52 @@ class Product extends Equatable {
   final String? remoteId;
   final bool isSynced;
 
+  Product copyWith({
+    String? id,
+    String? barcode,
+    String? nameKh,
+    String? nameEn,
+    String? categoryId,
+    String? unit,
+    double? costPrice,
+    double? retailPrice,
+    double? wholesalePrice,
+    double? stock,
+    double? reservedStock,
+    double? lowStockThreshold,
+    String? imagePath,
+    bool? isActive,
+    bool? isFeatured,
+    int? sortOrder,
+    DateTime? updatedAt,
+    DateTime? createdAt,
+    String? remoteId,
+    bool? isSynced,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      barcode: barcode ?? this.barcode,
+      nameKh: nameKh ?? this.nameKh,
+      nameEn: nameEn ?? this.nameEn,
+      categoryId: categoryId ?? this.categoryId,
+      unit: unit ?? this.unit,
+      costPrice: costPrice ?? this.costPrice,
+      retailPrice: retailPrice ?? this.retailPrice,
+      wholesalePrice: wholesalePrice ?? this.wholesalePrice,
+      stock: stock ?? this.stock,
+      reservedStock: reservedStock ?? this.reservedStock,
+      lowStockThreshold: lowStockThreshold ?? this.lowStockThreshold,
+      imagePath: imagePath ?? this.imagePath,
+      isActive: isActive ?? this.isActive,
+      isFeatured: isFeatured ?? this.isFeatured,
+      sortOrder: sortOrder ?? this.sortOrder,
+      updatedAt: updatedAt ?? this.updatedAt,
+      createdAt: createdAt ?? this.createdAt,
+      remoteId: remoteId ?? this.remoteId,
+      isSynced: isSynced ?? this.isSynced,
+    );
+  }
+
   @override
   List<Object?> get props => [
         id,

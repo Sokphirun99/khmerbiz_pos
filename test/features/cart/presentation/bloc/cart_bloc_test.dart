@@ -196,7 +196,7 @@ void main() {
       build: () {
         when(() => mockProductRepository.getProductById('p1')).thenAnswer(
             (_) async =>
-                Right(testProduct.copyWithStock(0))); // Stale cart vs DB
+                Right(testProduct.copyWith(stock: 0))); // Stale cart vs DB
         return cartBloc;
       },
       act: (bloc) {
@@ -246,29 +246,3 @@ void main() {
   });
 }
 
-extension ProductX on Product {
-  Product copyWithStock(double newStock) {
-    return Product(
-      id: id,
-      barcode: barcode,
-      nameKh: nameKh,
-      nameEn: nameEn,
-      categoryId: categoryId,
-      unit: this.unit,
-      costPrice: costPrice,
-      retailPrice: retailPrice,
-      wholesalePrice: wholesalePrice,
-      stock: newStock,
-      reservedStock: reservedStock,
-      lowStockThreshold: lowStockThreshold,
-      imagePath: imagePath,
-      isActive: isActive,
-      isFeatured: isFeatured,
-      sortOrder: sortOrder,
-      updatedAt: updatedAt,
-      createdAt: createdAt,
-      remoteId: remoteId,
-      isSynced: isSynced,
-    );
-  }
-}
