@@ -7,11 +7,16 @@ import 'package:khmerbiz_pos/data/datasources/local/daos/inventory_dao.dart';
 import 'package:khmerbiz_pos/data/repositories/product_repository_impl.dart';
 import 'package:khmerbiz_pos/data/repositories/inventory_repository_impl.dart';
 import 'package:khmerbiz_pos/data/repositories/auth_repository_impl.dart';
+import 'package:khmerbiz_pos/data/repositories/exchange_rate_repository_impl.dart';
+import 'package:khmerbiz_pos/data/repositories/khqr_repository_impl.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/inventory_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 
 /// Global service locator instance.
 final GetIt sl = GetIt.instance;
@@ -62,6 +67,15 @@ void _registerRepositories() {
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(sl<AppDatabase>()),
   );
+  sl.registerLazySingleton<ExchangeRateRepository>(
+    () => ExchangeRateRepositoryImpl(sl<AppDatabase>()),
+  );
+  sl.registerLazySingleton<KhqrRepository>(
+    () => KhqrRepositoryImpl(
+      networkInfo: sl<NetworkInfo>(),
+      exchangeRateRepository: sl<ExchangeRateRepository>(),
+    ),
+  );
 }
 
 /// Register BLoCs as factories (new instance per screen).
@@ -74,6 +88,13 @@ void _registerBlocs() {
       inventoryRepository: sl<InventoryRepository>(),
       productRepository: sl<ProductRepository>(),
       authRepository: sl<AuthRepository>(),
+    ),
+  );
+  sl.registerFactory<PaymentBloc>(
+    () => PaymentBloc(
+      khqrRepository: sl<KhqrRepository>(),
+      exchangeRateRepository: sl<ExchangeRateRepository>(),
+      networkInfo: sl<NetworkInfo>(),
     ),
   );
 }

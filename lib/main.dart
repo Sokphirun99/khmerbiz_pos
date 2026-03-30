@@ -12,6 +12,7 @@ import 'package:khmerbiz_pos/core/theme/app_theme.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 
 /// Main entry point for KhmerBiz POS application.
 void main() async {
@@ -57,6 +58,7 @@ class _KhmerBizPosAppState extends State<KhmerBizPosApp> {
         providers: [
           BlocProvider<ProductBloc>(create: (_) => sl<ProductBloc>()),
           BlocProvider<InventoryBloc>(create: (_) => sl<InventoryBloc>()),
+          BlocProvider<PaymentBloc>(create: (_) => sl<PaymentBloc>()),
         ],
         child: MaterialApp.router(
           title: 'KhmerBiz POS',

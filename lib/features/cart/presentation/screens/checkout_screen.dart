@@ -11,6 +11,10 @@ import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/screens/khqr_payment_sheet.dart';
+import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
 
 class CheckoutScreen extends StatefulWidget {
   const CheckoutScreen({super.key});
@@ -51,7 +55,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           AppToast.show(
             context,
             message: warningMessage,
-            isError: true, // using error style for warning as well
+            isError: true,
           );
         }
       },
@@ -122,6 +126,141 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
+  // ── Checkout Button Handler ─────────────────────────────────────────────
+
+  /// Handles the checkout button tap based on selected payment method.
+  ///
+  /// - Cash: Directly processes checkout via CartBloc.
+  /// - KHQR: Opens KhqrPaymentSheet, generates QR, polls for confirmation.
+  /// - ABA/Wing: Launches deep link to banking app, shows confirmation dialog.
+  void _handleCheckout(BuildContext context, CartLoaded state) {
+    switch (_selectedPaymentMethod) {
+      case PaymentMethod.cash:
+        _processCashCheckout(context, state);
+
+      case PaymentMethod.khqr:
+        _initiateKhqrPayment(context, state);
+
+      case PaymentMethod.aba:
+      case PaymentMethod.wing:
+        _initiateDeepLinkPayment(context, state);
+
+      case PaymentMethod.credit:
+        // Credit not yet implemented
+        AppSnackbar.show(
+          context,
+          message: 'Credit payment coming soon / ការទូទាត់ឥណទានមកដល់ឆាប់ៗ',
+          isError: false,
+        );
+    }
+  }
+
+  /// Process a cash checkout directly.
+  void _processCashCheckout(BuildContext context, CartLoaded state) {
+    context.read<CartBloc>().add(
+          ProcessCheckout(
+            method: PaymentMethod.cash,
+            cashReceived: _cashReceived,
+          ),
+        );
+  }
+
+  /// Initiate KHQR payment: open the payment sheet and start QR generation.
+  void _initiateKhqrPayment(BuildContext context, CartLoaded state) {
+    final paymentBloc = context.read<PaymentBloc>();
+
+    // Generate a temporary invoice ID (will be replaced by real receipt number)
+    final invoiceId =
+        'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
+    // Initiate the KHQR flow
+    paymentBloc.add(InitiateKhqrPayment(
+      amountKHR: state.total,
+      invoiceId: invoiceId,
+    ));
+
+    // Show the payment sheet
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: paymentBloc,
+        child: KhqrPaymentSheet(
+          amountKHR: state.total,
+          invoiceId: invoiceId,
+          onPaymentConfirmed: (reference, md5Hash) {
+            // Payment confirmed — process checkout with KHQR reference
+            context.read<CartBloc>().add(
+                  ProcessCheckout(
+                    method: PaymentMethod.khqr,
+                    khqrReference: reference,
+                    khqrMd5: md5Hash,
+                  ),
+                );
+          },
+          onPaymentCancelled: () {
+            // User cancelled — do nothing, stay on checkout screen
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Initiate ABA/Wing deep link payment.
+  void _initiateDeepLinkPayment(BuildContext context, CartLoaded state) {
+    final paymentBloc = context.read<PaymentBloc>();
+    final invoiceId =
+        'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
+    // Dispatch deep link event to PaymentBloc
+    paymentBloc.add(InitiateDeepLinkPayment(
+      method: _selectedPaymentMethod,
+      amountKHR: state.total,
+      invoiceId: invoiceId,
+    ));
+
+    // Show the payment sheet (reuses same sheet for deep link state)
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      backgroundColor: Colors.transparent,
+      builder: (_) => BlocProvider.value(
+        value: paymentBloc,
+        child: KhqrPaymentSheet(
+          amountKHR: state.total,
+          invoiceId: invoiceId,
+          onPaymentConfirmed: (reference, md5Hash) {
+            context.read<CartBloc>().add(
+                  ProcessCheckout(
+                    method: _selectedPaymentMethod,
+                    khqrReference: reference,
+                  ),
+                );
+          },
+          onPaymentCancelled: () {},
+        ),
+      ),
+    );
+
+    // TODO: Launch actual deep link via url_launcher
+    // final uri = DeepLinkHelper.getDeepLinkUri(
+    //   method: _selectedPaymentMethod,
+    //   amountKHR: state.total,
+    //   invoiceId: invoiceId,
+    //   merchantInfo: merchantInfo,
+    // );
+    // if (uri != null) {
+    //   launchUrl(uri, mode: LaunchMode.externalApplication);
+    // }
+  }
+
+  // ── Cart Content ────────────────────────────────────────────────────────
+
   Widget _buildCartContent(BuildContext context, CartLoaded state) {
     return Column(
       children: [
@@ -150,8 +289,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   name: item.product.nameEn,
                   nameKhmer: item.product.nameKh,
                   unitPriceKHR: item.unitPrice,
-                  unitPriceUSD: item.unitPrice /
-                      4000, // Approximate USD for display if needed
+                  unitPriceUSD: item.unitPrice / 4000,
                   quantity: item.quantity.toInt(),
                 ),
                 onQuantityChanged: (qty) {
@@ -187,7 +325,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       : 'Discount: ${state.discountValue}${state.discountType == DiscountType.percent ? '%' : 'KHR'}',
                   type: AppButtonType.ghost,
                   onTap: () {
-                    // Just applying a fixed 10% for now
                     context.read<CartBloc>().add(
                           const ApplyDiscount(
                               type: DiscountType.percent, value: 10),
@@ -282,7 +419,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
         ),
 
-        // Cash Input
+        // Cash Input (only for cash payment)
         if (_selectedPaymentMethod == PaymentMethod.cash)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: AppSpacing.base),
@@ -320,26 +457,39 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         Padding(
           padding: const EdgeInsets.all(AppSpacing.base),
           child: AppButton(
-            label: 'CHECKOUT',
-            labelKhmer: 'ទូទាត់',
+            label: _getCheckoutButtonLabel(),
+            labelKhmer: _getCheckoutButtonLabelKm(),
             height: 56,
             isDisabled: state.isCheckingOut ||
                 (_selectedPaymentMethod == PaymentMethod.cash &&
                     (_cashReceived == null || _cashReceived! < state.total)),
-            onTap: () {
-              context.read<CartBloc>().add(
-                    ProcessCheckout(
-                      method: _selectedPaymentMethod,
-                      cashReceived: _selectedPaymentMethod == PaymentMethod.cash
-                          ? _cashReceived
-                          : null,
-                    ),
-                  );
-            },
+            onTap: () => _handleCheckout(context, state),
           ),
         ),
       ],
     );
+  }
+
+  // ── Helpers ─────────────────────────────────────────────────────────────
+
+  String _getCheckoutButtonLabel() {
+    return switch (_selectedPaymentMethod) {
+      PaymentMethod.cash => 'CHECKOUT',
+      PaymentMethod.khqr => 'PAY WITH KHQR',
+      PaymentMethod.aba => 'PAY WITH ABA',
+      PaymentMethod.wing => 'PAY WITH WING',
+      PaymentMethod.credit => 'CHECKOUT',
+    };
+  }
+
+  String _getCheckoutButtonLabelKm() {
+    return switch (_selectedPaymentMethod) {
+      PaymentMethod.cash => 'ទូទាត់',
+      PaymentMethod.khqr => 'បង់តាម KHQR',
+      PaymentMethod.aba => 'បង់តាម ABA',
+      PaymentMethod.wing => 'បង់តាម Wing',
+      PaymentMethod.credit => 'ទូទាត់',
+    };
   }
 
   Widget _buildSummaryRow(String label, Widget valueWidget) {
