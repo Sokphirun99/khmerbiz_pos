@@ -1,6 +1,8 @@
 /// Mixins for shared functionality.
 library;
 
+import 'package:flutter/foundation.dart';
+
 /// Mixin for form validation helpers.
 mixin FormValidationMixin {
   /// Validate that field is not empty
@@ -149,23 +151,29 @@ mixin FormValidationMixin {
 mixin LoggerMixin {
   /// Log a debug message
   void debugLog(String message, {String? tag}) {
-    final timestamp = DateTime.now().toIso8601String();
-    final tagStr = tag != null ? '[$tag]' : '';
-    print('🐛 $timestamp $tagStr $message');
+    if (kDebugMode) {
+      final timestamp = DateTime.now().toIso8601String();
+      final tagStr = tag != null ? '[$tag]' : '';
+      print('🐛 $timestamp $tagStr $message');
+    }
   }
 
   /// Log an info message
   void infoLog(String message, {String? tag}) {
-    final timestamp = DateTime.now().toIso8601String();
-    final tagStr = tag != null ? '[$tag]' : '';
-    print('ℹ️ $timestamp $tagStr $message');
+    if (kDebugMode) {
+      final timestamp = DateTime.now().toIso8601String();
+      final tagStr = tag != null ? '[$tag]' : '';
+      print('ℹ️ $timestamp $tagStr $message');
+    }
   }
 
   /// Log a warning message
   void warningLog(String message, {String? tag}) {
-    final timestamp = DateTime.now().toIso8601String();
-    final tagStr = tag != null ? '[$tag]' : '';
-    print('⚠️ $timestamp $tagStr $message');
+    if (kDebugMode) {
+      final timestamp = DateTime.now().toIso8601String();
+      final tagStr = tag != null ? '[$tag]' : '';
+      print('⚠️ $timestamp $tagStr $message');
+    }
   }
 
   /// Log an error message
@@ -175,14 +183,16 @@ mixin LoggerMixin {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    final timestamp = DateTime.now().toIso8601String();
-    final tagStr = tag != null ? '[$tag]' : '';
-    print('❌ $timestamp $tagStr $message');
-    if (error != null) {
-      print('Error: $error');
-    }
-    if (stackTrace != null) {
-      print('StackTrace: $stackTrace');
+    if (kDebugMode) {
+      final timestamp = DateTime.now().toIso8601String();
+      final tagStr = tag != null ? '[$tag]' : '';
+      print('❌ $timestamp $tagStr $message');
+      if (error != null) {
+        print('Error: $error');
+      }
+      if (stackTrace != null) {
+        print('StackTrace: $stackTrace');
+      }
     }
   }
 }
