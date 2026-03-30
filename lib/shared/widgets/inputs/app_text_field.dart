@@ -404,6 +404,7 @@ class _AppTextFieldState extends State<AppTextField> {
     if (widget.showClearButton && _controller.text.isNotEmpty) {
       return IconButton(
         icon: const Icon(Icons.clear, size: 20),
+        tooltip: 'Clear text',
         onPressed: () {
           _controller.clear();
           widget.onChanged?.call('');
@@ -419,6 +420,7 @@ class _AppTextFieldState extends State<AppTextField> {
           _obscureText ? Icons.visibility_off : Icons.visibility,
           size: 20,
         ),
+        tooltip: _obscureText ? 'Show password' : 'Hide password',
         onPressed: () {
           setState(() {
             _obscureText = !_obscureText;

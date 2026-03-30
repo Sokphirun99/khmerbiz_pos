@@ -302,25 +302,33 @@ class _NumPadState extends State<NumPad> {
   }
 
   Widget _buildBackspaceButton({required double size}) {
-    return GestureDetector(
+    return Semantics(
+      button: true,
+      label: 'Backspace',
       onTap: _handleBackspace,
-      onTapDown: (_) => HapticFeedback.lightImpact(),
-      onLongPressStart: (_) => _handleBackspaceLongPressStart(),
-      onLongPressEnd: (_) => _handleBackspaceLongPressEnd(),
-      child: Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          color: AppColors.surfaceAlt,
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
-          border: Border.all(
-            color: AppColors.border,
+      child: Tooltip(
+        message: 'Backspace',
+        child: GestureDetector(
+          onTap: _handleBackspace,
+          onTapDown: (_) => HapticFeedback.lightImpact(),
+          onLongPressStart: (_) => _handleBackspaceLongPressStart(),
+          onLongPressEnd: (_) => _handleBackspaceLongPressEnd(),
+          child: Container(
+            width: size,
+            height: size,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceAlt,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+              border: Border.all(
+                color: AppColors.border,
+              ),
+            ),
+            child: const Icon(
+              Icons.backspace_outlined,
+              size: 28,
+              color: AppColors.textSecondary,
+            ),
           ),
-        ),
-        child: const Icon(
-          Icons.backspace_outlined,
-          size: 28,
-          color: AppColors.textSecondary,
         ),
       ),
     );
