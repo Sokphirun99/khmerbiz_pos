@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:crypto/crypto.dart';
 import 'package:drift/drift.dart' show Value;
@@ -56,19 +57,40 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   Future<bool> _verifyPin(UserModel userModel, String pin) async {
-    final hashedPin = _hashPin(pin);
-    if (userModel.pinHash == hashedPin) {
-      return true;
-    }
-
-    if (userModel.pinHash == pin) {
-      // Upgrade legacy plaintext PIN storage after the first successful login.
-      await (_db.update(_db.users)..where((tbl) => tbl.id.equals(userModel.id)))
-          .write(UsersCompanion(pinHash: Value(hashedPin)));
-      return true;
+    final storedHash = userModel.pinHash;
+    if (storedHash.startsWith('sha256:')) {
+      final parts = storedHash.split(':');
+      if (parts.length == 3) {
+        // Salted hash
+        final salt = parts[1];
+        if (storedHash == _hashPinWithSalt(pin, salt)) {
+          return true;
+        }
+      } else if (parts.length == 2) {
+        // Unsalted legacy hash
+        final legacyHash = 'sha256:${sha256.convert(utf8.encode(pin))}';
+        if (storedHash == legacyHash) {
+          // Upgrade to salted hash
+          await _upgradePinHash(userModel.id, pin);
+          return true;
+        }
+      }
+    } else {
+      // Plaintext legacy PIN
+      if (storedHash == pin) {
+        // Upgrade legacy plaintext PIN storage after the first successful login.
+        await _upgradePinHash(userModel.id, pin);
+        return true;
+      }
     }
 
     return false;
+  }
+
+  Future<void> _upgradePinHash(String userId, String pin) async {
+    final newHashedPin = _hashNewPin(pin);
+    await (_db.update(_db.users)..where((tbl) => tbl.id.equals(userId)))
+        .write(UsersCompanion(pinHash: Value(newHashedPin)));
   }
 
   User _mapUser(UserModel userModel) {
@@ -85,7 +107,14 @@ class AuthRepositoryImpl implements AuthRepository {
     );
   }
 
-  String _hashPin(String pin) {
-    return 'sha256:${sha256.convert(utf8.encode(pin))}';
+  String _hashNewPin(String pin) {
+    final random = Random.secure();
+    final saltBytes = List<int>.generate(16, (_) => random.nextInt(256));
+    final salt = base64Encode(saltBytes);
+    return _hashPinWithSalt(pin, salt);
+  }
+
+  String _hashPinWithSalt(String pin, String salt) {
+    return 'sha256:$salt:${sha256.convert(utf8.encode('$salt$pin'))}';
   }
 }

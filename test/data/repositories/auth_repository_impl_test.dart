@@ -53,6 +53,8 @@ void main() {
           .getSingle();
 
       expect(storedUser.pinHash, isNot('1234'));
+      expect(storedUser.pinHash, startsWith('sha256:'));
+      expect(storedUser.pinHash.split(':').length, 3);
 
       final secondResult =
           await repository.login(username: 'admin', pin: '1234');
@@ -62,6 +64,57 @@ void main() {
           'Expected login with upgraded PIN hash to succeed, got ${failure.messageEn}',
         ),
         (_) {},
+      );
+    });
+
+    test('upgrades legacy unsalted PIN hash storage after successful login',
+        () async {
+      // Legacy unsalted hash of '1234'
+      await insertUser(pinHash: 'sha256:03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4');
+
+      final result = await repository.login(username: 'admin', pin: '1234');
+
+      result.match(
+        (failure) =>
+            fail('Expected login to succeed, got ${failure.messageEn}'),
+        (user) {
+          expect(user.id, isNotEmpty);
+          expect(user.username, 'admin');
+        },
+      );
+
+      final storedUser = await (database.select(database.users)
+            ..where((tbl) => tbl.username.equals('admin')))
+          .getSingle();
+
+      expect(storedUser.pinHash, isNot('sha256:03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4'));
+      expect(storedUser.pinHash, startsWith('sha256:'));
+      expect(storedUser.pinHash.split(':').length, 3);
+
+      final secondResult =
+          await repository.login(username: 'admin', pin: '1234');
+
+      secondResult.match(
+        (failure) => fail(
+          'Expected login with upgraded PIN hash to succeed, got ${failure.messageEn}',
+        ),
+        (_) {},
+      );
+    });
+
+    test('accepts valid salted PIN hash', () async {
+      // Create a user with a valid salted hash
+      // PIN: 1234, Salt: c2FsdA==, Hash: hash('c2FsdA==1234') -> adcadd85c45df5f122418df018fdfac30b8c4b3e2b843eda251669897dd4a98c
+      await insertUser(pinHash: 'sha256:c2FsdA==:adcadd85c45df5f122418df018fdfac30b8c4b3e2b843eda251669897dd4a98c');
+
+      final result = await repository.login(username: 'admin', pin: '1234');
+
+      result.match(
+        (failure) =>
+            fail('Expected login to succeed, got ${failure.messageEn}'),
+        (user) {
+          expect(user.id, isNotEmpty);
+        },
       );
     });
 
