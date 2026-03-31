@@ -11,6 +11,8 @@ import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/settings/data/workers/exchange_rate_worker.dart';
+import 'package:khmerbiz_pos/features/sync/data/sync_worker.dart';
+import 'package:khmerbiz_pos/features/sync/presentation/bloc/sync_bloc.dart';
 import 'package:khmerbiz_pos/firebase_options.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -32,18 +34,30 @@ void main() async {
 
   // Initialize Workmanager for background tasks
   await Workmanager().initialize(
-    ExchangeRateWorker.callbackDispatcher,
+    callbackDispatcher,
     isInDebugMode: true,
+  );
+
+  // Register periodic sync task (every 15 minutes - WorkManager minimum)
+  await Workmanager().registerPeriodicTask(
+    'khmerbiz_sync',
+    'syncTask',
+    frequency: const Duration(minutes: 15),
+    constraints: Constraints(
+      networkType: NetworkType.connected,
+    ),
+    existingWorkPolicy: ExistingWorkPolicy.keep,
   );
 
   // Register periodic exchange rate update task (daily)
   await Workmanager().registerPeriodicTask(
-    '1',
-    ExchangeRateWorker.taskName,
+    'khmerbiz_rate_refresh',
+    'rateRefreshTask',
     frequency: const Duration(hours: 24),
     constraints: Constraints(
       networkType: NetworkType.connected,
     ),
+    existingWorkPolicy: ExistingWorkPolicy.keep,
   );
 
   runApp(const KhmerBizPosApp());
@@ -75,6 +89,7 @@ class _KhmerBizPosAppState extends State<KhmerBizPosApp> {
           BlocProvider<ProductBloc>(create: (_) => sl<ProductBloc>()),
           BlocProvider<InventoryBloc>(create: (_) => sl<InventoryBloc>()),
           BlocProvider<PaymentBloc>(create: (_) => sl<PaymentBloc>()),
+          BlocProvider<SyncBloc>(create: (_) => sl<SyncBloc>()),
         ],
         child: MaterialApp.router(
           title: 'KhmerBiz POS',
