@@ -216,6 +216,14 @@ final class PrinterFailure extends Failure {
     );
   }
 
+  /// Printer not connected when trying to print
+  factory PrinterFailure.notConnected() {
+    return const PrinterFailure(
+      messageEn: 'Printer is not connected. Please connect a printer first.',
+      messageKm: 'ម៉ាស៊ីនបោះពុម្ពមិនបានតភ្ជាប់ទេ។ សូមតភ្ជាប់ម៉ាស៊ីនបោះពុម្ពជាមុនសិន។',
+    );
+  }
+
   /// Print failed
   factory PrinterFailure.printFailed() {
     return const PrinterFailure(
@@ -308,4 +316,34 @@ final class SyncFailure extends Failure {
 
   @override
   List<Object?> get props => [messageEn, messageKm, details];
+}
+
+/// System-level failures (Bluetooth, permissions, hardware, etc.)
+final class SystemFailure extends Failure {
+  /// Creates a [SystemFailure].
+  const SystemFailure({
+    required super.messageEn,
+    required super.messageKm,
+    super.details,
+  });
+
+  /// Bluetooth related failure
+  factory SystemFailure.bluetooth(String reason) {
+    return SystemFailure(
+      messageEn: 'Bluetooth error: $reason',
+      messageKm: 'កំហុស Bluetooth៖ $reason',
+      details: reason,
+    );
+  }
+
+  /// Permission denied
+  factory SystemFailure.permissionDenied(String feature) {
+    return SystemFailure(
+      messageEn: '$feature permission denied. Please enable in settings.',
+      messageKm: 'ការអនុញ្ញាត $feature ត្រូវបានបដិសេធ។ សូមបើកនៅក្នុងការកំណត់។',
+    );
+  }
+
+  @override
+  List<Object?> get props => [...super.props];
 }
