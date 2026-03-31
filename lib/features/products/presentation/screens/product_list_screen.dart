@@ -47,7 +47,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      context.read<ProductBloc>().add(LoadMoreProducts());
+      context.read<ProductBloc>().add(const LoadMoreProducts());
     }
   }
 
@@ -102,7 +102,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         IconButton(
           icon: const Icon(Icons.qr_code_scanner, color: AppColors.primary),
           tooltip: 'Scan Barcode',
-          onPressed: () => context.read<ProductBloc>().add(ScanBarcode()),
+          onPressed: () => context.read<ProductBloc>().add(const ScanBarcode()),
         ),
         const SizedBox(width: AppSpacing.xs),
       ],
@@ -198,7 +198,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }) {
     return RefreshIndicator(
       onRefresh: () async {
-        context.read<ProductBloc>().add(RefreshProducts());
+        context.read<ProductBloc>().add(const RefreshProducts());
       },
       child: CustomScrollView(
         controller: _scrollController,

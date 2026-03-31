@@ -234,37 +234,37 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
   }
 
   @override
-  AppColorExtension lerp(ThemeExtension<AppColorExtension> other, double t) {
+  AppColorExtension lerp(ThemeExtension<AppColorExtension>? other, double t) {
     if (other is! AppColorExtension) {
       return this;
     }
     return AppColorExtension(
-      primary: Color.lerp(primary, other.primary, t)!,
-      primaryLight: Color.lerp(primaryLight, other.primaryLight, t)!,
-      primaryDark: Color.lerp(primaryDark, other.primaryDark, t)!,
-      accent: Color.lerp(accent, other.accent, t)!,
-      accentDark: Color.lerp(accentDark, other.accentDark, t)!,
-      accentLight: Color.lerp(accentLight, other.accentLight, t)!,
-      success: Color.lerp(success, other.success, t)!,
-      successLight: Color.lerp(successLight, other.successLight, t)!,
-      warning: Color.lerp(warning, other.warning, t)!,
-      warningLight: Color.lerp(warningLight, other.warningLight, t)!,
-      error: Color.lerp(error, other.error, t)!,
-      errorLight: Color.lerp(errorLight, other.errorLight, t)!,
-      info: Color.lerp(info, other.info, t)!,
-      infoLight: Color.lerp(infoLight, other.infoLight, t)!,
-      surfaceAlt: Color.lerp(surfaceAlt, other.surfaceAlt, t)!,
-      textHint: Color.lerp(textHint, other.textHint, t)!,
-      textDisabled: Color.lerp(textDisabled, other.textDisabled, t)!,
-      border: Color.lerp(border, other.border, t)!,
-      borderLight: Color.lerp(borderLight, other.borderLight, t)!,
-      borderFocus: Color.lerp(borderFocus, other.borderFocus, t)!,
-      overlay: Color.lerp(overlay, other.overlay, t)!,
-      shadow: Color.lerp(shadow, other.shadow, t)!,
-      khqrBlue: Color.lerp(khqrBlue, other.khqrBlue, t)!,
-      abaRed: Color.lerp(abaRed, other.abaRed, t)!,
-      wingOrange: Color.lerp(wingOrange, other.wingOrange, t)!,
-      cashGreen: Color.lerp(cashGreen, other.cashGreen, t)!,
+      primary: Color.lerp(primary, other.primary, t) ?? primary,
+      primaryLight: Color.lerp(primaryLight, other.primaryLight, t) ?? primaryLight,
+      primaryDark: Color.lerp(primaryDark, other.primaryDark, t) ?? primaryDark,
+      accent: Color.lerp(accent, other.accent, t) ?? accent,
+      accentDark: Color.lerp(accentDark, other.accentDark, t) ?? accentDark,
+      accentLight: Color.lerp(accentLight, other.accentLight, t) ?? accentLight,
+      success: Color.lerp(success, other.success, t) ?? success,
+      successLight: Color.lerp(successLight, other.successLight, t) ?? successLight,
+      warning: Color.lerp(warning, other.warning, t) ?? warning,
+      warningLight: Color.lerp(warningLight, other.warningLight, t) ?? warningLight,
+      error: Color.lerp(error, other.error, t) ?? error,
+      errorLight: Color.lerp(errorLight, other.errorLight, t) ?? errorLight,
+      info: Color.lerp(info, other.info, t) ?? info,
+      infoLight: Color.lerp(infoLight, other.infoLight, t) ?? infoLight,
+      surfaceAlt: Color.lerp(surfaceAlt, other.surfaceAlt, t) ?? surfaceAlt,
+      textHint: Color.lerp(textHint, other.textHint, t) ?? textHint,
+      textDisabled: Color.lerp(textDisabled, other.textDisabled, t) ?? textDisabled,
+      border: Color.lerp(border, other.border, t) ?? border,
+      borderLight: Color.lerp(borderLight, other.borderLight, t) ?? borderLight,
+      borderFocus: Color.lerp(borderFocus, other.borderFocus, t) ?? borderFocus,
+      overlay: Color.lerp(overlay, other.overlay, t) ?? overlay,
+      shadow: Color.lerp(shadow, other.shadow, t) ?? shadow,
+      khqrBlue: Color.lerp(khqrBlue, other.khqrBlue, t) ?? khqrBlue,
+      abaRed: Color.lerp(abaRed, other.abaRed, t) ?? abaRed,
+      wingOrange: Color.lerp(wingOrange, other.wingOrange, t) ?? wingOrange,
+      cashGreen: Color.lerp(cashGreen, other.cashGreen, t) ?? cashGreen,
     );
   }
 }
@@ -479,7 +479,7 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
 
   @override
   AppSpacingExtension lerp(
-    ThemeExtension<AppSpacingExtension> other,
+    ThemeExtension<AppSpacingExtension>? other,
     double t,
   ) {
     if (other is! AppSpacingExtension) {

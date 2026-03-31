@@ -164,7 +164,7 @@ void main() {
       ),),
       expect: () => [
         isA<PaymentFailed>().having((s) => s.failure.messageEn, 'messageEn',
-            contains('Check your internet connection'),),
+            contains('Network connection required'),),
       ],
     );
   });
@@ -233,8 +233,9 @@ void main() {
       expect: () => [
         const PaymentConfirmed(
           method: PaymentMethod.cash,
-          reference: 'Manual: Paid in cash',
+          reference: 'Paid in cash',
           amountKHR: 0, // In real test we'd set currentAmount
+          md5Hash: '',
         ),
       ],
     );

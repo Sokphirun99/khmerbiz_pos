@@ -30,7 +30,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         _productRepository = productRepository,
         _authRepository = authRepository,
         _exchangeRateRepository = exchangeRateRepository,
-        super(CartInitial()) {
+        super(const CartInitial()) {
     on<AddToCart>(_onAddToCart);
     on<RemoveFromCart>(_onRemoveFromCart);
     on<UpdateQuantity>(_onUpdateQuantity);
@@ -100,7 +100,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     updatedWarnings.remove(event.productId);
 
     if (updatedItems.isEmpty) {
-      emit(CartInitial());
+      emit(const CartInitial());
       return;
     }
 
@@ -194,7 +194,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   void _onClearCart(ClearCart event, Emitter<CartState> emit) {
-    emit(CartInitial());
+    emit(const CartInitial());
   }
 
   Future<void> _onProcessCheckout(

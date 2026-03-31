@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:workmanager/workmanager.dart';
-
 import 'package:khmerbiz_pos/core/di/injection.dart';
 import 'package:khmerbiz_pos/core/router/app_router.dart';
 import 'package:khmerbiz_pos/core/theme/app_theme.dart';
@@ -14,6 +12,7 @@ import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dar
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/settings/data/workers/exchange_rate_worker.dart';
 import 'package:khmerbiz_pos/firebase_options.dart';
+import 'package:workmanager/workmanager.dart';
 
 /// Main entry point for KhmerBiz POS application.
 void main() async {

@@ -185,7 +185,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
       // f. If customerId update loyalty
       if (transaction.customerId.present &&
           transaction.customerId.value != null) {
-        final cId = transaction.customerId.value!;
+        final cId = transaction.customerId.value;
         final amount = transaction.totalAmount.value;
         await customUpdate(
           'UPDATE customers SET loyaltyPoints = loyaltyPoints + ?, totalSpent = totalSpent + ?, totalTransactions = totalTransactions + 1 WHERE id = ?',
@@ -193,7 +193,7 @@ class TransactionsDao extends DatabaseAccessor<AppDatabase>
             Variable.withReal(
                 amount * 0.01,), // dummy logic 1 point per 100 spent
             Variable.withReal(amount),
-            Variable.withString(cId),
+            Variable.withString(cId!),
           ],
           updates: {customers},
         );

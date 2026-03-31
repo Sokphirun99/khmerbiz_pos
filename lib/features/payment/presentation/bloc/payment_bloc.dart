@@ -53,6 +53,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
 
   double? _lastAmountKHR;
   String? _lastInvoiceId;
+  String? _lastMd5Hash;
 
   // ── InitiateKhqrPayment ─────────────────────────────────────────────────
 
@@ -95,6 +96,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
           remaining: khqrData.remainingDuration,
         ),);
 
+        _lastMd5Hash = khqrData.md5Hash;
         _startTimers(khqrData.md5Hash);
       },
     );
@@ -118,8 +120,11 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       (status) {
         switch (status) {
           case PaymentPending():
+            // Don't emit state for pending polls to avoid unnecessary rebuilds.
+            // The countdown timer handles UI updates. Poll attempts are tracked
+            // internally and will be shown when the state is updated by countdown.
             final currentState = state;
-            if (currentState is KhqrReady) {
+            if (currentState is KhqrReady && currentState.pollAttempt != event.attemptNumber) {
               emit(KhqrReady(
                 qrString: currentState.qrString,
                 md5Hash: currentState.md5Hash,
@@ -159,6 +164,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       method: PaymentMethod.khqr,
       reference: event.reference,
       amountKHR: _lastAmountKHR ?? 0,
+      md5Hash: _lastMd5Hash ?? '',
     ),);
   }
 
@@ -229,6 +235,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       method: event.method,
       reference: event.notes,
       amountKHR: _lastAmountKHR ?? 0,
+      md5Hash: _lastMd5Hash ?? '',
     ),);
   }
 
@@ -251,21 +258,25 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
   void _onCountdownTick(CountdownTick event, Emitter<PaymentState> emit) {
     final currentState = state;
     if (currentState is KhqrReady) {
-      emit(KhqrReady(
-          qrString: currentState.qrString,
-          md5Hash: currentState.md5Hash,
-          amountKHR: currentState.amountKHR,
-          amountUSD: currentState.amountUSD,
-          invoiceId: currentState.invoiceId,
-          expiresAt: currentState.expiresAt,
-          pollAttempt: currentState.pollAttempt,
-          remaining: event.remaining,
-      ),);
+      // Only emit if remaining time has changed (avoid redundant emissions)
+      if (currentState.remaining != event.remaining) {
+        emit(KhqrReady(
+            qrString: currentState.qrString,
+            md5Hash: currentState.md5Hash,
+            amountKHR: currentState.amountKHR,
+            amountUSD: currentState.amountUSD,
+            invoiceId: currentState.invoiceId,
+            expiresAt: currentState.expiresAt,
+            pollAttempt: currentState.pollAttempt,
+            remaining: event.remaining,
+        ),);
+      }
     }
   }
 
   void _startTimers(String md5Hash) {
-    int attempts = 0;
+    _stopTimers();
+    var attempts = 0;
     _pollTimer = Timer.periodic(_pollInterval, (_) {
       attempts++;
       add(PollKhqrStatus(md5Hash: md5Hash, attemptNumber: attempts));

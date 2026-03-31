@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -8,7 +9,6 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
-import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/widgets/stock_adjustment_sheet.dart';
 import 'package:khmerbiz_pos/shared/widgets/displays/stock_badge.dart';
 

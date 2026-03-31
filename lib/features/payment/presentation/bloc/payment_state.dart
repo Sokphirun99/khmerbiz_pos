@@ -1,7 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
-import 'package:khmerbiz_pos/domain/entities/khqr_data.dart';
 
 /// States for the PaymentBloc.
 sealed class PaymentState extends Equatable {
@@ -107,6 +106,7 @@ final class PaymentConfirmed extends PaymentState {
     required this.method,
     required this.reference,
     required this.amountKHR,
+    required this.md5Hash,
   });
 
   /// Payment method used (KHQR, ABA, Wing, Cash).
@@ -118,8 +118,11 @@ final class PaymentConfirmed extends PaymentState {
   /// Confirmed amount in KHR.
   final double amountKHR;
 
+  /// MD5 hash of the confirmed QR.
+  final String md5Hash;
+
   @override
-  List<Object?> get props => [method, reference, amountKHR];
+  List<Object?> get props => [method, reference, amountKHR, md5Hash];
 }
 
 /// Payment failed with an error.
@@ -156,4 +159,10 @@ final class ExternalAppLaunched extends PaymentState {
 
   @override
   List<Object?> get props => [method];
+}
+
+/// Network was lost during an active payment flow.
+final class PaymentOffline extends PaymentState {
+  /// Creates a [PaymentOffline] state.
+  const PaymentOffline();
 }

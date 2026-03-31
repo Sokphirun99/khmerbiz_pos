@@ -121,11 +121,7 @@ void main() {
     blocTest<CartBloc, CartState>(
       'applies percent discount correctly',
       build: () => cartBloc,
-      seed: () {
-        // We have to seed a CartLoaded state manually
-        // But since seed needs exact state, we'll just act twice
-        return CartInitial();
-      },
+      seed: () => const CartInitial(),
       act: (bloc) {
         bloc.add(AddToCart(product: testProduct)); // 10000
         bloc.add(const ApplyDiscount(

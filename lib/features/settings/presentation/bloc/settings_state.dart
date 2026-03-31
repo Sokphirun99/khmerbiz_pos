@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:khmerbiz_pos/domain/entities/exchange_rate.dart';
+import 'package:khmerbiz_pos/features/settings/presentation/bloc/settings_bloc.dart' show SettingsBloc;
 
 /// Events for [SettingsBloc].
 sealed class SettingsEvent extends Equatable {

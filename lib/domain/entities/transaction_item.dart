@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction.dart' show Transaction;
 
 /// Represents a line item within a [Transaction].
 ///

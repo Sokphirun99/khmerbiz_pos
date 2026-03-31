@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 part 'database.g.dart';
 
 /// Drift table for Users (Staff).
+@DataClassName('UserModel')
 class Users extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -48,6 +49,7 @@ class Users extends Table {
 }
 
 /// Drift table for Product Categories.
+@DataClassName('CategoryModel')
 class Categories extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -78,6 +80,7 @@ class Categories extends Table {
 }
 
 /// Drift table for Products.
+@DataClassName('ProductModel')
 class Products extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -144,6 +147,7 @@ class Products extends Table {
 }
 
 /// Drift table for Customers.
+@DataClassName('CustomerModel')
 class Customers extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -180,6 +184,7 @@ class Customers extends Table {
 }
 
 /// Drift table for Transaction headers.
+@DataClassName('TransactionModel')
 class Transactions extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -255,6 +260,7 @@ class Transactions extends Table {
 }
 
 /// Drift table for Transaction line items.
+@DataClassName('TransactionItemModel')
 class TransactionItems extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -294,6 +300,7 @@ class TransactionItems extends Table {
 }
 
 /// Drift table for tracking Inventory changes.
+@DataClassName('InventoryLogModel')
 class InventoryLogs extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -330,6 +337,7 @@ class InventoryLogs extends Table {
 }
 
 /// Drift table for the Synchronization Queue.
+@DataClassName('SyncQueueModel')
 class SyncQueue extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();
@@ -369,6 +377,7 @@ class SyncQueue extends Table {
 }
 
 /// Drift table for Exchange Rates.
+@DataClassName('ExchangeRateModel')
 class ExchangeRates extends Table {
   /// Unique identifier (UUID).
   TextColumn get id => text().clientDefault(() => const Uuid().v4())();

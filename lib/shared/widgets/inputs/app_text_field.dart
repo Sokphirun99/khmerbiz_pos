@@ -219,8 +219,7 @@ class AppTextField extends StatefulWidget {
     properties.add(DiagnosticsProperty<IconData?>('suffixIcon', suffixIcon));
     properties.add(DiagnosticsProperty<bool>('isRequired', isRequired));
     properties.add(DiagnosticsProperty<bool>('isDisabled', isDisabled));
-    properties
-        .add(DiagnosticsProperty<bool>('showClearButton', showClearButton));
+    properties.add(DiagnosticsProperty<bool>('showClearButton', showClearButton));
     properties.add(IntProperty('maxLines', maxLines));
     properties.add(IntProperty('minLines', minLines));
     properties.add(IntProperty('maxLength', maxLength));

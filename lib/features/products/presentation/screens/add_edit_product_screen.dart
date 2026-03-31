@@ -294,7 +294,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       controller: _stockController,
                       type: AppTextFieldType.number,
                       errorText: _validationErrors['stock'],
-                      enabled: !widget.isEditing,
+                      isDisabled: widget.isEditing,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.md),

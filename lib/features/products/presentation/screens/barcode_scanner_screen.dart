@@ -205,7 +205,7 @@ class _BarcodeScannerScreenState extends State<BarcodeScannerScreen> {
                               child: OutlinedButton(
                                 onPressed: () {
                                   setState(() => _isScanned = false);
-                                  context.read<ProductBloc>().add(ScanBarcode());
+                                  context.read<ProductBloc>().add(const ScanBarcode());
                                 },
                                 child: const Text('Rescan'),
                               ),

@@ -14,6 +14,7 @@ import 'package:khmerbiz_pos/domain/repositories/inventory_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
+import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 
@@ -37,7 +38,8 @@ void _registerCoreDependencies() {
     )
     ..registerLazySingleton<NetworkMonitor>(
       () => NetworkMonitor(sl<NetworkInfo>()),
-    );
+    )
+    ..registerLazySingleton<DeepLinkHelper>(DeepLinkHelper.new);
 }
 
 /// Register database singleton.
@@ -95,6 +97,7 @@ void _registerBlocs() {
       khqrRepository: sl<KhqrRepository>(),
       exchangeRateRepository: sl<ExchangeRateRepository>(),
       networkInfo: sl<NetworkInfo>(),
+      deepLinkHelper: sl<DeepLinkHelper>(),
     ),
   );
 }

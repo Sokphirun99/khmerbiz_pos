@@ -135,7 +135,7 @@ void main() {
     blocTest<ProductBloc, ProductState>(
       'emits [BarcodeScanning] when scan initiated',
       build: () => productBloc,
-      act: (bloc) => bloc.add(ScanBarcode()),
+      act: (bloc) => bloc.add(const ScanBarcode()),
       expect: () => [isA<BarcodeScanning>()],
     );
   });
