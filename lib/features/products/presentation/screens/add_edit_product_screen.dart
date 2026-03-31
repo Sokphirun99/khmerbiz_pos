@@ -380,7 +380,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
       ),
       items: [
         const DropdownMenuItem<String>(
-          value: null,
           child: Text('No Category'),
         ),
         ...categories.map(

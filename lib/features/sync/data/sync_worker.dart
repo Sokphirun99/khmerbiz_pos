@@ -1,6 +1,6 @@
-import 'package:workmanager/workmanager.dart';
-import 'package:flutter/foundation.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
+import 'package:workmanager/workmanager.dart';
 
 /// Callback for WorkManager background tasks.
 ///
@@ -10,7 +10,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    debugPrint('Executing sync task: $task');
+    AppLogger.d('Executing sync task: $task', tag: 'SyncWorker');
 
     try {
       // Check connectivity
@@ -19,7 +19,7 @@ void callbackDispatcher() {
       final hasConnection = results.any((r) => r != ConnectivityResult.none);
 
       if (!hasConnection) {
-        debugPrint('No connectivity - skipping sync');
+        AppLogger.d('No connectivity - skipping sync', tag: 'SyncWorker');
         return Future.value(false);
       }
 
@@ -27,20 +27,20 @@ void callbackDispatcher() {
         case 'khmerbiz_sync':
           // In production: process sync queue directly
           // For now, just log that sync was triggered
-          debugPrint('Background sync triggered - SyncBloc will handle it');
+          AppLogger.d('Background sync triggered', tag: 'SyncWorker');
           return Future.value(true);
 
         case 'khmerbiz_rate_refresh':
           // In production: fetch and update exchange rate
-          debugPrint('Exchange rate refresh triggered');
+          AppLogger.d('Exchange rate refresh triggered', tag: 'SyncWorker');
           return Future.value(true);
 
         default:
-          debugPrint('Unknown task: $task');
+          AppLogger.w('Unknown task: $task', tag: 'SyncWorker');
           return Future.value(false);
       }
     } catch (e) {
-      debugPrint('Sync task failed: $e');
+      AppLogger.e('Sync task failed', tag: 'SyncWorker', error: e);
       return Future.value(false);
     }
   });

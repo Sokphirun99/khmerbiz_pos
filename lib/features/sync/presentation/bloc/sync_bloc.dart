@@ -1,16 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
 import 'package:khmerbiz_pos/domain/entities/sync_queue_item.dart';
 import 'package:khmerbiz_pos/domain/repositories/sync_queue_repository.dart';
+import 'package:khmerbiz_pos/features/sync/data/conflict_resolver.dart';
+import 'package:khmerbiz_pos/features/sync/data/sync_api_service.dart';
 import 'package:khmerbiz_pos/features/sync/presentation/bloc/sync_event.dart';
 import 'package:khmerbiz_pos/features/sync/presentation/bloc/sync_state.dart';
-import 'package:khmerbiz_pos/features/sync/data/sync_api_service.dart';
-import 'package:khmerbiz_pos/features/sync/data/conflict_resolver.dart';
 
 /// BLoC managing offline-first synchronization.
 ///
@@ -159,7 +161,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     Emitter<SyncState> emit,
   ) async {
     // Get pending items
-    final result = await _syncQueueRepository.getPendingItems(limit: 10);
+    final result = await _syncQueueRepository.getPendingItems();
 
     final items = result.fold(
       (failure) => <SyncQueueItem>[],
@@ -173,7 +175,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         synced: _processedInBatch,
         failed: _failedInBatch,
         at: _lastSyncTime!,
-      ));
+      ),);
 
       // Cleanup old completed items
       add(const CleanupCompleted());
@@ -189,7 +191,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       total: _totalInBatch,
       processed: 0,
       failed: 0,
-    ));
+    ),);
 
     // Process each item
     for (final item in items) {
@@ -226,7 +228,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           syncResult = left(SystemFailure(
             messageEn: 'Unknown entity type: ${item.entityType}',
             messageKm: 'ប្រភេទអង្គភាពមិនស្គាល់៖ ${item.entityType}',
-          ));
+          ),);
       }
 
       syncResult.fold(
@@ -264,12 +266,16 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
       total: _totalInBatch,
       processed: _processedInBatch + _failedInBatch,
       failed: _failedInBatch,
-    ));
+    ),);
   }
 
   Map<String, dynamic> _parsePayload(String payload) {
-    // Simple JSON parsing - in production use dart:convert
-    return {};
+    try {
+      return jsonDecode(payload) as Map<String, dynamic>;
+    } catch (e) {
+      AppLogger.w('Failed to parse sync payload: $e', tag: 'Sync');
+      return {};
+    }
   }
 
   // ── Sync Methods ─────────────────────────────────────────────────────────
@@ -280,7 +286,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   ) async {
     // Transactions are append-only - client always wins
     // POST to /api/v1/transactions
-    return await _syncApiService.syncTransactions([payload]);
+    return _syncApiService.syncTransactions([payload]);
   }
 
   Future<Either<Failure, void>> _syncInventoryLog(
@@ -289,7 +295,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   ) async {
     // Inventory logs are append-only - client always wins
     // POST to /api/v1/inventory-logs
-    return await _syncApiService.syncInventoryLogs([payload]);
+    return _syncApiService.syncInventoryLogs([payload]);
   }
 
   Future<Either<Failure, void>> _syncProduct(
@@ -298,7 +304,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
   ) async {
     // Products can have conflicts - need to check timestamps
     // PUT to /api/v1/products/{id}
-    return await _syncApiService.updateProduct(item.entityId, payload);
+    return _syncApiService.updateProduct(item.entityId, payload);
   }
 
   Future<Either<Failure, void>> _syncCustomer(
@@ -306,7 +312,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     Map<String, dynamic> payload,
   ) async {
     // Customers can have conflicts
-    return await _syncApiService.updateCustomer(item.entityId, payload);
+    return _syncApiService.updateCustomer(item.entityId, payload);
   }
 
   // ── Conflict Resolution ──────────────────────────────────────────────────
@@ -424,7 +430,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
           messageEn: 'Cannot sync while offline',
           messageKm: 'មិនអាចធ្វើសមកាលកម្មនៅពេលក្រៅបណ្តាញ',
         ),
-      ));
+      ),);
       return;
     }
 

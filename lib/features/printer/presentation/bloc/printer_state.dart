@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/printer.dart';
-import 'package:khmerbiz_pos/domain/repositories/bluetooth_printer_repository.dart';
 
 /// Base class for all printer-related states.
 sealed class PrinterState extends Equatable {

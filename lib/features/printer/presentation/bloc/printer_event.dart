@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:khmerbiz_pos/domain/entities/printer.dart';
-import 'package:khmerbiz_pos/domain/repositories/bluetooth_printer_repository.dart';
 
 /// Base class for all printer-related events.
 sealed class PrinterEvent extends Equatable {

@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:khmerbiz_pos/domain/entities/customer.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction_item.dart';
-import 'package:khmerbiz_pos/domain/entities/customer.dart';
 
 /// Transaction with all its items, used for receipt generation and display.
 final class TransactionWithItems extends Equatable {

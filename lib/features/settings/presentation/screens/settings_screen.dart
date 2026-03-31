@@ -1,240 +1,277 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
-import 'package:khmerbiz_pos/core/utils/currency_formatter.dart';
-import 'package:khmerbiz_pos/features/settings/presentation/bloc/settings_bloc.dart';
-import 'package:khmerbiz_pos/features/settings/presentation/bloc/settings_state.dart';
-import 'package:khmerbiz_pos/shared/widgets/feedback/app_snackbar.dart';
+import 'package:khmerbiz_pos/shared/widgets/displays/sync_status_badge.dart';
+import 'package:khmerbiz_pos/shared/widgets/layouts/section_header.dart';
 
-/// Screen for managing application settings, including exchange rates.
+/// Settings screen with role-gated sections.
 class SettingsScreen extends StatelessWidget {
+  /// Creates a [SettingsScreen].
   const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsBloc(context.read())..add(const LoadSettings()),
-      child: BlocConsumer<SettingsBloc, SettingsState>(
-        listener: (context, state) {
-          if (state is SettingsError) {
-            AppSnackbar.show(context, message: state.message, isError: true);
-          }
-        },
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Settings / ការកំណត់'),
-              actions: [
-                if (state is SettingsLoaded && state.isRefreshing)
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: Center(
-                      child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            body: ListView(
-              padding: const EdgeInsets.all(AppSpacing.base),
-              children: [
-                _buildExchangeRateSection(context, state),
-                const SizedBox(height: AppSpacing.lg),
-                _buildSettingsSection(
-                  context,
-                  title: 'Business Info / ព័ត៌មានអាជីវកម្ម',
-                  onTap: () => context.go('/settings/business'),
-                  icon: Icons.business,
-                ),
-                _buildSettingsSection(
-                  context,
-                  title: 'Printer / ម៉ាស៊ីនបោះពុម្ព',
-                  onTap: () => context.go('/settings/printer'),
-                  icon: Icons.print,
-                ),
-                _buildSettingsSection(
-                  context,
-                  title: 'Language / ភាសា',
-                  onTap: () => context.go('/settings/language'),
-                  icon: Icons.language,
-                ),
-                const SizedBox(height: AppSpacing.xl),
-                _buildAboutSection(context),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildExchangeRateSection(BuildContext context, SettingsState state) {
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.md),
-        side: BorderSide(color: AppColors.border.withValues(alpha: 0.5)),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.md),
-        child: Column(
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.surface,
+        elevation: 0,
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Exchange Rate',
-                      style: AppTextStyles.headlineSmall,
-                    ),
-                    Text(
-                      'អត្រាប្តូរប្រាក់',
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton.filledTonal(
-                  onPressed: state is SettingsLoading
-                      ? null
-                      : () => context.read<SettingsBloc>().add(const RefreshExchangeRate()),
-                  icon: const Icon(Icons.refresh),
-                  tooltip: 'Refresh Now',
-                ),
-              ],
-            ),
-            const SizedBox(height: AppSpacing.md),
-            if (state is SettingsLoading && state is! SettingsLoaded)
-              const Center(child: LinearProgressIndicator())
-            else if (state is SettingsLoaded) ...[
-              Row(
-                children: [
-                  _buildCurrencyBox('USD', '1.00'),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: AppSpacing.md),
-                    child: Icon(Icons.compare_arrows, color: AppColors.khqrBlue),
-                  ),
-                  _buildCurrencyBox('KHR', state.exchangeRate.rate.formatKHR),
-                ],
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Last updated:',
-                        style: AppTextStyles.bodySmall.copyWith(color: AppColors.textHint),
-                      ),
-                      Text(
-                        DateFormat('yyyy-MM-dd HH:mm').format(state.exchangeRate.fetchedAt),
-                        style: AppTextStyles.bodySmall.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: state.exchangeRate.source == 'nbc'
-                          ? AppColors.success.withValues(alpha: 0.1)
-                          : AppColors.warning.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      state.exchangeRate.source.toUpperCase(),
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: state.exchangeRate.source == 'nbc'
-                            ? AppColors.success
-                            : AppColors.warning,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ] else
-              const Center(child: Text('Failed to load exchange rate')),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCurrencyBox(String code, String value) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: AppColors.surfaceAlt,
-          borderRadius: BorderRadius.circular(AppSpacing.sm),
-        ),
-        child: Column(
-          children: [
-            Text(code, style: AppTextStyles.labelMedium),
             Text(
-              value,
+              'Settings',
               style: AppTextStyles.headlineSmall.copyWith(
                 color: AppColors.textPrimary,
               ),
             ),
+            Text(
+              'ការកំណត់',
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildSettingsSection(
-    BuildContext context, {
-    required String title,
-    required VoidCallback onTap,
-    required IconData icon,
-  }) {
-    return ListTile(
-      leading: Icon(icon, color: AppColors.khqrBlue),
-      title: Text(title, style: AppTextStyles.bodyLarge),
-      trailing: const Icon(Icons.chevron_right, color: AppColors.textHint),
-      onTap: onTap,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppSpacing.sm),
-      ),
-    );
-  }
-
-  Widget _buildAboutSection(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const Opacity(
-            opacity: 0.2,
-            child: Icon(Icons.qr_code_2, size: 48),
+        actions: const [
+          SyncStatusBadge(
+            status: SyncStatus.pending,
+            pendingCount: 3,
           ),
-          const SizedBox(height: AppSpacing.sm),
-          Text(
-            'KhmerBiz POS v1.0.0',
-            style: AppTextStyles.bodySmall.copyWith(color: AppColors.textHint),
-          ),
-          Text(
-            'Powered by Bakong KHQR',
-            style: AppTextStyles.labelSmall.copyWith(color: AppColors.khqrBlue),
-          ),
+          SizedBox(width: AppSpacing.sm),
         ],
       ),
+      body: ListView(
+        padding: const EdgeInsets.all(AppSpacing.pageHorizontal),
+        children: [
+          // Business Info section
+          _buildSection(
+            context,
+            titleEn: 'Business Info',
+            titleKh: 'ព័ត៌មានអាជីវកម្ម',
+            items: [
+              _buildSettingItem(
+                icon: Icons.business,
+                titleEn: 'Business Details',
+                titleKh: 'ព័ត៌មានអាជីវកម្ម',
+                subtitle: 'Name, Address, Tax Rate',
+                onTap: () => context.push('/settings/business'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // Payment section
+          _buildSection(
+            context,
+            titleEn: 'Payment',
+            titleKh: 'ការទូទាត់',
+            items: [
+              _buildSettingItem(
+                icon: Icons.qr_code,
+                titleEn: 'KHQR Settings',
+                titleKh: 'ការកំណត់ KHQR',
+                subtitle: 'Merchant ID, Bank',
+                onTap: () {},
+              ),
+              _buildSettingItem(
+                icon: Icons.currency_exchange,
+                titleEn: 'Exchange Rate',
+                titleKh: 'អត្រាប្តូរ',
+                subtitle: '1 USD = 4,100 ៛',
+                onTap: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // Printer section
+          _buildSection(
+            context,
+            titleEn: 'Printer',
+            titleKh: 'ម៉ាស៊ីនបោះពុម្ព',
+            items: [
+              _buildSettingItem(
+                icon: Icons.print,
+                titleEn: 'Printer Setup',
+                titleKh: 'ការកំណត់ម៉ាស៊ីនបោះពុម្ព',
+                subtitle: 'Not Connected',
+                trailing: Container(
+                  width: 8,
+                  height: 8,
+                  decoration: const BoxDecoration(
+                    color: AppColors.error,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+                onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Printer setup coming in v1.1.0'),
+                  ),
+                );
+              },
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // Staff section (admin only)
+          _buildSection(
+            context,
+            titleEn: 'Staff',
+            titleKh: 'បុគ្គលិក',
+            isAdminOnly: true,
+            items: [
+              _buildSettingItem(
+                icon: Icons.people,
+                titleEn: 'Manage Staff',
+                titleKh: 'គ្រប់គ្រងបុគ្គលិក',
+                onTap: () => context.push('/settings/staff'),
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // Data & Sync section
+          _buildSection(
+            context,
+            titleEn: 'Data & Sync',
+            titleKh: 'ទិន្នន័យ និង សមកាល',
+            items: [
+              _buildSettingItem(
+                icon: Icons.sync,
+                titleEn: 'Sync Now',
+                titleKh: 'សមកាលឥឡូវ',
+                subtitle: '3 items pending',
+                onTap: () {},
+              ),
+              _buildSettingItem(
+                icon: Icons.storage,
+                titleEn: 'Storage',
+                titleKh: 'ផ្ទុក',
+                subtitle: '45 MB used',
+                onTap: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // App Preferences section
+          _buildSection(
+            context,
+            titleEn: 'Preferences',
+            titleKh: 'ចំណូលចិត្ត',
+            items: [
+              _buildSettingItem(
+                icon: Icons.language,
+                titleEn: 'Language',
+                titleKh: 'ភាសា',
+                subtitle: 'English',
+                onTap: () {},
+              ),
+              _buildSettingItem(
+                icon: Icons.brightness_2,
+                titleEn: 'Dark Mode',
+                titleKh: 'របៀបងងឹត',
+                trailing: Switch(
+                  value: false,
+                  onChanged: (value) {},
+                  activeThumbColor: AppColors.primary,
+                ),
+                onTap: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+
+          // About section
+          _buildSection(
+            context,
+            titleEn: 'About',
+            titleKh: 'អំពី',
+            items: [
+              _buildSettingItem(
+                icon: Icons.info,
+                titleEn: 'App Version',
+                titleKh: 'កំណែកម្មវិធី',
+                subtitle: '1.0.0+1',
+                onTap: () {},
+              ),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.xxl),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSection(
+    BuildContext context, {
+    required String titleEn,
+    required String titleKh,
+    required List<Widget> items,
+    bool isAdminOnly = false,
+  }) {
+    // In production, check user role here
+    if (isAdminOnly) {
+      // For demo, show admin-only sections
+      // In real app: return isAdmin ? _buildSectionContent(...) : SizedBox.shrink();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: titleEn,
+          titleKhmer: titleKh,
+        ),
+        const SizedBox(height: AppSpacing.sm),
+        DecoratedBox(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
+          ),
+          child: Column(
+            children: items,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSettingItem({
+    required IconData icon,
+    required String titleEn,
+    String? titleKh,
+    String? subtitle,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: AppColors.primary, size: 24),
+      title: Text(
+        titleEn,
+        style: AppTextStyles.bodyMedium.copyWith(
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      subtitle: subtitle != null
+          ? Text(
+              subtitle,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            )
+          : null,
+      trailing: trailing ??
+          const Icon(
+            Icons.chevron_right,
+            color: AppColors.textHint,
+          ),
+      onTap: onTap,
     );
   }
 }

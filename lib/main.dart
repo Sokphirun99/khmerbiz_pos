@@ -7,10 +7,11 @@ import 'package:khmerbiz_pos/core/di/injection.dart';
 import 'package:khmerbiz_pos/core/router/app_router.dart';
 import 'package:khmerbiz_pos/core/theme/app_theme.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
+import 'package:khmerbiz_pos/features/home/presentation/bloc/home_bloc.dart';
+import 'package:khmerbiz_pos/features/home/presentation/bloc/home_event.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
-import 'package:khmerbiz_pos/features/settings/data/workers/exchange_rate_worker.dart';
 import 'package:khmerbiz_pos/features/sync/data/sync_worker.dart';
 import 'package:khmerbiz_pos/features/sync/presentation/bloc/sync_bloc.dart';
 import 'package:khmerbiz_pos/firebase_options.dart';
@@ -46,7 +47,7 @@ void main() async {
     constraints: Constraints(
       networkType: NetworkType.connected,
     ),
-    existingWorkPolicy: ExistingWorkPolicy.keep,
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
   );
 
   // Register periodic exchange rate update task (daily)
@@ -57,7 +58,7 @@ void main() async {
     constraints: Constraints(
       networkType: NetworkType.connected,
     ),
-    existingWorkPolicy: ExistingWorkPolicy.keep,
+    existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
   );
 
   runApp(const KhmerBizPosApp());
@@ -88,6 +89,8 @@ class _KhmerBizPosAppState extends State<KhmerBizPosApp> {
         providers: [
           BlocProvider<ProductBloc>(create: (_) => sl<ProductBloc>()),
           BlocProvider<InventoryBloc>(create: (_) => sl<InventoryBloc>()),
+          BlocProvider<HomeBloc>(
+              create: (_) => sl<HomeBloc>()..add(const LoadDashboard())),
           BlocProvider<PaymentBloc>(create: (_) => sl<PaymentBloc>()),
           BlocProvider<SyncBloc>(create: (_) => sl<SyncBloc>()),
         ],

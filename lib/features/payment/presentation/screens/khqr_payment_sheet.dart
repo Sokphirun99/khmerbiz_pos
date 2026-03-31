@@ -1,17 +1,17 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart' show AppLifecycleState;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
 import 'package:khmerbiz_pos/core/utils/currency_formatter.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_state.dart';
-import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
-import 'package:khmerbiz_pos/features/payment/presentation/widgets/payment_countdown_ring.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/widgets/payment_confirmation_dialog.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/widgets/payment_countdown_ring.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/widgets/qr_code_widget.dart';
 import 'package:screen_brightness/screen_brightness.dart';
 
@@ -126,19 +126,19 @@ class _KhqrPaymentSheetState extends State<KhqrPaymentSheet>
         bloc.add(MarkManualPayment(
           method: state.method,
           notes: 'Confirmed via ${state.method.name.toUpperCase()} deep-link',
-        ));
+        ),);
       case PaymentConfirmationResult.notYet:
         // Re-open the banking app
         if (state.method == PaymentMethod.aba) {
           bloc.add(InitiateAbaDeepLink(
             amountKHR: widget.amountKHR,
             invoiceId: widget.invoiceId,
-          ));
+          ),);
         } else if (state.method == PaymentMethod.wing) {
           bloc.add(InitiateWingDeepLink(
             amountKHR: widget.amountKHR,
             invoiceId: widget.invoiceId,
-          ));
+          ),);
         }
       case PaymentConfirmationResult.cancelled:
         bloc.add(const CancelPayment());
@@ -160,7 +160,7 @@ class _KhqrPaymentSheetState extends State<KhqrPaymentSheet>
       _originalBrightness = await ScreenBrightness().current;
       await ScreenBrightness().setScreenBrightness(1);
     } catch (e) {
-      debugPrint('Error boosting brightness: $e');
+      AppLogger.e('Error boosting brightness', tag: 'Payment', error: e);
     }
   }
 
@@ -170,7 +170,7 @@ class _KhqrPaymentSheetState extends State<KhqrPaymentSheet>
         await ScreenBrightness().setScreenBrightness(_originalBrightness!);
       }
     } catch (e) {
-      debugPrint('Error restoring brightness: $e');
+      AppLogger.e('Error restoring brightness', tag: 'Payment', error: e);
     }
   }
 

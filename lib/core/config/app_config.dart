@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:khmerbiz_pos/core/config/constants.dart';
 import 'package:khmerbiz_pos/core/config/env.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
 
 /// Application configuration class.
 /// Provides environment-aware configuration values.
@@ -66,9 +67,7 @@ final class AppConfig {
     _isInitialized = true;
 
     if (_environment.enableLogging) {
-      debugPrint('🏗️ AppConfig initialized');
-      debugPrint('   Environment: ${_environment.name}');
-      debugPrint('   API Base URL: $_apiBaseUrl');
+      AppLogger.i('AppConfig initialized - Environment: ${_environment.name}', tag: 'Config');
     }
   }
 

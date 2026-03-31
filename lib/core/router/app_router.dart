@@ -7,9 +7,12 @@ import 'package:khmerbiz_pos/features/inventory/presentation/widgets/stock_adjus
 import 'package:khmerbiz_pos/features/products/presentation/screens/add_edit_product_screen.dart';
 import 'package:khmerbiz_pos/features/products/presentation/screens/product_detail_screen.dart';
 import 'package:khmerbiz_pos/features/products/presentation/screens/product_list_screen.dart';
+import 'package:khmerbiz_pos/features/home/presentation/screens/home_screen.dart';
+import 'package:khmerbiz_pos/features/pos/presentation/pos_screen.dart';
 import 'package:khmerbiz_pos/features/settings/presentation/screens/settings_screen.dart';
+import 'package:khmerbiz_pos/features/transactions/presentation/screens/transaction_detail_screen.dart';
+import 'package:khmerbiz_pos/features/transactions/presentation/screens/transactions_list_screen.dart';
 import 'package:khmerbiz_pos/storybook/storybook_screen.dart';
-
 
 /// App router configuration using go_router.
 ///
@@ -284,14 +287,14 @@ final class AppRouter {
             GoRoute(
               path: home,
               name: homeName,
-              builder: (context, state) => const PlaceholderHomeScreen(),
+              builder: (context, state) => const HomeScreen(),
             ),
 
             // POS screen
             GoRoute(
               path: pos,
               name: posName,
-              builder: (context, state) => const PlaceholderPOSScreen(),
+              builder: (context, state) => const POSScreen(),
             ),
 
             // Products screens
@@ -365,15 +368,14 @@ final class AppRouter {
             GoRoute(
               path: transactions,
               name: transactionsName,
-              builder: (context, state) =>
-                  const PlaceholderTransactionsScreen(),
+              builder: (context, state) => const TransactionsListScreen(),
               routes: [
                 GoRoute(
                   path: ':id',
                   name: transactionDetailName,
                   builder: (context, state) {
                     final id = state.pathParameters['id'] ?? '';
-                    return PlaceholderTransactionDetailScreen(
+                    return TransactionDetailScreen(
                       transactionId: id,
                     );
                   },
@@ -430,7 +432,6 @@ final class AppRouter {
               path: settings,
               name: settingsName,
               builder: (context, state) => const SettingsScreen(),
-
               routes: [
                 GoRoute(
                   path: 'business',
@@ -632,6 +633,7 @@ class PlaceholderForgotPasswordScreen extends StatelessWidget {
 class PlaceholderMainScaffold extends StatelessWidget {
   /// Creates a [PlaceholderMainScaffold] with a [child] widget.
   const PlaceholderMainScaffold({required this.child, super.key});
+
   /// The main content area of the scaffold
   final Widget child;
 
@@ -728,6 +730,7 @@ class PlaceholderProductsScreen extends StatelessWidget {
 class PlaceholderProductDetailScreen extends StatelessWidget {
   /// Creates a [PlaceholderProductDetailScreen] for [productId].
   const PlaceholderProductDetailScreen({required this.productId, super.key});
+
   /// The unique identifier of the product to display
   final String productId;
 
@@ -809,6 +812,7 @@ class PlaceholderTransactionDetailScreen extends StatelessWidget {
     required this.transactionId,
     super.key,
   });
+
   /// The unique identifier of the transaction to display
   final String transactionId;
 
@@ -873,6 +877,7 @@ class PlaceholderPaymentScreen extends StatelessWidget {
 class PlaceholderReceiptScreen extends StatelessWidget {
   /// Creates a [PlaceholderReceiptScreen] for [transactionId].
   const PlaceholderReceiptScreen({required this.transactionId, super.key});
+
   /// The unique identifier of the transaction for the receipt
   final String transactionId;
 
@@ -913,6 +918,7 @@ class PlaceholderCustomersScreen extends StatelessWidget {
 class PlaceholderCustomerDetailScreen extends StatelessWidget {
   /// Creates a [PlaceholderCustomerDetailScreen] for [customerId].
   const PlaceholderCustomerDetailScreen({required this.customerId, super.key});
+
   /// The unique identifier of the customer to display
   final String customerId;
 
@@ -986,9 +992,6 @@ class PlaceholderInventoryReportScreen extends StatelessWidget {
     );
   }
 }
-
-
-
 
 /// Temporary placeholder for the Business Settings screen.
 class PlaceholderBusinessSettingsScreen extends StatelessWidget {

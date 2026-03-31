@@ -1,7 +1,7 @@
 /// Mixins for shared functionality.
 library;
 
-import 'package:flutter/foundation.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
 
 /// Mixin for form validation helpers.
 mixin FormValidationMixin {
@@ -152,29 +152,17 @@ mixin FormValidationMixin {
 mixin LoggerMixin {
   /// Logs a debug message with an optional [tag].
   void debugLog(String message, {String? tag}) {
-    if (kDebugMode) {
-      final timestamp = DateTime.now().toIso8601String();
-      final tagStr = tag != null ? '[$tag]' : '';
-      debugPrint('🐛 $timestamp $tagStr $message');
-    }
+    AppLogger.d(message, tag: tag ?? 'Mixin');
   }
 
   /// Logs an info message with an optional [tag].
   void infoLog(String message, {String? tag}) {
-    if (kDebugMode) {
-      final timestamp = DateTime.now().toIso8601String();
-      final tagStr = tag != null ? '[$tag]' : '';
-      debugPrint('ℹ️ $timestamp $tagStr $message');
-    }
+    AppLogger.i(message, tag: tag ?? 'Mixin');
   }
 
   /// Logs a warning message with an optional [tag].
   void warningLog(String message, {String? tag}) {
-    if (kDebugMode) {
-      final timestamp = DateTime.now().toIso8601String();
-      final tagStr = tag != null ? '[$tag]' : '';
-      debugPrint('⚠️ $timestamp $tagStr $message');
-    }
+    AppLogger.w(message, tag: tag ?? 'Mixin');
   }
 
   /// Logs an error message with [tag], optional [error] and [stackTrace].
@@ -184,16 +172,6 @@ mixin LoggerMixin {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    if (kDebugMode) {
-      final timestamp = DateTime.now().toIso8601String();
-      final tagStr = tag != null ? '[$tag]' : '';
-      debugPrint('❌ $timestamp $tagStr $message');
-      if (error != null) {
-        debugPrint('Error: $error');
-      }
-      if (stackTrace != null) {
-        debugPrint('StackTrace: $stackTrace');
-      }
-    }
+    AppLogger.e(message, tag: tag ?? 'Mixin', error: error, stackTrace: stackTrace);
   }
 }

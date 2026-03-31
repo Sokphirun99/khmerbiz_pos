@@ -1,7 +1,8 @@
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:injectable/injectable.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
-import 'package:dio/dio.dart';
+import 'package:khmerbiz_pos/core/network/api_client.dart';
 
 /// API service for synchronization operations.
 ///
@@ -9,9 +10,8 @@ import 'package:dio/dio.dart';
 @LazySingleton()
 class SyncApiService {
   /// Creates a [SyncApiService].
-  SyncApiService({
-    @factoryParam Dio? dio,
-  }) : _dio = dio ?? Dio();
+  SyncApiService({required ApiClient apiClient})
+      : _dio = apiClient.dio;
 
   final Dio _dio;
 
@@ -23,7 +23,7 @@ class SyncApiService {
   /// POST /api/v1/transactions/batch
   Future<Either<Failure, void>> syncTransactions(List<Map<String, dynamic>> transactions) async {
     try {
-      final response = await _dio.post(
+      final response = await _dio.post<Map<String, dynamic>>(
         '$baseUrl/api/v1/transactions/batch',
         data: {'transactions': transactions},
       );
@@ -31,15 +31,15 @@ class SyncApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return const Right(null);
       } else {
-        return _handleError(response);
+        return _handleError<void>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<void>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to sync transactions: $e',
         messageKm: 'បរាជ័យក្នុងការធ្វើសមកាលកម្មប្រតិបត្តិការ៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -48,7 +48,7 @@ class SyncApiService {
   /// POST /api/v1/inventory-logs/batch
   Future<Either<Failure, void>> syncInventoryLogs(List<Map<String, dynamic>> logs) async {
     try {
-      final response = await _dio.post(
+      final response = await _dio.post<Map<String, dynamic>>(
         '$baseUrl/api/v1/inventory-logs/batch',
         data: {'logs': logs},
       );
@@ -56,15 +56,15 @@ class SyncApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return const Right(null);
       } else {
-        return _handleError(response);
+        return _handleError<void>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<void>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to sync inventory logs: $e',
         messageKm: 'បរាជ័យក្នុងការធ្វើសមកាលកម្មកំណត់ហេតុស្តុក៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -76,7 +76,7 @@ class SyncApiService {
     Map<String, dynamic> product,
   ) async {
     try {
-      final response = await _dio.put(
+      final response = await _dio.put<Map<String, dynamic>>(
         '$baseUrl/api/v1/products/$id',
         data: product,
       );
@@ -84,15 +84,15 @@ class SyncApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return const Right(null);
       } else {
-        return _handleError(response);
+        return _handleError<void>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<void>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to update product: $e',
         messageKm: 'បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពផលិតផល៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -104,7 +104,7 @@ class SyncApiService {
     Map<String, dynamic> customer,
   ) async {
     try {
-      final response = await _dio.put(
+      final response = await _dio.put<Map<String, dynamic>>(
         '$baseUrl/api/v1/customers/$id',
         data: customer,
       );
@@ -112,15 +112,15 @@ class SyncApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return const Right(null);
       } else {
-        return _handleError(response);
+        return _handleError<void>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<void>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to update customer: $e',
         messageKm: 'បរាជ័យក្នុងការធ្វើបច្ចុប្បន្នភាពអតិថិជន៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -132,7 +132,7 @@ class SyncApiService {
     required String deviceId,
   }) async {
     try {
-      final response = await _dio.get(
+      final response = await _dio.get<Map<String, dynamic>>(
         '$baseUrl/api/v1/products/updates',
         queryParameters: {
           'since': since,
@@ -141,19 +141,22 @@ class SyncApiService {
       );
 
       if (response.statusCode == 200) {
-        final data = response.data as Map<String, dynamic>;
-        final products = data['products'] as List;
-        return right(products.cast<Map<String, dynamic>>());
+        final data = response.data;
+        if (data != null && data.containsKey('products')) {
+          final products = data['products'] as List;
+          return right(products.cast<Map<String, dynamic>>());
+        }
+        return right([]);
       } else {
-        return _handleError(response);
+        return _handleError<List<Map<String, dynamic>>>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<List<Map<String, dynamic>>>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to fetch product updates: $e',
         messageKm: 'បរាជ័យក្នុងការទាញយកបច្ចុប្បន្នភាពផលិតផល៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -162,22 +165,22 @@ class SyncApiService {
   /// GET /api/v1/exchange-rates/latest
   Future<Either<Failure, Map<String, dynamic>>> getLatestExchangeRate() async {
     try {
-      final response = await _dio.get(
+      final response = await _dio.get<Map<String, dynamic>>(
         '$baseUrl/api/v1/exchange-rates/latest',
       );
 
       if (response.statusCode == 200) {
-        return right(response.data as Map<String, dynamic>);
+        return right(response.data ?? <String, dynamic>{});
       } else {
-        return _handleError(response);
+        return _handleError<Map<String, dynamic>>(response);
       }
     } on DioException catch (e) {
-      return _handleDioError(e);
+      return _handleDioError<Map<String, dynamic>>(e);
     } catch (e) {
       return left(SystemFailure(
         messageEn: 'Failed to fetch exchange rate: $e',
         messageKm: 'បរាជ័យក្នុងការទាញយកអត្រាប្តូរ៖ $e',
-      ));
+      ),);
     }
   }
 
@@ -193,18 +196,18 @@ class SyncApiService {
         messageEn: 'Conflict: $message',
         messageKm: 'ជម្លោះ៖ $message',
         statusCode: statusCode,
-      ));
+      ),);
     } else if (statusCode >= 400 && statusCode < 500) {
       return left<Failure, T>(ServerFailure(
         messageEn: 'Client error: $message',
         messageKm: 'កំហុសអតិថិជន៖ $message',
         statusCode: statusCode,
-      ));
+      ),);
     } else {
       return left<Failure, T>(ServerFailure.defaultError(
         statusCode: statusCode,
         details: message,
-      ));
+      ),);
     }
   }
 
@@ -218,19 +221,19 @@ class SyncApiService {
         return left<Failure, T>(const NetworkFailure(
           messageEn: 'Connection error. Please check your internet.',
           messageKm: 'កំហុសតភ្ជាប់។ សូមពិនិត្យអ៊ីនធឺណិតរបស់អ្នក។',
-        ));
+        ),);
       case DioExceptionType.badResponse:
         return _handleError<T>(e.response!);
       case DioExceptionType.cancel:
         return left<Failure, T>(const NetworkFailure(
           messageEn: 'Request cancelled',
           messageKm: 'សំណើត្រូវបានបោះបង់',
-        ));
+        ),);
       default:
         return left<Failure, T>(SystemFailure(
           messageEn: 'Network error: ${e.message}',
           messageKm: 'កំហុសបណ្តាញ៖ ${e.message}',
-        ));
+        ),);
     }
   }
 }

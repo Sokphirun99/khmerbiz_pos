@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:khmerbiz_pos/core/config/app_config.dart';
 import 'package:khmerbiz_pos/core/config/constants.dart';
+import 'package:khmerbiz_pos/core/utils/app_logger.dart';
 
 /// API client for making HTTP requests.
 final class ApiClient {
@@ -214,7 +215,7 @@ final class ApiClient {
   }
 
   void _debugLog(String message) {
-    debugPrint(message);
+    AppLogger.network(message);
   }
 
   String _formatLogEntry(Map<String, Object?> payload) {
