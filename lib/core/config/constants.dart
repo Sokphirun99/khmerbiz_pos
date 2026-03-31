@@ -6,8 +6,13 @@ final class AppConstants {
   // ═══════════════════════════════════════════════════════════════════════════
   // APP INFO
   // ═══════════════════════════════════════════════════════════════════════════
+  /// The primary application name
   static const String appName = 'KhmerBiz POS';
+
+  /// Semantic version of the application
   static const String appVersion = '1.0.0';
+
+  /// Build version code for the application
   static const int appVersionCode = 1;
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -166,36 +171,79 @@ final class AppConstants {
   // ═══════════════════════════════════════════════════════════════════════════
   // PERMISSIONS
   // ═══════════════════════════════════════════════════════════════════════════
+  /// Bluetooth permission identifier
   static const String permissionBluetooth = 'bluetooth';
+
+  /// Location permission identifier
   static const String permissionLocation = 'location';
+
+  /// Camera permission identifier
   static const String permissionCamera = 'camera';
+
+  /// Storage permission identifier
   static const String permissionStorage = 'storage';
 
   // ═══════════════════════════════════════════════════════════════════════════
   // ROUTES
   // ═══════════════════════════════════════════════════════════════════════════
+  /// Splash screen route
   static const String routeSplash = '/';
+
+  /// Login screen route
   static const String routeLogin = '/login';
+
+  /// Home/Dashboard route
   static const String routeHome = '/home';
+
+  /// POS sales screen route
   static const String routePOS = '/pos';
+
+  /// Product management route
   static const String routeProducts = '/products';
+
+  /// Inventory management route
   static const String routeInventory = '/inventory';
+
+  /// Transaction history route
   static const String routeTransactions = '/transactions';
+
+  /// Reports and analytics route
   static const String routeReports = '/reports';
+
+  /// App settings route
   static const String routeSettings = '/settings';
+
+  /// Customer management route
   static const String routeCustomers = '/customers';
 
   // ═══════════════════════════════════════════════════════════════════════════
   // STORAGE KEYS
   // ═══════════════════════════════════════════════════════════════════════════
+  /// Key for authentication token
   static const String keyAuthToken = 'auth_token';
+
+  /// Key for token expiration timestamp
   static const String keyTokenExpiry = 'token_expiry';
+
+  /// Key for user identifier
   static const String keyUserId = 'user_id';
+
+  /// Key for user email
   static const String keyUserEmail = 'user_email';
+
+  /// Key for active language preference
   static const String keyLanguage = 'language';
+
+  /// Key for active theme preference
   static const String keyTheme = 'theme';
+
+  /// Key for last successful sync timestamp
   static const String keyLastSync = 'last_sync';
+
+  /// Key for cached exchange rate value
   static const String keyExchangeRate = 'exchange_rate';
+
+  /// Key for exchange rate last update timestamp
   static const String keyExchangeRateTimestamp = 'exchange_rate_timestamp';
 
   // ═══════════════════════════════════════════════════════════════════════════

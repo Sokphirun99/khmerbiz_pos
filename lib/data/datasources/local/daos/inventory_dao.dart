@@ -4,13 +4,18 @@ import 'package:uuid/uuid.dart';
 
 part 'inventory_dao.g.dart';
 
+/// Data Access Object for InventoryLogs and Products tables.
+///
+/// Handles inventory adjustments and history tracking.
 @DriftAccessor(tables: [InventoryLogs, Products])
 class InventoryDao extends DatabaseAccessor<AppDatabase>
     with _$InventoryDaoMixin {
+  /// Creates a new [InventoryDao] with the given [db].
   InventoryDao(super.db);
 
   final Uuid _uuid = const Uuid();
 
+  /// Returns a stream of inventory logs for a specific [productId], ordered by [timestamp] descending.
   Stream<List<InventoryLogModel>> watchProductHistory(String productId) {
     return (select(inventoryLogs)
           ..where((tbl) => tbl.productId.equals(productId))
@@ -18,6 +23,7 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
+  /// Retrieves inventory logs filtered by [productId], [startDate], and [endDate].
   Future<List<InventoryLogModel>> getInventoryLogs({
     String? productId,
     DateTime? startDate,
@@ -31,16 +37,17 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
     }
     if (startDate != null) {
       query.where(
-          (tbl) => tbl.timestamp.isBiggerOrEqualValue(startDate));
+          (tbl) => tbl.timestamp.isBiggerOrEqualValue(startDate),);
     }
     if (endDate != null) {
       query.where(
-          (tbl) => tbl.timestamp.isSmallerOrEqualValue(endDate));
+          (tbl) => tbl.timestamp.isSmallerOrEqualValue(endDate),);
     }
 
     return query.get();
   }
 
+  /// Retrieves active products where stock is at or below the low stock threshold.
   Future<List<ProductModel>> getLowStockProducts() {
     return (select(products)
           ..where(
@@ -51,6 +58,14 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
+  /// Adjusts the stock of a product and creates an inventory log entry.
+  ///
+  /// This operation is performed within a database transaction.
+  /// [productId] is the ID of the product to adjust.
+  /// [quantity] is the amount to add (positive) or subtract (negative).
+  /// [reason] explains why the adjustment was made.
+  /// [staffId] is the ID of the staff member performing the adjustment.
+  /// [notes] contains optional additional information.
   Future<void> adjustStock({
     required String productId,
     required double quantity,
@@ -70,7 +85,7 @@ class InventoryDao extends DatabaseAccessor<AppDatabase>
           .write(ProductsCompanion(
         stock: Value(stockAfter),
         updatedAt: Value(DateTime.now()),
-      ));
+      ),);
 
       await into(inventoryLogs).insert(
         InventoryLogsCompanion(

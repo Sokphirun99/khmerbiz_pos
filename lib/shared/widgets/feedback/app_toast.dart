@@ -4,7 +4,11 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
+/// A utility class for displaying toast-style notifications.
 class AppToast {
+  /// Shows a toast-style notification with the given [message].
+  ///
+  /// If [isError] is true, it displays an error icon and background.
   static void show(
     BuildContext context, {
     required String message,

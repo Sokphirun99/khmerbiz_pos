@@ -68,6 +68,7 @@ enum AppTextFieldType {
 /// )
 /// ```
 class AppTextField extends StatefulWidget {
+  /// Creates an [AppTextField].
   const AppTextField({
     super.key,
     this.label,

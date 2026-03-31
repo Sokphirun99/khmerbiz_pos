@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:stream_transform/stream_transform.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:khmerbiz_pos/domain/entities/category.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_event.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_state.dart';
+import 'package:stream_transform/stream_transform.dart';
 
 /// Debounce duration for search events.
 const _searchDebounce = Duration(milliseconds: 300);
@@ -25,14 +24,18 @@ EventTransformer<E> _debounceDroppable<E>(Duration duration) {
   };
 }
 
+/// Bloc responsible for managing product-related state and actions.
+///
+/// Handles loading products, searching, categorization, and CRUD operations.
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
+  /// Creates a [ProductBloc].
   ProductBloc({
     required ProductRepository productRepository,
   })  : _productRepository = productRepository,
         super(ProductsInitial()) {
     on<LoadProducts>(_onLoadProducts);
     on<SearchProducts>(_onSearchProducts,
-        transformer: _debounceDroppable(_searchDebounce));
+        transformer: _debounceDroppable(_searchDebounce),);
     on<SelectCategory>(_onSelectCategory);
     on<ScanBarcode>(_onScanBarcode);
     on<BarcodeDetected>(_onBarcodeDetected);
@@ -55,7 +58,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   // ── LoadProducts ─────────────────────────────────────────────────────────
 
   Future<void> _onLoadProducts(
-      LoadProducts event, Emitter<ProductState> emit) async {
+      LoadProducts event, Emitter<ProductState> emit,) async {
     emit(ProductsLoading());
 
     await _productsSubscription?.cancel();
@@ -123,43 +126,43 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       selectedCategoryId: effectiveCategoryId,
       searchQuery: effectiveSearchQuery,
       hasMore: _allProducts.length >= _pageSize,
-    ));
+    ),);
   }
 
   // ── SearchProducts ───────────────────────────────────────────────────────
 
   Future<void> _onSearchProducts(
-      SearchProducts event, Emitter<ProductState> emit) async {
+      SearchProducts event, Emitter<ProductState> emit,) async {
+    final currentState = state;
+    if (currentState is! ProductsLoaded && currentState is! ProductsLoading) {
+      emit(ProductsLoading());
+    }
+
     if (event.query.isEmpty) {
       _emitLoadedIfReady(searchQuery: '');
       return;
     }
 
-    // For small datasets, search in-memory
-    if (_allProducts.length < _inMemorySearchThreshold) {
+    // For datasets <= threshold, search in-memory using the cached _allProducts
+    if (_allProducts.length <= _inMemorySearchThreshold) {
       _emitLoadedIfReady(searchQuery: event.query);
       return;
     }
 
-    // For large datasets, use DB search
-    final result =
-        await _productRepository.searchProducts(event.query).first;
+    // For large datasets, use DB search via repository
+    final result = await _productRepository.searchProducts(event.query).first;
     result.fold(
       (failure) => emit(ProductsError(failure: failure)),
       (products) {
-        final lowStock = products
-            .where((p) => p.stock <= p.lowStockThreshold)
-            .toList();
-
         emit(ProductsLoaded(
           products: products,
           categories: _allCategories,
-          lowStockAlerts: lowStock,
+          lowStockAlerts: products.where((p) => p.isLowStock).toList(),
           searchQuery: event.query,
           selectedCategoryId: state is ProductsLoaded
               ? (state as ProductsLoaded).selectedCategoryId
               : null,
-        ));
+        ),);
       },
     );
   }
@@ -167,7 +170,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   // ── SelectCategory ───────────────────────────────────────────────────────
 
   Future<void> _onSelectCategory(
-      SelectCategory event, Emitter<ProductState> emit) async {
+      SelectCategory event, Emitter<ProductState> emit,) async {
     add(LoadProducts(categoryId: event.categoryId));
   }
 
@@ -178,7 +181,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onBarcodeDetected(
-      BarcodeDetected event, Emitter<ProductState> emit) async {
+      BarcodeDetected event, Emitter<ProductState> emit,) async {
     final result =
         await _productRepository.getProductByBarcode(event.barcode);
     result.fold(
@@ -196,7 +199,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   // ── CRUD ─────────────────────────────────────────────────────────────────
 
   Future<void> _onAddProduct(
-      AddProduct event, Emitter<ProductState> emit) async {
+      AddProduct event, Emitter<ProductState> emit,) async {
     final result = await _productRepository.createProduct(event.input);
     await result.fold(
       (failure) async => emit(ProductsError(failure: failure)),
@@ -215,7 +218,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onUpdateProduct(
-      UpdateProduct event, Emitter<ProductState> emit) async {
+      UpdateProduct event, Emitter<ProductState> emit,) async {
     final result =
         await _productRepository.updateProduct(event.id, event.input);
     await result.fold(
@@ -236,7 +239,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onDeleteProduct(
-      DeleteProduct event, Emitter<ProductState> emit) async {
+      DeleteProduct event, Emitter<ProductState> emit,) async {
     final result = await _productRepository.deleteProduct(event.id);
     result.fold(
       (failure) => emit(ProductsError(failure: failure)),
@@ -245,7 +248,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   }
 
   Future<void> _onToggleProductActive(
-      ToggleProductActive event, Emitter<ProductState> emit) async {
+      ToggleProductActive event, Emitter<ProductState> emit,) async {
     final result = await _productRepository.toggleProductActive(event.id);
     result.fold(
       (failure) => emit(ProductsError(failure: failure)),
@@ -256,19 +259,28 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   // ── Pagination ───────────────────────────────────────────────────────────
 
   Future<void> _onLoadMoreProducts(
-      LoadMoreProducts event, Emitter<ProductState> emit) async {
+      LoadMoreProducts event, Emitter<ProductState> emit,) async {
     if (state is! ProductsLoaded) return;
     final currentState = state as ProductsLoaded;
     if (currentState.isLoadingMore || !currentState.hasMore) return;
 
     emit(currentState.copyWith(isLoadingMore: true));
+
+    // In a real paginated app, we would fetch the next page from repository.
+    // For this local Drift implementation, LoadProducts already watches all items.
+    // However, if we were using a paginated repository method:
+    // final result = await _productRepository.getProducts(page: nextPage);
+    
+    // Simulate a delay and just set hasMore to false for now as our stream
+    // currently returns all active products at once.
+    await Future<void>.delayed(const Duration(milliseconds: 500));
     emit(currentState.copyWith(isLoadingMore: false, hasMore: false));
   }
 
   // ── Refresh ──────────────────────────────────────────────────────────────
 
   Future<void> _onRefreshProducts(
-      RefreshProducts event, Emitter<ProductState> emit) async {
+      RefreshProducts event, Emitter<ProductState> emit,) async {
     final categoryId = state is ProductsLoaded
         ? (state as ProductsLoaded).selectedCategoryId
         : null;

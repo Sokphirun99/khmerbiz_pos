@@ -54,6 +54,7 @@ enum ConfirmationDialogType {
 /// )
 /// ```
 class ConfirmationDialog extends StatelessWidget {
+  /// Creates a [ConfirmationDialog].
   const ConfirmationDialog({
     super.key,
     this.title,
@@ -133,7 +134,7 @@ class ConfirmationDialog extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: config.iconColor!.withOpacity(0.1),
+                  color: config.iconColor!.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -431,7 +432,9 @@ class ConfirmationDialog extends StatelessWidget {
   }
 }
 
+/// Internal configuration for the dialog based on its type.
 class _DialogConfig {
+  /// Creates a [_DialogConfig].
   const _DialogConfig({
     required this.confirmColor,
     this.title,
@@ -454,17 +457,19 @@ class _DialogConfig {
   final Color? iconColor;
 }
 
-/// Show confirmation dialog helper
+/// Helper function to show a standard confirmation dialog.
+///
+/// Returns `true` if the user confirmed, `false` otherwise.
 Future<bool> showConfirmationDialog({
-  required BuildContext context,
-  String? title,
-  String? titleKhmer,
-  String? subtitle,
-  String? subtitleKhmer,
-  String? confirmLabel,
-  String? confirmLabelKhmer,
-  ConfirmationDialogType type = ConfirmationDialogType.confirm,
-}) async {
+    required BuildContext context,
+    String? title,
+    String? titleKhmer,
+    String? subtitle,
+    String? subtitleKhmer,
+    String? confirmLabel,
+    String? confirmLabelKhmer,
+    ConfirmationDialogType type = ConfirmationDialogType.confirm,
+  }) async {
   return await showDialog<bool>(
         context: context,
         builder: (context) => ConfirmationDialog(

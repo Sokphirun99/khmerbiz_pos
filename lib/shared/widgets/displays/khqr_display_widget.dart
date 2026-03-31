@@ -6,9 +6,27 @@ import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 import 'package:khmerbiz_pos/core/theme/foundation/app_shadow.dart';
 
-enum KhqrState { generating, ready, success, timeout, offline }
+/// States of the KHQR generation and payment process.
+enum KhqrState {
+  /// Currently generating the QR code.
+  generating,
 
+  /// QR code is ready for scanning.
+  ready,
+
+  /// Payment has been successfully received.
+  success,
+
+  /// QR code generation or payment timed out.
+  timeout,
+
+  /// Device is offline and cannot generate QR.
+  offline,
+}
+
+/// A widget that displays the KHQR and manages its states.
 class KhqrDisplayWidget extends StatelessWidget {
+  /// Creates a [KhqrDisplayWidget].
   const KhqrDisplayWidget({
     required this.state,
     super.key,
@@ -16,8 +34,13 @@ class KhqrDisplayWidget extends StatelessWidget {
     this.onRetry,
   });
 
+  /// The current state of the KHQR.
   final KhqrState state;
+
+  /// The raw QR string to display (if ready).
   final String? qrString;
+
+  /// Callback when the user wants to retry generation.
   final VoidCallback? onRetry;
 
   @override
@@ -60,12 +83,12 @@ class KhqrDisplayWidget extends StatelessWidget {
               color: AppColors.surfaceAlt,
               child: const Center(
                 child: Icon(Icons.qr_code_2,
-                    size: 120, color: AppColors.textPrimary),
+                    size: 120, color: AppColors.textPrimary,),
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text('Scan to pay with any supported app',
-                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
+                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center,),
           ],
         );
       case KhqrState.success:
@@ -98,7 +121,7 @@ class KhqrDisplayWidget extends StatelessWidget {
             Text('Offline Mode', style: AppTextStyles.headlineSmall),
             const SizedBox(height: AppSpacing.sm),
             Text('Cannot generate KHQR without internet connection.',
-                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center),
+                style: AppTextStyles.bodyMedium, textAlign: TextAlign.center,),
             const SizedBox(height: AppSpacing.lg),
             if (onRetry != null)
               OutlinedButton(

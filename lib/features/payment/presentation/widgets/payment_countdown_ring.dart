@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 
@@ -9,10 +10,7 @@ import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 /// Changes color from blue → yellow → red as time decreases.
 class PaymentCountdownRing extends StatelessWidget {
   const PaymentCountdownRing({
-    super.key,
-    required this.remaining,
-    required this.total,
-    required this.child,
+    required this.remaining, required this.total, required this.child, super.key,
     this.strokeWidth = 4,
     this.padding = 16,
   });
@@ -58,6 +56,15 @@ class PaymentCountdownRing extends StatelessWidget {
     if (progress > 0.5) return AppColors.khqrBlue;
     if (progress > 0.2) return AppColors.warning;
     return AppColors.error;
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Duration>('remaining', remaining));
+    properties.add(DiagnosticsProperty<Duration>('total', total));
+    properties.add(DoubleProperty('strokeWidth', strokeWidth));
+    properties.add(DoubleProperty('padding', padding));
   }
 }
 

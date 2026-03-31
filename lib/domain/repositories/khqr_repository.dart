@@ -31,5 +31,5 @@ abstract class KhqrRepository {
   /// Static QR does not include an amount — the customer enters
   /// the amount in their banking app. Useful for printed QR codes.
   Future<Either<Failure, String>> generateStaticQR(
-      MerchantInfo merchantInfo);
+      MerchantInfo merchantInfo,);
 }

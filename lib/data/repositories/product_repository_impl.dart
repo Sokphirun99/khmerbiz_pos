@@ -9,8 +9,12 @@ import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/domain/entities/product_input.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 
+/// Implementation of [ProductRepository] using [ProductsDao].
+///
+/// Handles product and category CRUD operations, reactive updates, and search.
 @LazySingleton(as: ProductRepository)
 class ProductRepositoryImpl implements ProductRepository {
+  /// Creates a new [ProductRepositoryImpl] with the given [ProductsDao].
   ProductRepositoryImpl(this._dao);
   final ProductsDao _dao;
 
@@ -60,22 +64,22 @@ class ProductRepositoryImpl implements ProductRepository {
   Stream<Either<Failure, List<Product>>> watchAllActiveProducts() {
     return _dao.watchAllActiveProducts().map((models) {
       return right<Failure, List<Product>>(
-          models.map(_mapProductToDomain).toList());
-    }).handleError((error) {
+          models.map(_mapProductToDomain).toList(),);
+    }).handleError((Object error) {
       return left<Failure, List<Product>>(
-          CacheFailure.defaultError(details: error.toString()));
+          CacheFailure.defaultError(details: error.toString()),);
     });
   }
 
   @override
   Stream<Either<Failure, List<Product>>> watchProductsByCategory(
-      String categoryId) {
+      String categoryId,) {
     return _dao.watchProductsByCategory(categoryId).map((models) {
       return right<Failure, List<Product>>(
-          models.map(_mapProductToDomain).toList());
-    }).handleError((error) {
+          models.map(_mapProductToDomain).toList(),);
+    }).handleError((Object error) {
       return left<Failure, List<Product>>(
-          CacheFailure.defaultError(details: error.toString()));
+          CacheFailure.defaultError(details: error.toString()),);
     });
   }
 
@@ -83,10 +87,10 @@ class ProductRepositoryImpl implements ProductRepository {
   Stream<Either<Failure, List<Product>>> watchFeaturedProducts() {
     return _dao.watchFeaturedProducts().map((models) {
       return right<Failure, List<Product>>(
-          models.map(_mapProductToDomain).toList());
-    }).handleError((error) {
+          models.map(_mapProductToDomain).toList(),);
+    }).handleError((Object error) {
       return left<Failure, List<Product>>(
-          CacheFailure.defaultError(details: error.toString()));
+          CacheFailure.defaultError(details: error.toString()),);
     });
   }
 
@@ -94,10 +98,10 @@ class ProductRepositoryImpl implements ProductRepository {
   Stream<Either<Failure, List<Product>>> searchProducts(String query) {
     return _dao.searchProducts(query).map((models) {
       return right<Failure, List<Product>>(
-          models.map(_mapProductToDomain).toList());
-    }).handleError((error) {
+          models.map(_mapProductToDomain).toList(),);
+    }).handleError((Object error) {
       return left<Failure, List<Product>>(
-          CacheFailure.defaultError(details: error.toString()));
+          CacheFailure.defaultError(details: error.toString()),);
     });
   }
 
@@ -125,7 +129,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, List<Product>>> getProductsByIds(
-      List<String> ids) async {
+      List<String> ids,) async {
     try {
       final list = await _dao.getProductsByIds(ids);
       return right(list.map(_mapProductToDomain).toList());
@@ -150,10 +154,10 @@ class ProductRepositoryImpl implements ProductRepository {
   Stream<Either<Failure, List<Category>>> watchActiveCategories() {
     return _dao.watchActiveCategories().map((models) {
       return right<Failure, List<Category>>(
-          models.map(_mapCategoryToDomain).toList());
-    }).handleError((error) {
+          models.map(_mapCategoryToDomain).toList(),);
+    }).handleError((Object error) {
       return left<Failure, List<Category>>(
-          CacheFailure.defaultError(details: error.toString()));
+          CacheFailure.defaultError(details: error.toString()),);
     });
   }
 
@@ -194,7 +198,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
   @override
   Future<Either<Failure, void>> updateProduct(
-      String id, ProductInput input) async {
+      String id, ProductInput input,) async {
     try {
       await _dao.updateProduct(input.toUpdateCompanion(id));
       return right(null);

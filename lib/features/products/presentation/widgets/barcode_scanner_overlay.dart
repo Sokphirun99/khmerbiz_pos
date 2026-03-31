@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 
 /// Full-screen barcode scanner overlay.
 ///
@@ -28,9 +27,7 @@ class BarcodeScannerOverlay extends StatefulWidget {
 
 class _BarcodeScannerOverlayState extends State<BarcodeScannerOverlay> {
   final MobileScannerController _controller = MobileScannerController(
-    detectionSpeed: DetectionSpeed.normal,
-    facing: CameraFacing.back,
-    torchEnabled: false,
+    
   );
 
   bool _hasScanned = false;
@@ -76,11 +73,11 @@ class _BarcodeScannerOverlayState extends State<BarcodeScannerOverlay> {
                 );
               },
             ),
-            onPressed: () => _controller.toggleTorch(),
+            onPressed: _controller.toggleTorch,
           ),
           IconButton(
             icon: const Icon(Icons.cameraswitch, color: Colors.white),
-            onPressed: () => _controller.switchCamera(),
+            onPressed: _controller.switchCamera,
           ),
         ],
       ),

@@ -1,23 +1,29 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:khmerbiz_pos/core/localization/app_localizations.dart';
-
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/core/utils/currency_formatter.dart';
 import 'package:khmerbiz_pos/core/utils/date_formatter.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
-import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
+import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
 
+/// A success screen displayed after a successful checkout transaction.
+///
+/// Features a receipt summary, a flash success animation, and a countdown to a new sale.
 class CheckoutSuccessScreen extends StatefulWidget {
-  const CheckoutSuccessScreen({super.key, required this.state});
+  /// Creates a [CheckoutSuccessScreen].
+  const CheckoutSuccessScreen({required this.state, super.key});
+
+  /// The successful checkout state containing transaction details.
   final CartCheckoutSuccess state;
 
   @override
@@ -48,7 +54,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
     );
 
     _flashColorAnimation = ColorTween(
-      begin: AppColors.success.withOpacity(0.5),
+      begin: AppColors.success.withValues(alpha: 0.5),
       end: AppColors.background,
     ).animate(_flashController);
 
@@ -79,7 +85,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
   }
 
   String _getLocalizedPaymentMethod(
-      BuildContext context, PaymentMethod method) {
+      BuildContext context, PaymentMethod method,) {
     final l10n = AppLocalizations.of(context)!;
     switch (method) {
       case PaymentMethod.cash:
@@ -112,7 +118,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(Icons.check_circle,
-                        size: 100, color: AppColors.success),
+                        size: 100, color: AppColors.success,),
                     const SizedBox(height: AppSpacing.lg),
                     Text(
                       l10n.checkoutSuccess,
@@ -130,7 +136,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
                             BorderRadius.circular(AppSpacing.radiusLarge),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.shadow.withOpacity(0.1),
+                            color: AppColors.shadow.withValues(alpha: 0.1),
                             blurRadius: 10,
                             offset: const Offset(0, 4),
                           ),
@@ -153,7 +159,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
                           _buildReceiptRow(
                             l10n.paymentMethod,
                             _getLocalizedPaymentMethod(
-                                context, widget.state.paymentMethod),
+                                context, widget.state.paymentMethod,),
                           ),
                           const Divider(height: AppSpacing.xl),
                           _buildReceiptRow(
@@ -199,7 +205,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
                             child: CircularProgressIndicator(
                               value: _countdown / 30,
                               strokeWidth: 2,
-                              color: AppColors.onPrimary.withOpacity(0.5),
+                              color: AppColors.onPrimary.withValues(alpha: 0.5),
                             ),
                           ),
                         ),
@@ -225,7 +231,7 @@ class _CheckoutSuccessScreenState extends State<CheckoutSuccessScreen>
   }
 
   Widget _buildReceiptRow(String label, String value,
-      {bool isBold = false, bool isSubtitle = false}) {
+      {bool isBold = false, bool isSubtitle = false,}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(

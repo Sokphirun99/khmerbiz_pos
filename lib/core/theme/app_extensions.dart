@@ -14,6 +14,7 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// final spacing = Theme.of(context).extension<AppSpacingExtension>()!;
 /// ```
 final class AppColorExtension extends ThemeExtension<AppColorExtension> {
+  /// Creates an [AppColorExtension].
   const AppColorExtension({
     required this.primary,
     required this.primaryLight,
@@ -108,43 +109,69 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
   }
 
   /// Brand colors
+  /// Primary brand color
   final Color primary;
+  /// Lighter version of primary color
   final Color primaryLight;
+  /// Darker version of primary color
   final Color primaryDark;
+  /// Accent brand color (gold)
   final Color accent;
+  /// Darker version of accent color
   final Color accentDark;
+  /// Lighter version of accent color
   final Color accentLight;
 
   /// Semantic colors
+  /// Success state color (green)
   final Color success;
+  /// Light success background
   final Color successLight;
+  /// Warning state color (orange/yellow)
   final Color warning;
+  /// Light warning background
   final Color warningLight;
+  /// Error state color (red)
   final Color error;
+  /// Light error background
   final Color errorLight;
+  /// Info state color (blue)
   final Color info;
+  /// Light info background
   final Color infoLight;
 
   /// Surface colors
+  /// Alternative surface color for inputs/cards
   final Color surfaceAlt;
 
   /// Text colors
+  /// Hint/Placeholder text color
   final Color textHint;
+  /// Disabled text color
   final Color textDisabled;
 
   /// Border colors
+  /// Standard border color
   final Color border;
+  /// Subtle border color
   final Color borderLight;
+  /// Focused element border color
   final Color borderFocus;
 
   /// Overlay colors
+  /// Scrim/Barrier overlay color
   final Color overlay;
+  /// Shadow/Elevation color
   final Color shadow;
 
   /// Payment brand colors
+  /// KHQR brand blue
   final Color khqrBlue;
+  /// ABA bank brand red
   final Color abaRed;
+  /// Wing brand orange
   final Color wingOrange;
+  /// Cash payment green
   final Color cashGreen;
 
   @override
@@ -244,6 +271,7 @@ final class AppColorExtension extends ThemeExtension<AppColorExtension> {
 
 /// Spacing extension for custom spacing values
 final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
+  /// Creates an [AppSpacingExtension].
   const AppSpacingExtension({
     required this.xs,
     required this.sm,
@@ -314,41 +342,71 @@ final class AppSpacingExtension extends ThemeExtension<AppSpacingExtension> {
   }
 
   /// Base spacing units
+  /// 4dp grid unit
   final double xs;
+  /// 8dp unit
   final double sm;
+  /// 12dp unit
   final double md;
+  /// 16dp unit
   final double base;
+  /// 24dp unit
   final double lg;
+  /// 32dp unit
   final double xl;
+  /// 48dp unit
   final double xxl;
 
   /// Component sizes
+  /// Height for primary buttons (56dp)
   final double buttonHeightPrimary;
+  /// Height for secondary buttons (48dp)
   final double buttonHeightSecondary;
+  /// Height for small buttons (40dp)
   final double buttonHeightSmall;
+  /// Square size for icon buttons (48dp)
   final double iconButtonSize;
+  /// Square size for numpad keys (72dp)
   final double numpadKeySize;
+  /// Standard product card width
   final double productCardWidth;
+  /// Standard product card height
   final double productCardHeight;
+  /// Height for category filter pills
   final double categoryPillHeight;
+  /// Height for standard list items
   final double listItemHeight;
+  /// Standard AppBar height
   final double appBarHeight;
+  /// Bottom navigation bar height
   final double bottomNavHeight;
+  /// Height for payment method selectors
   final double paymentMethodHeight;
+  /// Standard input field height
   final double inputFieldHeight;
+  /// Square size for quantity stepper buttons
   final double stepperButtonSize;
 
   /// Border radius
+  /// Small border radius (4dp)
   final double radiusSmall;
+  /// Medium border radius (8dp)
   final double radiusMedium;
+  /// Large border radius (12dp)
   final double radiusLarge;
+  /// Extra large border radius (16dp)
   final double radiusExtraLarge;
+  /// Circular border radius (999dp)
   final double radiusFull;
 
   /// Elevation
+  /// Elevation level 1 (Resting cards)
   final double elevation1;
+  /// Elevation level 2 (Raised elements)
   final double elevation2;
+  /// Elevation level 3 (Pressed elements)
   final double elevation3;
+  /// Elevation level 4 (Dialogs/Sheets)
   final double elevation4;
 
   @override

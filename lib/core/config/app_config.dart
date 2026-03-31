@@ -66,9 +66,9 @@ final class AppConfig {
     _isInitialized = true;
 
     if (_environment.enableLogging) {
-      print('🏗️ AppConfig initialized');
-      print('   Environment: ${_environment.name}');
-      print('   API Base URL: $_apiBaseUrl');
+      debugPrint('🏗️ AppConfig initialized');
+      debugPrint('   Environment: ${_environment.name}');
+      debugPrint('   API Base URL: $_apiBaseUrl');
     }
   }
 

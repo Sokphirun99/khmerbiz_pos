@@ -83,6 +83,9 @@ final class AppColors {
   /// Text Hint: Placeholder text, disabled states
   static const Color textHint = Color(0xFF9E9E9E);
 
+  /// Text Tertiary: Tertiary info, least emphasized text
+  static const Color textTertiary = textHint;
+
   /// Text Disabled: Disabled text
   static const Color textDisabled = Color(0xFFBDBDBD);
 

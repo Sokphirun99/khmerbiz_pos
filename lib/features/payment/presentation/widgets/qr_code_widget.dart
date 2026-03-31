@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 
@@ -10,8 +11,7 @@ import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 /// Add to pubspec.yaml: `flutter pub add qr_flutter`
 class QrCodeWidget extends StatelessWidget {
   const QrCodeWidget({
-    super.key,
-    required this.data,
+    required this.data, super.key,
     this.size = 250,
     this.backgroundColor = Colors.white,
     this.foregroundColor = Colors.black,
@@ -70,8 +70,8 @@ class QrCodeWidget extends StatelessWidget {
             color: foregroundColor,
           ),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'KHQR',
               style: TextStyle(
@@ -82,8 +82,8 @@ class QrCodeWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 4),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Scan with any banking app',
               style: TextStyle(
@@ -94,8 +94,8 @@ class QrCodeWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 2),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'ស្កេនជាមួយកម្មវិធីធនាគារ',
               style: TextStyle(
@@ -108,5 +108,14 @@ class QrCodeWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('data', data));
+    properties.add(DoubleProperty('size', size));
+    properties.add(ColorProperty('backgroundColor', backgroundColor));
+    properties.add(ColorProperty('foregroundColor', foregroundColor));
   }
 }

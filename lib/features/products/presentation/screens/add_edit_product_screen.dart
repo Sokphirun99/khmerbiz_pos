@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' hide Category;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,23 +16,36 @@ import 'package:khmerbiz_pos/features/products/presentation/widgets/barcode_scan
 import 'package:khmerbiz_pos/shared/widgets/buttons/app_button.dart';
 import 'package:khmerbiz_pos/shared/widgets/inputs/app_text_field.dart';
 
+/// A screen for adding a new product or editing an existing one.
+///
+/// Provides a form for product details, pricing, and category selection.
 class AddEditProductScreen extends StatefulWidget {
+  /// Creates an [AddEditProductScreen].
   const AddEditProductScreen({
     super.key,
     this.product,
     this.initialBarcode,
   });
 
-  /// If non-null, we are editing this product.
+  /// The product to edit. If null, a new product is created.
   final Product? product;
 
-  /// Pre-filled barcode from scanner.
+  /// An initial barcode value, typically from a scanner.
   final String? initialBarcode;
 
+  /// Whether the screen is in editing mode.
   bool get isEditing => product != null;
 
   @override
   State<AddEditProductScreen> createState() => _AddEditProductScreenState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Product?>('product', product));
+    properties.add(StringProperty('initialBarcode', initialBarcode));
+    properties.add(DiagnosticsProperty<bool>('isEditing', isEditing));
+  }
 }
 
 class _AddEditProductScreenState extends State<AddEditProductScreen> {
@@ -163,7 +177,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                 label: 'Save',
                 labelKhmer: 'រក្សាទុក',
                 type: AppButtonType.accent,
-                onPressed: _save,
+                onTap: _save,
               ),
             ),
           ],
@@ -183,13 +197,12 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                       label: 'Barcode',
                       labelKhmer: 'បាកូដ',
                       controller: _barcodeController,
-                      type: AppTextFieldType.text,
                     ),
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   IconButton(
                     icon: const Icon(Icons.qr_code_scanner,
-                        color: AppColors.primary),
+                        color: AppColors.primary,),
                     onPressed: () async {
                       final barcode =
                           await BarcodeScannerOverlay.show(context);
@@ -212,7 +225,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                 label: 'Khmer Name *',
                 labelKhmer: 'ឈ្មោះខ្មែរ *',
                 controller: _nameKhController,
-                type: AppTextFieldType.text,
                 errorText: _validationErrors['nameKh'],
               ),
               const SizedBox(height: AppSpacing.md),
@@ -220,7 +232,6 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
                 label: 'English Name *',
                 labelKhmer: 'ឈ្មោះអង់គ្លេស *',
                 controller: _nameEnController,
-                type: AppTextFieldType.text,
                 errorText: _validationErrors['nameEn'],
               ),
 
@@ -306,21 +317,21 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
               const SizedBox(height: AppSpacing.sm),
               SwitchListTile(
                 title: Text('Featured Product',
-                    style: AppTextStyles.bodyMedium),
+                    style: AppTextStyles.bodyMedium,),
                 subtitle: Text('ផលិតផលពិសេស',
                     style: AppTextStyles.bodySmall
-                        .copyWith(color: AppColors.textSecondary)),
+                        .copyWith(color: AppColors.textSecondary),),
                 value: _isFeatured,
-                activeColor: AppColors.accent,
+                activeThumbColor: AppColors.accent,
                 onChanged: (v) => setState(() => _isFeatured = v),
               ),
               SwitchListTile(
                 title: Text('Active', style: AppTextStyles.bodyMedium),
                 subtitle: Text('សកម្ម',
                     style: AppTextStyles.bodySmall
-                        .copyWith(color: AppColors.textSecondary)),
+                        .copyWith(color: AppColors.textSecondary),),
                 value: _isActive,
-                activeColor: AppColors.success,
+                activeThumbColor: AppColors.success,
                 onChanged: (v) => setState(() => _isActive = v),
               ),
 
@@ -358,7 +369,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
     final categories = state is ProductsLoaded ? state.categories : <Category>[];
 
     return DropdownButtonFormField<String>(
-      value: _selectedCategoryId,
+      initialValue: _selectedCategoryId,
       decoration: InputDecoration(
         labelText: 'Category',
         filled: true,
@@ -368,12 +379,12 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
         ),
       ),
       items: [
-        const DropdownMenuItem(
+        const DropdownMenuItem<String>(
           value: null,
           child: Text('No Category'),
         ),
         ...categories.map(
-          (c) => DropdownMenuItem(
+          (c) => DropdownMenuItem<String>(
             value: c.id,
             child: Text('${c.nameKh} (${c.nameEn})'),
           ),
@@ -385,7 +396,7 @@ class _AddEditProductScreenState extends State<AddEditProductScreen> {
 
   Widget _buildUnitDropdown() {
     return DropdownButtonFormField<String>(
-      value: _selectedUnit,
+      initialValue: _selectedUnit,
       decoration: InputDecoration(
         labelText: 'Unit',
         filled: true,

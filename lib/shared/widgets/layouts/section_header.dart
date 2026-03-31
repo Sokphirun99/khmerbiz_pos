@@ -33,6 +33,7 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// )
 /// ```
 class SectionHeader extends StatelessWidget {
+  /// Creates a [SectionHeader].
   const SectionHeader({
     super.key,
     this.title,
@@ -232,6 +233,7 @@ class SectionHeader extends StatelessWidget {
 
 /// Compact section header for cards
 class SectionHeaderCompact extends StatelessWidget {
+  /// Creates a [SectionHeaderCompact].
   const SectionHeaderCompact({
     required this.title,
     super.key,
@@ -240,10 +242,19 @@ class SectionHeaderCompact extends StatelessWidget {
     this.onAction,
     this.actionIcon,
   });
+  /// Title (English).
   final String title;
+
+  /// Title (Khmer).
   final String? titleKhmer;
+
+  /// Optional icon next to the title.
   final IconData? icon;
+
+  /// Callback when action is tapped.
   final VoidCallback? onAction;
+
+  /// Custom icon for the action button.
   final IconData? actionIcon;
 
   @override

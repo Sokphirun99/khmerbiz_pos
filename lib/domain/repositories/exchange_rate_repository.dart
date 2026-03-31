@@ -2,6 +2,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/exchange_rate.dart';
 
+/// Repository interface for managing KHR/USD exchange rates.
 abstract class ExchangeRateRepository {
   /// Get the latest exchange rate from local DB.
   Future<Either<Failure, ExchangeRate>> getLatestRate();

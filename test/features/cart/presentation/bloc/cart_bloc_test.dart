@@ -1,20 +1,19 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
 import 'package:fpdart/fpdart.dart';
-
+import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
+import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity_tx;
+import 'package:khmerbiz_pos/domain/entities/user.dart';
+import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
-import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
-import 'package:khmerbiz_pos/domain/entities/product.dart';
-import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
-import 'package:khmerbiz_pos/domain/entities/user.dart';
-import 'package:khmerbiz_pos/core/error/failures.dart';
-import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity_tx;
+import 'package:mocktail/mocktail.dart';
 
 class MockTransactionRepository extends Mock implements TransactionRepository {}
 
@@ -99,7 +98,7 @@ void main() {
             .having((s) => s.items.first.productId, 'product id', 'p1')
             .having((s) => s.subtotal, 'subtotal', 10000.0)
             .having(
-                (s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true),
+                (s) => s.stockWarnings?.isEmpty ?? true, 'no warnings', true,),
       ],
     );
 
@@ -111,9 +110,9 @@ void main() {
         isA<CartLoaded>()
             .having((s) => s.items.length, 'items count', 1)
             .having(
-                (s) => s.stockWarnings?.containsKey('p2'), 'has warning', true)
+                (s) => s.stockWarnings?.containsKey('p2'), 'has warning', true,)
             .having(
-                (s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock'),
+                (s) => s.stockWarnings?['p2'], 'warning text', 'Out of stock',),
       ],
     );
   });
@@ -130,14 +129,14 @@ void main() {
       act: (bloc) {
         bloc.add(AddToCart(product: testProduct)); // 10000
         bloc.add(const ApplyDiscount(
-            type: DiscountType.percent, value: 10)); // 10% -> 1000
+            type: DiscountType.percent, value: 10,),); // 10% -> 1000
       },
       skip: 1, // Skip AddToCart state
       expect: () => [
         isA<CartLoaded>()
             .having((s) => s.discountAmount, 'discount amount', 1000.0)
             .having((s) => s.taxAmount, 'tax on remaining',
-                900.0) // (10000 - 1000) * 0.1
+                900.0,) // (10000 - 1000) * 0.1
             .having((s) => s.total, 'total', 9900.0),
       ],
     );
@@ -187,7 +186,7 @@ void main() {
         isA<CartCheckoutSuccess>()
             .having((s) => s.transactionId, 'txn id', 'txn-123')
             .having((s) => s.totalAmount, 'total amount',
-                11000.0), // 10000 + 1000 tax
+                11000.0,), // 10000 + 1000 tax
       ],
     );
 
@@ -196,7 +195,7 @@ void main() {
       build: () {
         when(() => mockProductRepository.getProductsByIds(['p1'])).thenAnswer(
             (_) async =>
-                Right([testProduct.copyWithStock(0)])); // Stale cart vs DB
+                Right([testProduct.copyWithStock(0)]),); // Stale cart vs DB
         return cartBloc;
       },
       act: (bloc) {
@@ -226,7 +225,7 @@ void main() {
             items: any(named: 'items'),
           ),
         ).thenAnswer(
-            (_) async => Left(CacheFailure.defaultError(details: 'DB Crash')));
+            (_) async => Left(CacheFailure.defaultError(details: 'DB Crash')),);
 
         return cartBloc;
       },

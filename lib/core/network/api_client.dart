@@ -1,15 +1,16 @@
 import 'dart:convert';
-
 import 'package:dio/dio.dart';
-
+import 'package:flutter/foundation.dart';
 import 'package:khmerbiz_pos/core/config/app_config.dart';
 import 'package:khmerbiz_pos/core/config/constants.dart';
 
 /// API client for making HTTP requests.
 final class ApiClient {
-  static const String _redactedValue = '<redacted>';
-  static const String _omittedValue = '<omitted>';
 
+  /// Creates a new [ApiClient] instance.
+  ///
+  /// [baseUrl] - The base URL for all API requests
+  /// [authToken] - Optional initial authentication token
   ApiClient({
     required String baseUrl,
     String? authToken,
@@ -31,10 +32,16 @@ final class ApiClient {
         ) {
     _setupInterceptors();
   }
+  static const String _redactedValue = '<redacted>';
+  static const String _omittedValue = '<omitted>';
   final Dio _dio;
 
+  /// Returns the underlying [Dio] instance for custom configuration.
   Dio get dio => _dio;
 
+  /// Updates the authentication token used in request headers.
+  ///
+  /// If [token] is null, the Authorization header is removed.
   void updateAuthToken(String? token) {
     if (token != null) {
       _dio.options.headers['Authorization'] = 'Bearer $token';
@@ -43,6 +50,7 @@ final class ApiClient {
     }
   }
 
+  /// Clears the authentication token from request headers.
   void clearAuthToken() {
     _dio.options.headers.remove('Authorization');
   }
@@ -206,7 +214,7 @@ final class ApiClient {
   }
 
   void _debugLog(String message) {
-    print(message);
+    debugPrint(message);
   }
 
   String _formatLogEntry(Map<String, Object?> payload) {
@@ -283,16 +291,30 @@ final class ApiClient {
 
 /// Retry interceptor for handling transient failures.
 final class RetryInterceptor extends Interceptor {
+  /// Creates a new [RetryInterceptor].
+  ///
+  /// [dio] - The Dio instance to use for retrying requests
+  /// [retries] - Maximum number of retry attempts (default: 3)
+  /// [retryDelay] - Delay between retry attempts (default: 1 second)
+  /// [logPrint] - Optional callback for logging retry attempts
   RetryInterceptor({
     required this.dio,
     this.retries = 3,
     this.retryDelay = const Duration(seconds: 1),
-    this.logPrint = print,
+    this.logPrint,
   });
+
+  /// The Dio instance used to retry failed requests
   final Dio dio;
+
+  /// Maximum number of retry attempts before giving up
   final int retries;
+
+  /// Duration to wait before attempting a retry
   final Duration retryDelay;
-  final void Function(Object object) logPrint;
+
+  /// Optional logging function, defaults to [debugPrint] compatible signatures
+  final void Function(Object object)? logPrint;
 
   @override
   Future<void> onError(

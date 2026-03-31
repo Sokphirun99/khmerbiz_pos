@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 /// Contains the QR string for rendering, the MD5 hash for polling
 /// payment status, and transaction metadata.
 class KhqrData extends Equatable {
+  /// Creates a [KhqrData] entity.
   const KhqrData({
     required this.qrString,
     required this.md5Hash,

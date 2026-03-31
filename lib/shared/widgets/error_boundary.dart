@@ -13,14 +13,21 @@ import 'package:flutter/material.dart';
 /// )
 /// ```
 final class ErrorBoundary extends StatefulWidget {
+  /// Creates an [ErrorBoundary].
   const ErrorBoundary({
     required this.child,
     super.key,
     this.errorBuilder,
     this.onError,
   });
+
+  /// The widget subtree to protect.
   final Widget child;
+
+  /// Optional builder for custom error UI.
   final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
+
+  /// Optional callback for error reporting.
   final void Function(Object error, StackTrace stackTrace)? onError;
 
   @override
@@ -43,6 +50,7 @@ final class ErrorBoundary extends StatefulWidget {
             StackTrace stackTrace,
           )?>.has('onError', onError),
     );
+    properties.add(DiagnosticsProperty<Widget>('child', child));
   }
 }
 
@@ -183,14 +191,21 @@ void _reportError(BuildContext context, Object error, StackTrace stackTrace) {
 
 /// Default error widget for small sections.
 final class DefaultErrorWidget extends StatelessWidget {
+  /// Creates a [DefaultErrorWidget].
   const DefaultErrorWidget({
     required this.error,
     required this.stackTrace,
     super.key,
     this.onRetry,
   });
+
+  /// The error object.
   final Object error;
+
+  /// The stack trace associated with the error.
   final StackTrace stackTrace;
+
+  /// Optional callback to retry the operation.
   final VoidCallback? onRetry;
 
   @override

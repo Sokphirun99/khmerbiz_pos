@@ -6,7 +6,11 @@ import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/shared/widgets/displays/stock_badge.dart';
 
+/// A grid item widget that displays product information.
+///
+/// Shows name (Khmer/English), price, stock status, and image.
 class ProductGridItem extends StatelessWidget {
+  /// Creates a [ProductGridItem].
   const ProductGridItem({
     required this.product,
     super.key,
@@ -14,8 +18,13 @@ class ProductGridItem extends StatelessWidget {
     this.onLongPress,
   });
 
+  /// The product entity to display.
   final Product product;
+
+  /// Callback when the item is tapped.
   final VoidCallback? onTap;
+
+  /// Callback when the item is long-pressed.
   final VoidCallback? onLongPress;
 
   StockStatus get _stockStatus {
@@ -35,7 +44,7 @@ class ProductGridItem extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           side: _stockStatus == StockStatus.outOfStock
-              ? const BorderSide(color: AppColors.error, width: 1)
+              ? const BorderSide(color: AppColors.error)
               : BorderSide.none,
         ),
         child: Padding(
@@ -103,7 +112,6 @@ class ProductGridItem extends StatelessWidget {
                   StockBadge(
                     status: _stockStatus,
                     quantity: product.stock.toInt(),
-                    style: StockBadgeStyle.compact,
                   ),
                 ],
               ),
@@ -127,5 +135,13 @@ class ProductGridItem extends StatelessWidget {
         color: AppColors.textTertiary,
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Product>('product', product));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onLongPress', onLongPress));
   }
 }

@@ -38,6 +38,14 @@ dependencies:
   lottie: ^3.3.2
   firebase_core: ^4.6.0
   firebase_analytics: ^12.2.0
+  mobile_scanner: ^7.2.0
+  bloc_concurrency: ^0.3.0
+  stream_transform: ^2.1.1
+  intl_phone_field: ^3.2.0
+  image_picker: ^1.2.1
+  flutter_image_compress: ^2.4.0
+  url_launcher: ^6.3.2
+  screen_brightness: ^2.1.7
 
 dev_dependencies:
   bloc_test: ^10.0.0

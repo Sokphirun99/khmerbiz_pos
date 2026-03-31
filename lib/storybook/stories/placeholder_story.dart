@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 
+/// A placeholder story for components that are not yet implemented.
 class PlaceholderStory extends StatelessWidget {
+  /// Creates a [PlaceholderStory].
   const PlaceholderStory({required this.title, super.key});
 
+  /// The title of the story to display.
   final String title;
 
   @override

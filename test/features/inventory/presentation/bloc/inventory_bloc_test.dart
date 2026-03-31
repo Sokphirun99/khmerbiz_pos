@@ -1,8 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/adjustment_reason.dart';
 import 'package:khmerbiz_pos/domain/entities/inventory_log.dart';
@@ -14,6 +12,7 @@ import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_event.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_state.dart';
+import 'package:mocktail/mocktail.dart';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -34,7 +33,6 @@ final _testProduct = Product(
   retailPrice: 10000,
   costPrice: 5000,
   stock: 10,
-  lowStockThreshold: 5,
   updatedAt: _now,
   createdAt: _now,
 );
@@ -46,7 +44,6 @@ final _updatedProduct = Product(
   retailPrice: 10000,
   costPrice: 5000,
   stock: 15,
-  lowStockThreshold: 5,
   updatedAt: _now,
   createdAt: _now,
 );
@@ -58,7 +55,6 @@ final _lowStockProduct = Product(
   retailPrice: 8000,
   costPrice: 4000,
   stock: 2,
-  lowStockThreshold: 5,
   updatedAt: _now,
   createdAt: _now,
 );
@@ -168,28 +164,28 @@ void main() {
     blocTest<InventoryBloc, InventoryState>(
       'passes productId and date filters to repository',
       build: () {
-        final start = DateTime(2026, 3, 1);
+        final start = DateTime(2026, 3);
         final end = DateTime(2026, 3, 31);
         when(() => mockInventoryRepo.getInventoryLogs(
               productId: 'p1',
               startDate: start,
               endDate: end,
-            )).thenAnswer((_) async => Right([_testLog]));
+            ),).thenAnswer((_) async => Right([_testLog]));
         when(() => mockInventoryRepo.getLowStockProducts())
             .thenAnswer((_) async => const Right([]));
         return inventoryBloc;
       },
       act: (bloc) => bloc.add(LoadInventoryLog(
         productId: 'p1',
-        startDate: DateTime(2026, 3, 1),
+        startDate: DateTime(2026, 3),
         endDate: DateTime(2026, 3, 31),
-      )),
+      ),),
       verify: (_) {
         verify(() => mockInventoryRepo.getInventoryLogs(
               productId: 'p1',
-              startDate: DateTime(2026, 3, 1),
+              startDate: DateTime(2026, 3),
               endDate: DateTime(2026, 3, 31),
-            )).called(1);
+            ),).called(1);
       },
     );
   });
@@ -207,7 +203,7 @@ void main() {
               quantity: 5,
               reason: 'received_stock',
               staffId: 'u1',
-            )).thenAnswer((_) async => const Right(null));
+            ),).thenAnswer((_) async => const Right(null));
         // After adjustment, fetch updated product
         when(() => mockProductRepo.getProductById('p1'))
             .thenAnswer((_) async => Right(_updatedProduct));
@@ -217,13 +213,13 @@ void main() {
         productId: 'p1',
         quantity: 5,
         reason: AdjustmentReason.receivedStock,
-      )),
+      ),),
       expect: () => [
         isA<StockAdjusted>()
             .having(
-                (s) => s.previousStock, 'previous stock', 10.0)
+                (s) => s.previousStock, 'previous stock', 10.0,)
             .having(
-                (s) => s.updatedProduct.stock, 'new stock', 15.0),
+                (s) => s.updatedProduct.stock, 'new stock', 15.0,),
       ],
     );
 
@@ -238,7 +234,7 @@ void main() {
         productId: 'p1',
         quantity: 5,
         reason: AdjustmentReason.receivedStock,
-      )),
+      ),),
       expect: () => [isA<InventoryError>()],
     );
 
@@ -249,13 +245,13 @@ void main() {
             .thenAnswer((_) async => Right(_testProduct));
         when(() => mockAuthRepo.getCurrentUser())
             .thenAnswer(
-                (_) async => Left(ServerFailure.notFound()));
+                (_) async => Left(ServerFailure.notFound()),);
         when(() => mockInventoryRepo.adjustStock(
               productId: 'p1',
               quantity: 5,
               reason: 'received_stock',
               staffId: 'unknown',
-            )).thenAnswer((_) async => const Right(null));
+            ),).thenAnswer((_) async => const Right(null));
         when(() => mockProductRepo.getProductById('p1'))
             .thenAnswer((_) async => Right(_updatedProduct));
         return inventoryBloc;
@@ -264,14 +260,14 @@ void main() {
         productId: 'p1',
         quantity: 5,
         reason: AdjustmentReason.receivedStock,
-      )),
+      ),),
       verify: (_) {
         verify(() => mockInventoryRepo.adjustStock(
               productId: 'p1',
               quantity: 5,
               reason: 'received_stock',
               staffId: 'unknown',
-            )).called(1);
+            ),).called(1);
       },
     );
 
@@ -287,15 +283,15 @@ void main() {
               quantity: 5,
               reason: 'received_stock',
               staffId: 'u1',
-            )).thenAnswer(
-                (_) async => Left(CacheFailure.defaultError()));
+            ),).thenAnswer(
+                (_) async => Left(CacheFailure.defaultError()),);
         return inventoryBloc;
       },
       act: (bloc) => bloc.add(const AdjustStock(
         productId: 'p1',
         quantity: 5,
         reason: AdjustmentReason.receivedStock,
-      )),
+      ),),
       expect: () => [isA<InventoryError>()],
     );
   });

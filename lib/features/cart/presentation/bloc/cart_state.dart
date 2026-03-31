@@ -1,19 +1,27 @@
 import 'package:equatable/equatable.dart';
-import 'package:khmerbiz_pos/domain/entities/cart_item.dart';
-import 'package:khmerbiz_pos/domain/entities/customer.dart';
-import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/entities/cart_item.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
+import 'package:khmerbiz_pos/domain/entities/customer.dart';
 
+/// Base class for all cart-related states.
 sealed class CartState extends Equatable {
+  /// Creates a [CartState].
   const CartState();
 
   @override
   List<Object?> get props => [];
 }
 
-final class CartInitial extends CartState {}
+/// Initial state of the cart.
+final class CartInitial extends CartState {
+  /// Creates a [CartInitial] state.
+  const CartInitial();
+}
 
+/// State indicating that the cart has items and calculations are performed.
 final class CartLoaded extends CartState {
+  /// Creates a [CartLoaded] state.
   const CartLoaded({
     required this.items,
     required this.subtotal,
@@ -28,19 +36,44 @@ final class CartLoaded extends CartState {
     this.isCheckingOut = false,
     this.stockWarnings,
   });
+
+  /// The list of items currently in the cart.
   final List<CartItem> items;
+
+  /// The subtotal before discounts and taxes.
   final double subtotal;
+
+  /// The total discount amount applied.
   final double discountAmount;
+
+  /// The total tax amount applied.
   final double taxAmount;
+
+  /// The final total amount in KHR.
   final double total;
+
+  /// The final total amount in USD.
   final double totalUSD;
+
+  /// The change amount to be returned to the customer.
   final double changeAmount;
+
+  /// The customer associated with the cart, if any.
   final Customer? customer;
+
+  /// The type of discount applied.
   final DiscountType? discountType;
+
+  /// The value of the discount (percentage or fixed amount).
   final double? discountValue;
+
+  /// Whether a checkout operation is currently in progress.
   final bool isCheckingOut;
+
+  /// A map of product IDs to stock warning messages.
   final Map<String, String>? stockWarnings;
 
+  /// Creates a copy of this [CartLoaded] with the given fields replaced.
   CartLoaded copyWith({
     List<CartItem>? items,
     double? subtotal,
@@ -91,7 +124,9 @@ final class CartLoaded extends CartState {
       ];
 }
 
+/// State indicating that the checkout was successful.
 final class CartCheckoutSuccess extends CartState {
+  /// Creates a [CartCheckoutSuccess] state.
   const CartCheckoutSuccess({
     required this.transactionId,
     required this.receiptNumber,
@@ -101,12 +136,26 @@ final class CartCheckoutSuccess extends CartState {
     required this.completedAt,
     required this.staffName,
   });
+
+  /// The unique ID of the processed transaction.
   final String transactionId;
+
+  /// The human-readable receipt number.
   final String receiptNumber;
+
+  /// The final total amount paid in KHR.
   final double totalAmount;
+
+  /// The final total amount paid in USD.
   final double totalAmountUSD;
+
+  /// The payment method used for the checkout.
   final PaymentMethod paymentMethod;
+
+  /// The timestamp when the checkout was completed.
   final DateTime completedAt;
+
+  /// The name of the staff member who processed the sale.
   final String staffName;
 
   @override
@@ -121,8 +170,12 @@ final class CartCheckoutSuccess extends CartState {
       ];
 }
 
+/// State indicating that the checkout process failed.
 final class CartCheckoutFailure extends CartState {
+  /// Creates a [CartCheckoutFailure] state.
   const CartCheckoutFailure({required this.failure});
+
+  /// The failure that caused the checkout to fail.
   final Failure failure;
 
   @override

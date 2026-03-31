@@ -64,6 +64,7 @@ enum EmptyStateVariant {
 /// )
 /// ```
 class EmptyState extends StatelessWidget {
+  /// Creates an [EmptyState].
   const EmptyState({
     super.key,
     this.variant,
@@ -210,13 +211,13 @@ class EmptyState extends StatelessWidget {
       width: 120,
       height: 120,
       decoration: BoxDecoration(
-        color: effectiveColor.withOpacity(0.1),
+        color: effectiveColor.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
       child: Icon(
         icon,
         size: 64,
-        color: effectiveColor.withOpacity(0.5),
+        color: effectiveColor.withValues(alpha: 0.5),
       ),
     );
   }
@@ -426,7 +427,9 @@ class EmptyState extends StatelessWidget {
   }
 }
 
+/// Internal configuration for the empty state.
 class _EmptyStateConfig {
+  /// Creates an [_EmptyStateConfig].
   const _EmptyStateConfig({
     this.title,
     this.titleKhmer,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
+/// A story collection for input components (text fields, dropdowns).
 class InputStories extends StatelessWidget {
+  /// Creates an [InputStories].
   const InputStories({super.key});
 
   @override
@@ -11,7 +13,7 @@ class InputStories extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
         Text('Inputs',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
         SizedBox(height: AppSpacing.base),
         Text('Text fields, dropdowns, and switch inputs.'),
         SizedBox(height: AppSpacing.xl),

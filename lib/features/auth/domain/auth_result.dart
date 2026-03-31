@@ -4,6 +4,7 @@ import 'package:khmerbiz_pos/features/auth/domain/user.dart';
 
 /// Authentication result containing user data and tokens.
 final class AuthResult extends Equatable {
+  /// Creates an [AuthResult].
   const AuthResult({
     required this.user,
     required this.accessToken,
@@ -38,6 +39,7 @@ final class AuthResult extends Equatable {
 
 /// Registration data for new user signup.
 final class RegisterData extends Equatable {
+  /// Creates registration data.
   const RegisterData({
     required this.email,
     required this.password,

@@ -24,6 +24,7 @@ enum PaymentMethodType {
 
 /// Payment method button configuration
 class PaymentMethodConfig {
+  /// Creates a [PaymentMethodConfig].
   const PaymentMethodConfig({
     required this.type,
     required this.label,
@@ -31,10 +32,20 @@ class PaymentMethodConfig {
     this.labelKhmer,
     this.iconColor,
   });
+
+  /// The payment method type.
   final PaymentMethodType type;
+
+  /// The English label for the payment method.
   final String label;
+
+  /// The optional Khmer label for the payment method.
   final String? labelKhmer;
+
+  /// The icon representing the payment method.
   final IconData icon;
+
+  /// The color of the icon.
   final Color? iconColor;
 
   /// Get configuration for payment method type
@@ -103,6 +114,7 @@ class PaymentMethodConfig {
 /// )
 /// ```
 class PaymentMethodButton extends StatefulWidget {
+  /// Creates a [PaymentMethodButton].
   const PaymentMethodButton({
     required this.method,
     super.key,
@@ -322,7 +334,7 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
       return AppColors.surfaceAlt;
     }
     return widget.isSelected
-        ? AppColors.primaryLight.withOpacity(0.1)
+        ? AppColors.primaryLight.withValues(alpha: 0.1)
         : AppColors.surface;
   }
 
@@ -335,10 +347,10 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
 
   Color _getIconBackgroundColor() {
     if (widget.isDisabled) {
-      return AppColors.border.withOpacity(0.3);
+      return AppColors.border.withValues(alpha: 0.3);
     }
     final config = PaymentMethodConfig.fromType(widget.method);
-    return (config.iconColor ?? AppColors.primary).withOpacity(0.1);
+    return (config.iconColor ?? AppColors.primary).withValues(alpha: 0.1);
   }
 
   List<BoxShadow>? _getShadow() {
@@ -348,7 +360,7 @@ class _PaymentMethodButtonState extends State<PaymentMethodButton>
     if (!_isPressed) {
       return [
         BoxShadow(
-          color: AppColors.shadow.withOpacity(0.1),
+          color: AppColors.shadow.withValues(alpha: 0.1),
           blurRadius: 4,
           offset: const Offset(0, 2),
         ),

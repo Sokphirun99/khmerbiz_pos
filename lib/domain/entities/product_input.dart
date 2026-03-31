@@ -8,6 +8,7 @@ import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 /// Use [validate] to check all fields and [toProductsCompanion] to
 /// convert to a Drift companion for database operations.
 class ProductInput extends Equatable {
+  /// Creates a [ProductInput].
   const ProductInput({
     this.barcode,
     this.nameKh = '',
@@ -24,18 +25,43 @@ class ProductInput extends Equatable {
     this.isActive = true,
   });
 
+  /// Optional barcode or QR code.
   final String? barcode;
+
+  /// Product name in Khmer (required).
   final String nameKh;
+
+  /// Product name in English (required).
   final String nameEn;
+
+  /// ID of the category this product belongs to.
   final String? categoryId;
+
+  /// Unit of measurement.
   final String unit;
+
+  /// Purchase cost per unit.
   final double costPrice;
+
+  /// Standard retail price per unit.
   final double retailPrice;
+
+  /// Optional wholesale price.
   final double? wholesalePrice;
+
+  /// Current physical stock quantity.
   final double stock;
+
+  /// Threshold for low stock alerts.
   final double lowStockThreshold;
+
+  /// Path to the product image.
   final String? imagePath;
+
+  /// Whether the product is featured.
   final bool isFeatured;
+
+  /// Whether the product is active.
   final bool isActive;
 
   /// Khmer Unicode range check.
@@ -88,9 +114,12 @@ class ProductInput extends Equatable {
       errors['stock'] = 'Stock cannot be negative';
     }
 
-    // lowStockThreshold: >= 0
+    // lowStockThreshold: >= 0, < stock (warn if not)
     if (lowStockThreshold < 0) {
       errors['lowStockThreshold'] = 'Low stock threshold cannot be negative';
+    } else if (lowStockThreshold >= stock && stock > 0) {
+      errors['lowStockThresholdWarning'] =
+          'Low stock threshold should be less than current stock';
     }
 
     return errors;
@@ -101,6 +130,7 @@ class ProductInput extends Equatable {
     final errors = validate();
     // Remove warning-only keys
     errors.remove('retailPriceWarning');
+    errors.remove('lowStockThresholdWarning');
     return errors.isEmpty;
   }
 
@@ -148,6 +178,7 @@ class ProductInput extends Equatable {
     );
   }
 
+  /// Creates a copy of this [ProductInput] with the given fields replaced.
   ProductInput copyWith({
     String? barcode,
     String? nameKh,

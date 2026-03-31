@@ -371,7 +371,7 @@ class _POSScreenState extends State<POSScreen> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow.withOpacity(0.1),
+            color: AppColors.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -444,7 +444,7 @@ class _POSScreenState extends State<POSScreen> {
         color: AppColors.surface,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow.withOpacity(0.1),
+            color: AppColors.shadow.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

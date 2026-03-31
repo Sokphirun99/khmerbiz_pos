@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-
 import 'package:khmerbiz_pos/core/router/app_router.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
+import 'package:khmerbiz_pos/domain/entities/category.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_event.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_state.dart';
-import 'package:khmerbiz_pos/features/products/presentation/widgets/product_grid_item.dart';
 import 'package:khmerbiz_pos/features/products/presentation/widgets/low_stock_alert_banner.dart';
+import 'package:khmerbiz_pos/features/products/presentation/widgets/product_grid_item.dart';
 import 'package:khmerbiz_pos/shared/widgets/feedback/empty_state.dart';
 import 'package:khmerbiz_pos/shared/widgets/feedback/loading_skeleton.dart';
 import 'package:khmerbiz_pos/shared/widgets/layouts/category_pill.dart';
+import 'package:khmerbiz_pos/shared/widgets/layouts/responsive_layout.dart';
 
+/// A screen that displays a searchable, categorical list of products.
 class ProductListScreen extends StatefulWidget {
+  /// Creates a [ProductListScreen].
   const ProductListScreen({super.key});
 
   @override
@@ -121,7 +124,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
               suffixIcon: _searchController.text.isNotEmpty
                   ? IconButton(
                       icon: const Icon(Icons.clear,
-                          color: AppColors.textSecondary),
+                          color: AppColors.textSecondary,),
                       onPressed: () {
                         _searchController.clear();
                         context
@@ -189,7 +192,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
   Widget _buildContent(
     BuildContext context, {
     required List<Product> products,
-    List<dynamic>? categories,
+    List<Category>? categories,
     List<Product>? lowStockAlerts,
     String? selectedCategoryId,
   }) {
@@ -221,7 +224,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             id: c.id,
                             name: c.nameEn,
                             nameKhmer: c.nameKh,
-                          ))
+                          ),)
                       .toList(),
                   selectedId: selectedCategoryId,
                   onSelected: (id) {
@@ -249,8 +252,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 vertical: AppSpacing.sm,
               ),
               sliver: SliverGrid(
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 200,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: ResponsiveLayout.isTablet(context) ? 4 : 2,
                   mainAxisSpacing: AppSpacing.sm,
                   crossAxisSpacing: AppSpacing.sm,
                   childAspectRatio: 0.75,

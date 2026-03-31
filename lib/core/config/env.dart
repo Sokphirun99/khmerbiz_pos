@@ -11,6 +11,7 @@ enum Environment {
   prod,
 }
 
+/// Extension methods for [Environment] to provide helper getters.
 extension EnvironmentExtension on Environment {
   /// Whether this is a development environment
   bool get isDevelopment => this == Environment.dev;

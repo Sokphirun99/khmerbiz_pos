@@ -3,7 +3,9 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/shared/widgets/buttons/app_button.dart';
 import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
+/// A story collection for button components.
 class ButtonStories extends StatelessWidget {
+  /// Creates a [ButtonStories].
   const ButtonStories({super.key});
 
   @override
@@ -12,7 +14,7 @@ class ButtonStories extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
         const Text('Buttons',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
         const SizedBox(height: AppSpacing.base),
         const Text('AppButton variants, states, and sizes.'),
         const SizedBox(height: AppSpacing.xl),

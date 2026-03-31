@@ -10,8 +10,12 @@ import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:khmerbiz_pos/domain/entities/user.dart';
 import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
 
+/// Implementation of [AuthRepository] using a local SQLite database.
+///
+/// Handles user login, logout, and PIN verification with automated security upgrades.
 @LazySingleton(as: AuthRepository)
 class AuthRepositoryImpl implements AuthRepository {
+  /// Creates a new [AuthRepositoryImpl] with the given [AppDatabase].
   AuthRepositoryImpl(this._db);
   final AppDatabase _db;
 

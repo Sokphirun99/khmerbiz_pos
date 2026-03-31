@@ -72,6 +72,7 @@ enum AppButtonState {
 /// )
 /// ```
 class AppButton extends StatefulWidget {
+  /// Creates an [AppButton].
   const AppButton({
     required this.label,
     super.key,
@@ -293,7 +294,7 @@ class _AppButtonState extends State<AppButton>
             style: TextStyle(
               fontFamily: 'Kantumruy Pro',
               fontSize: 14,
-              color: _getTextColor().withOpacity(0.5),
+              color: _getTextColor().withValues(alpha: 0.5),
             ),
           ),
           const SizedBox(width: AppSpacing.xs),

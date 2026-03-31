@@ -9,12 +9,16 @@ import 'package:khmerbiz_pos/domain/entities/daily_summary.dart';
 import 'package:khmerbiz_pos/domain/entities/top_product.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity;
 import 'package:khmerbiz_pos/domain/entities/transaction_item.dart'
-    as entityItem;
+    as entity_item;
 import 'package:khmerbiz_pos/domain/entities/weekly_summary.dart';
 import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
 
+/// Implementation of [TransactionRepository] using [TransactionsDao].
+///
+/// Handles sale processing, transaction history tracking, reporting, and voiding.
 @LazySingleton(as: TransactionRepository)
 class TransactionRepositoryImpl implements TransactionRepository {
+  /// Creates a new [TransactionRepositoryImpl] with the given [TransactionsDao].
   TransactionRepositoryImpl(this._dao);
   final TransactionsDao _dao;
 
@@ -46,8 +50,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
     );
   }
 
-  entityItem.TransactionItem _mapItemToDomain(TransactionItemModel model) {
-    return entityItem.TransactionItem(
+  entity_item.TransactionItem _mapItemToDomain(TransactionItemModel model) {
+    return entity_item.TransactionItem(
       id: model.id,
       transactionId: model.transactionId,
       productId: model.productId,
@@ -65,7 +69,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
   @override
   Future<Either<Failure, String>> processSale({
     required entity.Transaction transaction,
-    required List<entityItem.TransactionItem> items,
+    required List<entity_item.TransactionItem> items,
   }) async {
     try {
       final txCompanion = TransactionsCompanion(
@@ -103,7 +107,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
           .toList();
 
       final txId = await _dao.processSale(
-          transaction: txCompanion, items: itemsCompanion);
+          transaction: txCompanion, items: itemsCompanion,);
       return right(txId);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
@@ -114,9 +118,9 @@ class TransactionRepositoryImpl implements TransactionRepository {
   Stream<Either<Failure, List<entity.Transaction>>> watchTodayTransactions() {
     return _dao.watchTodayTransactions().map((models) {
       return right<Failure, List<entity.Transaction>>(
-          models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(
-        CacheFailure.defaultError(details: err.toString())));
+          models.map(_mapToDomain).toList(),);
+    }).handleError((Object err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString()),),);
   }
 
   @override
@@ -124,14 +128,14 @@ class TransactionRepositoryImpl implements TransactionRepository {
       watchTransactionsByDateRange(DateTime start, DateTime end) {
     return _dao.watchTransactionsByDateRange(start, end).map((models) {
       return right<Failure, List<entity.Transaction>>(
-          models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(
-        CacheFailure.defaultError(details: err.toString())));
+          models.map(_mapToDomain).toList(),);
+    }).handleError((Object err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString()),),);
   }
 
   @override
   Future<Either<Failure, TransactionWithItems>> getTransactionWithItems(
-      String id) async {
+      String id,) async {
     try {
       final res = await _dao.getTransactionWithItems(id);
       if (res == null) return left(ServerFailure.notFound());
@@ -165,7 +169,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<Either<Failure, WeeklySummary>> getWeeklySummary(
-      DateTime weekStart) async {
+      DateTime weekStart,) async {
     try {
       final res = await _dao.getWeeklySummary(weekStart);
       return right(
@@ -184,13 +188,13 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<Either<Failure, List<TopProduct>>> getTopProducts(
-      DateTime start, DateTime end, int limit) async {
+      DateTime start, DateTime end, int limit,) async {
     try {
       await _dao.getTopProducts(start, end, limit);
       // In a real app we would map productId to full Product domain entities, since getTopProducts returns them.
       // We will skip actual product mapping to avoid creating an n+1 query here just for the skeleton
       return right(
-          []); // To correctly implement, fetch Products via ProductRepository.
+          [],); // To correctly implement, fetch Products via ProductRepository.
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }
@@ -198,7 +202,7 @@ class TransactionRepositoryImpl implements TransactionRepository {
 
   @override
   Future<Either<Failure, void>> voidTransaction(
-      String id, String staffId) async {
+      String id, String staffId,) async {
     try {
       await _dao.voidTransaction(id, staffId);
       return right(null);
@@ -212,8 +216,8 @@ class TransactionRepositoryImpl implements TransactionRepository {
       watchUnsyncedTransactions() {
     return _dao.watchUnsyncedTransactions().map((models) {
       return right<Failure, List<entity.Transaction>>(
-          models.map(_mapToDomain).toList());
-    }).handleError((err) => left<Failure, List<entity.Transaction>>(
-        CacheFailure.defaultError(details: err.toString())));
+          models.map(_mapToDomain).toList(),);
+    }).handleError((Object err) => left<Failure, List<entity.Transaction>>(
+        CacheFailure.defaultError(details: err.toString()),),);
   }
 }

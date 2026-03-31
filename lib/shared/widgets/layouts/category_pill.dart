@@ -6,6 +6,7 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 
 /// Category data for CategoryPill
 class CategoryPillData {
+  /// Creates [CategoryPillData].
   const CategoryPillData({
     required this.id,
     required this.name,
@@ -13,10 +14,20 @@ class CategoryPillData {
     this.icon,
     this.productCount,
   });
+
+  /// Unique identifier for the category
   final String id;
+
+  /// Category name in English
   final String name;
+
+  /// Category name in Khmer
   final String? nameKhmer;
+
+  /// Optional icon for the category
   final IconData? icon;
+
+  /// Optional product count for the category
   final int? productCount;
 }
 
@@ -53,6 +64,7 @@ class CategoryPillData {
 /// )
 /// ```
 class CategoryPill extends StatefulWidget {
+  /// Creates a [CategoryPill].
   const CategoryPill({
     required this.category,
     super.key,
@@ -250,7 +262,7 @@ class _CategoryPillState extends State<CategoryPill>
 
   Color _getCountBackgroundColor() {
     return widget.isSelected
-        ? AppColors.onPrimary.withOpacity(0.2)
+        ? AppColors.onPrimary.withValues(alpha: 0.2)
         : AppColors.surfaceAlt;
   }
 
@@ -261,6 +273,7 @@ class _CategoryPillState extends State<CategoryPill>
 
 /// Scrollable row of category pills
 class CategoryPillRow extends StatelessWidget {
+  /// Creates a [CategoryPillRow].
   const CategoryPillRow({
     required this.categories,
     required this.onSelected,
@@ -346,6 +359,7 @@ class CategoryPillRow extends StatelessWidget {
 
 /// Category pill with all option
 class CategoryPillRowWithAll extends StatelessWidget {
+  /// Creates a [CategoryPillRowWithAll].
   const CategoryPillRowWithAll({
     required this.categories,
     required this.onSelected,
@@ -355,11 +369,22 @@ class CategoryPillRowWithAll extends StatelessWidget {
     this.allLabelKhmer,
     this.showCount = true,
   });
+  /// List of categories to display.
   final List<CategoryPillData> categories;
+
+  /// Currently selected category ID.
   final String? selectedId;
+
+  /// Callback when a category (or "All") is selected.
   final ValueChanged<String?> onSelected;
+
+  /// Label for the "All" category.
   final String allLabel;
+
+  /// Khmer label for the "All" category.
   final String? allLabelKhmer;
+
+  /// Whether to show product counts.
   final bool showCount;
 
   @override

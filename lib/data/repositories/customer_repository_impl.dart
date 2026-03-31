@@ -6,8 +6,12 @@ import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:khmerbiz_pos/domain/entities/customer.dart';
 import 'package:khmerbiz_pos/domain/repositories/customer_repository.dart';
 
+/// Implementation of [CustomerRepository] using [CustomersDao].
+///
+/// Handles customer lookup, search, and loyalty point updates.
 @LazySingleton(as: CustomerRepository)
 class CustomerRepositoryImpl implements CustomerRepository {
+  /// Creates a new [CustomerRepositoryImpl] with the given [CustomersDao].
   CustomerRepositoryImpl(this._dao);
   final CustomersDao _dao;
 
@@ -48,7 +52,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
 
   @override
   Future<Either<Failure, void>> updateLoyaltyPoints(
-      String customerId, double pointsToAdd) async {
+      String customerId, double pointsToAdd,) async {
     try {
       await _dao.updateLoyaltyPoints(customerId, pointsToAdd);
       return right(null);

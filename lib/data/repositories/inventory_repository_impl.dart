@@ -7,8 +7,12 @@ import 'package:khmerbiz_pos/domain/entities/inventory_log.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/domain/repositories/inventory_repository.dart';
 
+/// Implementation of [InventoryRepository] using [InventoryDao].
+///
+/// Handles stock adjustments, history tracking, and low stock alerts.
 @LazySingleton(as: InventoryRepository)
 class InventoryRepositoryImpl implements InventoryRepository {
+  /// Creates a new [InventoryRepositoryImpl] with the given [InventoryDao].
   InventoryRepositoryImpl(this._dao);
   final InventoryDao _dao;
 
@@ -54,12 +58,12 @@ class InventoryRepositoryImpl implements InventoryRepository {
 
   @override
   Stream<Either<Failure, List<InventoryLog>>> watchProductHistory(
-      String productId) {
+      String productId,) {
     return _dao.watchProductHistory(productId).map((models) {
       return right<Failure, List<InventoryLog>>(
-          models.map(_mapLogToDomain).toList());
-    }).handleError((err) => left<Failure, List<InventoryLog>>(
-        CacheFailure.defaultError(details: err.toString())));
+          models.map(_mapLogToDomain).toList(),);
+    }).handleError((Object err) => left<Failure, List<InventoryLog>>(
+        CacheFailure.defaultError(details: err.toString()),),);
   }
 
   @override

@@ -1,18 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:workmanager/workmanager.dart';
 
 import 'package:khmerbiz_pos/core/di/injection.dart';
 import 'package:khmerbiz_pos/core/router/app_router.dart';
 import 'package:khmerbiz_pos/core/theme/app_theme.dart';
 import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
-import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
+import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
+import 'package:khmerbiz_pos/features/settings/data/workers/exchange_rate_worker.dart';
+import 'package:khmerbiz_pos/firebase_options.dart';
 
 /// Main entry point for KhmerBiz POS application.
 void main() async {
@@ -29,6 +30,22 @@ void main() async {
 
   // Initialize dependency injection
   await configureDependencies();
+
+  // Initialize Workmanager for background tasks
+  await Workmanager().initialize(
+    ExchangeRateWorker.callbackDispatcher,
+    isInDebugMode: true,
+  );
+
+  // Register periodic exchange rate update task (daily)
+  await Workmanager().registerPeriodicTask(
+    '1',
+    ExchangeRateWorker.taskName,
+    frequency: const Duration(hours: 24),
+    constraints: Constraints(
+      networkType: NetworkType.connected,
+    ),
+  );
 
   runApp(const KhmerBizPosApp());
 }

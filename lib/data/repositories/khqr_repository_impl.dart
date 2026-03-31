@@ -14,6 +14,7 @@ import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
 
 /// KHQR Repository implementation.
 ///
+/// Handles dynamic and static KHQR generation and payment status polling.
 /// Currently uses a simulation layer that generates valid-looking KHQR
 /// payloads and simulates payment confirmation after a configurable delay.
 ///
@@ -22,6 +23,11 @@ import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
 /// 2. Replace [_generateSimulatedQR] with SDK call
 /// 3. Replace [_simulatePaymentStatus] with real Bakong API polling
 class KhqrRepositoryImpl implements KhqrRepository {
+  /// Creates a new [KhqrRepositoryImpl] with required dependencies.
+  ///
+  /// [networkInfo] is used for connectivity checks.
+  /// [exchangeRateRepository] is used for KHR to USD conversion.
+  /// [simulateConfirmationAfter] sets the mock polling threshold.
   KhqrRepositoryImpl({
     required NetworkInfo networkInfo,
     required ExchangeRateRepository exchangeRateRepository,
@@ -62,7 +68,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
         return left(const PaymentFailure(
           messageEn: 'Internet connection required to generate KHQR.',
           messageKm: 'ត្រូវការការតភ្ជាប់អ៊ីនធឺណិតដើម្បីបង្កើត KHQR។',
-        ));
+        ),);
       }
 
       // Validate amount
@@ -70,7 +76,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
         return left(ValidationFailure.custom(
           messageEn: 'Amount must be greater than 0.',
           messageKm: 'ចំនួនទឹកប្រាក់ត្រូវតែធំជាង 0។',
-        ));
+        ),);
       }
 
       // Convert to USD using current exchange rate
@@ -110,7 +116,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
         messageEn: 'Failed to generate KHQR code.',
         messageKm: 'បរាជ័យក្នុងការបង្កើតកូដ KHQR។',
         details: e.toString(),
-      ));
+      ),);
     }
   }
 
@@ -118,7 +124,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
 
   @override
   Future<Either<Failure, PaymentStatus>> checkPaymentStatus(
-      String md5Hash) async {
+      String md5Hash,) async {
     try {
       final isConnected = await _networkInfo.isConnected;
       if (!isConnected) {
@@ -141,7 +147,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
         messageEn: 'Failed to check payment status.',
         messageKm: 'បរាជ័យក្នុងការពិនិត្យស្ថានភាពការទូទាត់។',
         details: e.toString(),
-      ));
+      ),);
     }
   }
 
@@ -149,7 +155,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
 
   @override
   Future<Either<Failure, String>> generateStaticQR(
-      MerchantInfo merchantInfo) async {
+      MerchantInfo merchantInfo,) async {
     try {
       // Static QR does not require network (can be generated offline)
       final qrString = _generateStaticQRPayload(merchantInfo);
@@ -159,7 +165,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
         messageEn: 'Failed to generate static KHQR.',
         messageKm: 'បរាជ័យក្នុងការបង្កើត KHQR ថេរ។',
         details: e.toString(),
-      ));
+      ),);
     }
   }
 
@@ -198,7 +204,7 @@ class KhqrRepositoryImpl implements KhqrRepository {
       ..write('58${AppConstants.khqrCountryCode}')
       ..write('59${merchantInfo.merchantName}')
       ..write('60${merchantInfo.merchantCity}')
-      ..write('62${invoiceId}')
+      ..write('62$invoiceId')
       ..write('6304'); // CRC placeholder
 
     // Append a simulated CRC

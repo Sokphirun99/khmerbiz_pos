@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 /// Loaded from local settings/database. The merchant must register
 /// with an NBC-approved platform (Bakong, ABA, ACLEDA, etc.).
 class MerchantInfo extends Equatable {
+  /// Creates a [MerchantInfo] entity.
   const MerchantInfo({
     required this.merchantId,
     required this.merchantName,

@@ -8,8 +8,14 @@ sealed class Failure extends Equatable {
     required this.messageKm,
     this.details,
   });
+
+  /// The error message in English
   final String messageEn;
+
+  /// The error message in Khmer
   final String messageKm;
+
+  /// Optional technical details or stack trace context
   final String? details;
 
   @override
@@ -18,6 +24,7 @@ sealed class Failure extends Equatable {
 
 /// Server-related failures (API errors, timeouts, etc.)
 final class ServerFailure extends Failure {
+  /// Creates a [ServerFailure].
   const ServerFailure({
     required super.messageEn,
     required super.messageKm,
@@ -61,6 +68,8 @@ final class ServerFailure extends Failure {
       statusCode: 503,
     );
   }
+
+  /// The HTTP status code returned by the server, if any
   final int? statusCode;
 
   @override
@@ -69,6 +78,7 @@ final class ServerFailure extends Failure {
 
 /// Local cache/database failures
 final class CacheFailure extends Failure {
+  /// Creates a [CacheFailure].
   const CacheFailure({
     required super.messageEn,
     required super.messageKm,
@@ -106,6 +116,7 @@ final class CacheFailure extends Failure {
 
 /// Network connectivity failures
 final class NetworkFailure extends Failure {
+  /// Creates a [NetworkFailure].
   const NetworkFailure({
     required super.messageEn,
     required super.messageKm,
@@ -142,6 +153,7 @@ final class NetworkFailure extends Failure {
 
 /// Input validation failures
 final class ValidationFailure extends Failure {
+  /// Creates a [ValidationFailure].
   const ValidationFailure({
     required super.messageEn,
     required super.messageKm,
@@ -179,6 +191,8 @@ final class ValidationFailure extends Failure {
       field: field,
     );
   }
+
+  /// The specific input field that failed validation
   final String? field;
 
   @override
@@ -187,6 +201,7 @@ final class ValidationFailure extends Failure {
 
 /// Bluetooth/Thermal printer failures
 final class PrinterFailure extends Failure {
+  /// Creates a [PrinterFailure].
   const PrinterFailure({
     required super.messageEn,
     required super.messageKm,
@@ -223,6 +238,7 @@ final class PrinterFailure extends Failure {
 
 /// Payment processing failures
 final class PaymentFailure extends Failure {
+  /// Creates a [PaymentFailure].
   const PaymentFailure({
     required super.messageEn,
     required super.messageKm,
@@ -259,6 +275,7 @@ final class PaymentFailure extends Failure {
 
 /// Data synchronization failures
 final class SyncFailure extends Failure {
+  /// Creates a [SyncFailure].
   const SyncFailure({
     required super.messageEn,
     required super.messageKm,

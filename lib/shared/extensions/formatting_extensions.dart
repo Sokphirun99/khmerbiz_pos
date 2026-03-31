@@ -8,25 +8,25 @@ import 'package:khmerbiz_pos/core/utils/date_formatter.dart';
 
 /// Extensions on num for formatting.
 extension NumFormattingExtension on num {
-  /// Format as KHR currency
+  /// Formats the number as a Khmer Riel (KHR) currency string.
   String get formatKHR => currencyFormatter.formatKHR(toDouble());
 
-  /// Format as dual currency (KHR primary, USD secondary)
+  /// Formats as dual currency, showing KHR primary and USD secondary.
   String get formatDual => currencyFormatter.formatDual(toDouble());
 
-  /// Format as USD currency
+  /// Formats the number as a US Dollar (USD) currency string.
   String get formatUSD => currencyFormatter.formatUSD(toDouble());
 
-  /// Convert to USD from KHR
+  /// Converts the value from KHR to USD based on the current exchange rate.
   double get toUSD => currencyFormatter.khqrToUSD(toDouble());
 
-  /// Convert to KHR from USD
+  /// Converts the value from USD to KHR based on the current exchange rate.
   double get toKHR => currencyFormatter.usdToKHR(toDouble());
 
-  /// Format as percentage
+  /// Formats the number as a percentage string (e.g., 0.1 -> "10.0%").
   String get asPercentage => '${(this * 100).toStringAsFixed(1)}%';
 
-  /// Format with thousand separators
+  /// Formats the number with thousand separators (e.g., 1000 -> "1,000").
   String get withSeparators {
     return toString().replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
@@ -34,14 +34,14 @@ extension NumFormattingExtension on num {
     );
   }
 
-  /// Clamp value between min and max
+  /// Clamps the value between [min] and [max].
   num clampTo(num min, num max) {
     if (this < min) return min;
     if (this > max) return max;
     return this;
   }
 
-  /// Round to decimal places
+  /// Rounds the number to the specified number of [places].
   double toDecimalPlaces(int places) {
     final mod = math.pow(10, places).toDouble();
     return (this * mod).round() / mod;
@@ -50,13 +50,13 @@ extension NumFormattingExtension on num {
 
 /// Extensions on int for formatting.
 extension IntFormattingExtension on int {
-  /// Format as KHR currency
+  /// Formats the integer as a Khmer Riel (KHR) currency string.
   String get formatKHR => currencyFormatter.formatKHR(toDouble());
 
-  /// Format as dual currency
+  /// Formats the integer as dual currency (primary KHR, secondary USD).
   String get formatDual => currencyFormatter.formatDual(toDouble());
 
-  /// Format as quantity with abbreviation for large numbers
+  /// Formats as quantity with abbreviations for large numbers (e.g., 1500 -> "1.5K").
   String get formattedQuantity {
     if (this >= 1000000) {
       return '${(this / 1000000).toStringAsFixed(1)}M';
@@ -66,20 +66,21 @@ extension IntFormattingExtension on int {
     return toString();
   }
 
-  /// Format as time duration (hours:minutes)
+  /// Formats the integer as a duration string (e.g., 90 -> "01:30").
+  /// Assumes the integer represents total minutes.
   String get asDuration {
     final hours = this ~/ 60;
     final minutes = this % 60;
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}';
   }
 
-  /// Format as day name (0 = Sunday, 6 = Saturday)
+  /// Returns the day abbreviation in English (0 = Sun, 6 = Sat).
   String get asDayName {
     const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     return days[this % 7];
   }
 
-  /// Format as Khmer day name
+  /// Returns the day name in Khmer.
   String get asDayNameKhmer {
     const days = [
       'អាទិត្យ',
@@ -96,96 +97,96 @@ extension IntFormattingExtension on int {
 
 /// Extensions on DateTime for formatting.
 extension DateTimeFormattingExtension on DateTime {
-  /// Format as display date
+  /// Formats as display date (dd MMM yyyy).
   String get formatDisplay => dateFormatter.formatDisplay(this);
 
-  /// Format as Khmer date
+  /// Formats as Khmer date.
   String get formatKhmer => dateFormatter.formatKhmer(this);
 
-  /// Format as dual language
+  /// Formats in both English and Khmer.
   String get formatDual => dateFormatter.formatDual(this);
 
-  /// Format date and time display
+  /// Formats date and time for display.
   String get formatDateTimeDisplay => dateFormatter.formatDateTimeDisplay(this);
 
-  /// Format date and time Khmer
+  /// Formats date and time in Khmer.
   String get formatDateTimeKhmer => dateFormatter.formatDateTimeKhmer(this);
 
-  /// Format date and time dual
+  /// Formats date and time in both languages.
   String get formatDateTimeDual => dateFormatter.formatDateTimeDual(this);
 
-  /// Format as ISO string
+  /// Formats in ISO 8601 string.
   String get formatISO => dateFormatter.formatISO(this);
 
-  /// Format as relative time (English)
+  /// Returns relative time in English (e.g., "5 minutes ago").
   String get formatRelative => dateFormatter.formatRelative(this);
 
-  /// Format as relative time (Khmer)
+  /// Returns relative time in Khmer.
   String get formatRelativeKhmer => dateFormatter.formatRelativeKhmer(this);
 
-  /// Format time only
+  /// Formats time portion only (HH:mm).
   String get formatTime => dateFormatter.formatTime(this);
 
-  /// Format time in Khmer
+  /// Formats time in Khmer.
   String get formatTimeKhmer => dateFormatter.formatTimeKhmer(this);
 
-  /// Check if is today
+  /// Whether the date is today.
   bool get isToday => dateFormatter.isToday(this);
 
-  /// Check if is yesterday
+  /// Whether the date is yesterday.
   bool get isYesterday => dateFormatter.isYesterday(this);
 
-  /// Get day name in Khmer
+  /// Returns day name in Khmer.
   String get dayNameKhmer => dateFormatter.getDayNameKhmer(this);
 
-  /// Get day name in English (short)
+  /// Returns day name in English.
   String get dayNameEnglish => dateFormatter.getDayNameEnglish(this);
 
-  /// Get start of day
+  /// Returns the start of the day (00:00:00).
   DateTime get startOfDay => DateTime(year, month, day);
 
-  /// Get end of day
+  /// Returns the end of the day (23:59:59).
   DateTime get endOfDay => DateTime(year, month, day, 23, 59, 59);
 
-  /// Get start of week (Monday)
+  /// Returns the start of the week (Monday).
   DateTime get startOfWeek {
     return subtract(Duration(days: weekday - 1)).startOfDay;
   }
 
-  /// Get end of week (Sunday)
+  /// Returns the end of the week (Sunday).
   DateTime get endOfWeek {
     return add(Duration(days: 7 - weekday)).endOfDay;
   }
 
-  /// Get start of month
+  /// Returns the start of the month.
   DateTime get startOfMonth => DateTime(year, month);
 
-  /// Get end of month
+  /// Returns the end of the month.
   DateTime get endOfMonth => DateTime(year, month + 1, 0, 23, 59, 59);
 
-  /// Check if is in the past
+  /// Whether the date is in the past.
   bool get isPast => isBefore(DateTime.now());
 
-  /// Check if is in the future
+  /// Whether the date is in the future.
   bool get isFuture => isAfter(DateTime.now());
 
-  /// Check if is same day as another date
+  /// Whether this date is on the same day as [other].
   bool isSameDay(DateTime other) {
     return year == other.year && month == other.month && day == other.day;
   }
 
-  /// Check if is same month as another date
+  /// Whether this date is in the same month as [other].
   bool isSameMonth(DateTime other) {
     return year == other.year && month == other.month;
   }
 
-  /// Add days
+  /// Returns a new [DateTime] with [days] added.
   DateTime addDays(int days) => add(Duration(days: days));
 
-  /// Subtract days
+  /// Returns a new [DateTime] with [days] subtracted.
   DateTime subtractDays(int days) => subtract(Duration(days: days));
 
-  /// Add months (handles month overflow)
+  /// Returns a new [DateTime] with [months] added.
   DateTime addMonths(int months) {
     final newMonth = month + months;
     final newYear = year + (newMonth - 1) ~/ 12;
@@ -195,7 +196,7 @@ extension DateTimeFormattingExtension on DateTime {
     return DateTime(newYear, adjustedMonth, newDay, hour, minute, second);
   }
 
-  /// Get age from birthdate
+  /// Calculates age based on this date.
   int get age {
     final now = DateTime.now();
     var age = now.year - year;
@@ -208,31 +209,31 @@ extension DateTimeFormattingExtension on DateTime {
 
 /// Extensions on String for parsing and validation.
 extension StringParsingExtension on String {
-  /// Parse to int
+  /// Attempts to parse to an [int].
   int? tryParseInt() => int.tryParse(this);
 
-  /// Parse to double
+  /// Attempts to parse to a [double].
   double? tryParseDouble() => double.tryParse(this);
 
-  /// Parse to DateTime from ISO format
+  /// Attempts to parse as ISO 8601 date.
   DateTime? tryParseISO() => dateFormatter.parseISO(this);
 
-  /// Parse to DateTime from display format
+  /// Attempts to parse as display date.
   DateTime? tryParseDisplay() => dateFormatter.parseDisplay(this);
 
-  /// Check if string is null or empty
+  /// Whether the string is null (if applicable) or empty.
   bool get isNullOrEmpty => trim().isEmpty;
 
-  /// Check if string is not null or empty
+  /// Whether the string is not empty.
   bool get isNotNullOrEmpty => trim().isNotEmpty;
 
-  /// Check if string is a valid email
+  /// Validates email format.
   bool get isValidEmail {
     return RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
         .hasMatch(this);
   }
 
-  /// Check if string is a valid Khmer phone number
+  /// Validates Khmer phone number format.
   bool get isValidKhmerPhone {
     final cleaned = replaceAll(RegExp(r'[\s\-\(\)]'), '');
     final localPattern = RegExp(r'^0[16789]\d{7}$');
@@ -240,37 +241,37 @@ extension StringParsingExtension on String {
     return localPattern.hasMatch(cleaned) || intlPattern.hasMatch(cleaned);
   }
 
-  /// Check if string contains only Khmer characters
+  /// Whether the string contains Khmer characters.
   bool get isKhmer {
     return RegExp(r'[\u1780-\u17FF]').hasMatch(this);
   }
 
-  /// Check if string contains Khmer characters
+  /// Whether the string contains Khmer characters.
   bool get containsKhmer {
     return RegExp(r'[\u1780-\u17FF]').hasMatch(this);
   }
 
-  /// Capitalize first letter
+  /// Capitalizes the first character.
   String get capitalize {
     if (isEmpty) return this;
     return this[0].toUpperCase() + substring(1);
   }
 
-  /// Title case
+  /// Converts to Title Case.
   String get titleCase {
     return split(' ').map((word) => word.capitalize).join(' ');
   }
 
-  /// Truncate string with ellipsis
+  /// Truncates the string with ellipses if it exceeds [maxLength].
   String truncate(int maxLength) {
     if (length <= maxLength) return this;
     return '${substring(0, maxLength)}...';
   }
 
-  /// Remove all non-numeric characters
+  /// Returns only the numeric digits from the string.
   String get onlyDigits => replaceAll(RegExp(r'\D'), '');
 
-  /// Format as phone number (Khmer format)
+  /// Formats the string as a Khmer phone number.
   String get formatAsKhmerPhone {
     final digits = onlyDigits;
     if (digits.startsWith('855') && digits.length == 11) {
@@ -281,12 +282,12 @@ extension StringParsingExtension on String {
     return this;
   }
 
-  /// Safe trim (handles null)
+  /// Trims the string.
   String safeTrim() => trim();
 
-  /// Or default value if empty
+  /// Returns [defaultValue] if the string is empty.
   String or(String defaultValue) => isNullOrEmpty ? defaultValue : this;
 
-  /// Or null if empty
+  /// Returns null if the string is empty.
   String? orNull() => isNullOrEmpty ? null : this;
 }

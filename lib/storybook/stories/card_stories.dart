@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
+/// A story collection for card components.
 class CardStories extends StatelessWidget {
+  /// Creates a [CardStories].
   const CardStories({super.key});
 
   @override
@@ -11,7 +13,7 @@ class CardStories extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: const [
         Text('Cards',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
         SizedBox(height: AppSpacing.base),
         Text('Product, Dashboard, and generic cards.'),
         SizedBox(height: AppSpacing.xl),

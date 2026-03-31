@@ -420,32 +420,45 @@ final class Validators {
 /// final passwordError = _passwordController.text.validatePassword();
 /// ```
 extension ValidationExtension on String? {
+  /// Validate that field is not empty.
   ValidationFailure? validateRequired(String fieldName) =>
       Validators.required(this, fieldName);
 
+  /// Validate email format.
   ValidationFailure? validateEmail() => Validators.email(this);
 
+  /// Validate phone number (Cambodia format).
   ValidationFailure? validatePhoneKhmer() => Validators.phoneKhmer(this);
 
+  /// Validate password strength.
   ValidationFailure? validatePassword() => Validators.password(this);
 
+  /// Validate password confirmation matches.
   ValidationFailure? validatePasswordConfirm(String original) =>
       Validators.passwordConfirm(this, original);
 
+  /// Validate price value.
   ValidationFailure? validatePrice() => Validators.price(this);
 
+  /// Validate quantity value.
   ValidationFailure? validateQuantity({int? max}) =>
       Validators.quantity(this, max: max);
 
+  /// Validate discount percentage.
   ValidationFailure? validateDiscount() => Validators.discount(this);
 
+  /// Validate product name.
   ValidationFailure? validateProductName() => Validators.productName(this);
 
+  /// Validate customer name.
   ValidationFailure? validateCustomerName() => Validators.customerName(this);
 
+  /// Validate business name.
   ValidationFailure? validateBusinessName() => Validators.businessName(this);
 
+  /// Validate VAT number (Cambodia format).
   ValidationFailure? validateVATNumber() => Validators.vatNumber(this);
 
+  /// Validate PIN code (4-6 digits).
   ValidationFailure? validatePin() => Validators.pin(this);
 }

@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 
 /// Mixin for form validation helpers.
 mixin FormValidationMixin {
-  /// Validate that field is not empty
+  /// Validates that the [value] is not empty.
+  /// Returns a [fieldName] specific error message if invalid.
   String? validateRequired(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -13,7 +14,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate email format
+  /// Validates that the [value] is a correctly formatted email address.
   String? validateEmail(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Email is required';
@@ -30,7 +31,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate phone number (Khmer format)
+  /// Validates that the [value] is a valid Khmer phone number.
   String? validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Phone number is required';
@@ -47,7 +48,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate password strength
+  /// Validates that the [value] meets minimum password strength requirements.
   String? validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -72,7 +73,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate password confirmation
+  /// Validates that the [value] matches the provided [password].
   String? validatePasswordConfirm(String? value, String password) {
     if (value == null || value.isEmpty) {
       return 'Please confirm your password';
@@ -85,7 +86,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate number
+  /// Validates that the [value] is a valid numeric string.
   String? validateNumber(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
       return '$fieldName is required';
@@ -98,7 +99,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate positive number
+  /// Validates that the [value] is a positive numeric string.
   String? validatePositiveNumber(String? value, String fieldName) {
     final error = validateNumber(value, fieldName);
     if (error != null) return error;
@@ -110,7 +111,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate price
+  /// Validates that the [value] is a valid price (non-negative number).
   String? validatePrice(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Price is required';
@@ -128,7 +129,7 @@ mixin FormValidationMixin {
     return null;
   }
 
-  /// Validate quantity
+  /// Validates that the [value] is a valid quantity (non-negative integer).
   String? validateQuantity(String? value) {
     if (value == null || value.trim().isEmpty) {
       return 'Quantity is required';
@@ -149,34 +150,34 @@ mixin FormValidationMixin {
 
 /// Mixin for logging helpers.
 mixin LoggerMixin {
-  /// Log a debug message
+  /// Logs a debug message with an optional [tag].
   void debugLog(String message, {String? tag}) {
     if (kDebugMode) {
       final timestamp = DateTime.now().toIso8601String();
       final tagStr = tag != null ? '[$tag]' : '';
-      print('🐛 $timestamp $tagStr $message');
+      debugPrint('🐛 $timestamp $tagStr $message');
     }
   }
 
-  /// Log an info message
+  /// Logs an info message with an optional [tag].
   void infoLog(String message, {String? tag}) {
     if (kDebugMode) {
       final timestamp = DateTime.now().toIso8601String();
       final tagStr = tag != null ? '[$tag]' : '';
-      print('ℹ️ $timestamp $tagStr $message');
+      debugPrint('ℹ️ $timestamp $tagStr $message');
     }
   }
 
-  /// Log a warning message
+  /// Logs a warning message with an optional [tag].
   void warningLog(String message, {String? tag}) {
     if (kDebugMode) {
       final timestamp = DateTime.now().toIso8601String();
       final tagStr = tag != null ? '[$tag]' : '';
-      print('⚠️ $timestamp $tagStr $message');
+      debugPrint('⚠️ $timestamp $tagStr $message');
     }
   }
 
-  /// Log an error message
+  /// Logs an error message with [tag], optional [error] and [stackTrace].
   void errorLog(
     String message, {
     String? tag,
@@ -186,12 +187,12 @@ mixin LoggerMixin {
     if (kDebugMode) {
       final timestamp = DateTime.now().toIso8601String();
       final tagStr = tag != null ? '[$tag]' : '';
-      print('❌ $timestamp $tagStr $message');
+      debugPrint('❌ $timestamp $tagStr $message');
       if (error != null) {
-        print('Error: $error');
+        debugPrint('Error: $error');
       }
       if (stackTrace != null) {
-        print('StackTrace: $stackTrace');
+        debugPrint('StackTrace: $stackTrace');
       }
     }
   }

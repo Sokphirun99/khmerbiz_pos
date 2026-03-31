@@ -43,6 +43,7 @@ enum SyncStatus {
 /// )
 /// ```
 class SyncStatusBadge extends StatelessWidget {
+  /// Creates a [SyncStatusBadge].
   const SyncStatusBadge({
     super.key,
     this.status = SyncStatus.synced,
@@ -189,10 +190,12 @@ class SyncStatusBadge extends StatelessWidget {
 
 /// Animated sync indicator for sync-in-progress
 class SyncProgressIndicator extends StatelessWidget {
+  /// Creates a [SyncProgressIndicator].
   const SyncProgressIndicator({
     super.key,
     this.message,
   });
+  /// Optional message to display.
   final String? message;
 
   @override
@@ -235,6 +238,7 @@ class SyncProgressIndicator extends StatelessWidget {
 
 /// Sync status with detailed information
 class SyncStatusDetail extends StatelessWidget {
+  /// Creates a [SyncStatusDetail].
   const SyncStatusDetail({
     required this.status,
     super.key,
@@ -243,10 +247,19 @@ class SyncStatusDetail extends StatelessWidget {
     this.errorMessage,
     this.onRetry,
   });
+  /// Current sync status.
   final SyncStatus status;
+
+  /// Number of pending items.
   final int pendingCount;
+
+  /// Time of last successful sync.
   final DateTime? lastSyncTime;
+
+  /// Optional error message if sync failed.
   final String? errorMessage;
+
+  /// Optional callback to retry sync.
   final VoidCallback? onRetry;
 
   @override
@@ -343,11 +356,11 @@ class SyncStatusDetail extends StatelessWidget {
   Color _getBorderColor() {
     switch (status) {
       case SyncStatus.synced:
-        return AppColors.success.withOpacity(0.3);
+        return AppColors.success.withValues(alpha: 0.3);
       case SyncStatus.pending:
-        return AppColors.warning.withOpacity(0.3);
+        return AppColors.warning.withValues(alpha: 0.3);
       case SyncStatus.error:
-        return AppColors.error.withOpacity(0.3);
+        return AppColors.error.withValues(alpha: 0.3);
       case SyncStatus.offline:
         return AppColors.border;
     }

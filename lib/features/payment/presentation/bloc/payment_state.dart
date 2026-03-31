@@ -1,9 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/domain/entities/khqr_data.dart';
 
 /// States for the PaymentBloc.
 sealed class PaymentState extends Equatable {
+  /// Base constructor for all [PaymentState]s.
   const PaymentState();
 
   @override
@@ -11,33 +13,54 @@ sealed class PaymentState extends Equatable {
 }
 
 /// Initial state — no payment flow active.
-final class PaymentInitial extends PaymentState {
-  const PaymentInitial();
+final class PaymentIdle extends PaymentState {
+  /// Creates a [PaymentIdle] state.
+  const PaymentIdle();
 }
 
 /// Generating the KHQR code (network call in progress).
-final class PaymentGenerating extends PaymentState {
-  const PaymentGenerating();
+final class KhqrGenerating extends PaymentState {
+  /// Creates a [KhqrGenerating] state.
+  const KhqrGenerating();
 }
 
-/// QR code is displayed and polling is active.
-///
-/// This is the main "waiting for payment" state.
-final class PaymentAwaitingConfirmation extends PaymentState {
-  const PaymentAwaitingConfirmation({
-    required this.khqrData,
+/// QR code is ready for display.
+final class KhqrReady extends PaymentState {
+  /// Creates a [KhqrReady] state.
+  const KhqrReady({
+    required this.qrString,
+    required this.md5Hash,
+    required this.amountKHR,
+    required this.amountUSD,
+    required this.invoiceId,
+    required this.expiresAt,
+    required this.pollAttempt,
     required this.remaining,
-    required this.pollAttempts,
   });
 
-  /// Generated KHQR data including QR string and MD5.
-  final KhqrData khqrData;
+  /// The QR code content string.
+  final String qrString;
 
-  /// Time remaining until QR expiry.
+  /// MD5 hash for status lookup.
+  final String md5Hash;
+
+  /// Amount in KHR.
+  final double amountKHR;
+
+  /// Amount in USD.
+  final double amountUSD;
+
+  /// Invoice ID.
+  final String invoiceId;
+
+  /// Expiration timestamp.
+  final DateTime expiresAt;
+
+  /// Current polling attempt count.
+  final int pollAttempt;
+
+  /// Time remaining until expiry.
   final Duration remaining;
-
-  /// Number of poll attempts so far.
-  final int pollAttempts;
 
   /// Formatted remaining time as "M:SS".
   String get remainingFormatted {
@@ -47,101 +70,90 @@ final class PaymentAwaitingConfirmation extends PaymentState {
   }
 
   @override
-  List<Object?> get props => [khqrData, remaining, pollAttempts];
+  List<Object?> get props => [
+        qrString,
+        md5Hash,
+        amountKHR,
+        amountUSD,
+        invoiceId,
+        expiresAt,
+        pollAttempt,
+        remaining,
+      ];
 }
 
-/// Payment has been confirmed by the bank.
-final class PaymentConfirmed extends PaymentState {
-  const PaymentConfirmed({
-    required this.reference,
-    required this.amountKHR,
-    required this.amountUSD,
+/// Polling for payment status.
+final class KhqrPolling extends PaymentState {
+  /// Creates a [KhqrPolling] state.
+  const KhqrPolling({
     required this.md5Hash,
+    required this.attemptCount,
   });
 
-  /// Bank reference/transaction ID.
+  /// MD5 hash for status lookup.
+  final String md5Hash;
+
+  /// Number of poll attempts so far.
+  final int attemptCount;
+
+  @override
+  List<Object?> get props => [md5Hash, attemptCount];
+}
+
+/// Payment has been confirmed by the bank or manually.
+final class PaymentConfirmed extends PaymentState {
+  /// Creates a [PaymentConfirmed] state.
+  const PaymentConfirmed({
+    required this.method,
+    required this.reference,
+    required this.amountKHR,
+  });
+
+  /// Payment method used (KHQR, ABA, Wing, Cash).
+  final PaymentMethod method;
+
+  /// Bank reference or manual note.
   final String reference;
 
   /// Confirmed amount in KHR.
   final double amountKHR;
 
-  /// Confirmed amount in USD.
-  final double amountUSD;
-
-  /// MD5 hash for the confirmed KHQR.
-  final String md5Hash;
-
   @override
-  List<Object?> get props => [reference, amountKHR, amountUSD, md5Hash];
-}
-
-/// KHQR code has expired (5-minute window elapsed).
-final class PaymentTimedOut extends PaymentState {
-  const PaymentTimedOut({
-    required this.amountKHR,
-    required this.invoiceId,
-  });
-
-  /// Original amount for retry.
-  final double amountKHR;
-
-  /// Original invoice ID for retry.
-  final String invoiceId;
-
-  @override
-  List<Object?> get props => [amountKHR, invoiceId];
+  List<Object?> get props => [method, reference, amountKHR];
 }
 
 /// Payment failed with an error.
 final class PaymentFailed extends PaymentState {
-  const PaymentFailed({
-    required this.messageEn,
-    required this.messageKm,
-  });
+  /// Creates a [PaymentFailed] state.
+  const PaymentFailed({required this.failure});
 
-  final String messageEn;
-  final String messageKm;
+  /// Failure object containing Khmer and English messages.
+  final Failure failure;
 
   @override
-  List<Object?> get props => [messageEn, messageKm];
+  List<Object?> get props => [failure];
+}
+
+/// KHQR code has expired.
+final class PaymentTimeout extends PaymentState {
+  /// Creates a [PaymentTimeout] state.
+  const PaymentTimeout();
 }
 
 /// User cancelled the payment flow.
 final class PaymentCancelled extends PaymentState {
+  /// Creates a [PaymentCancelled] state.
   const PaymentCancelled();
 }
 
-/// Deep link payment initiated — waiting for user to return from banking app.
-final class PaymentDeepLinkLaunched extends PaymentState {
-  const PaymentDeepLinkLaunched({
-    required this.method,
-    required this.amountKHR,
-    required this.invoiceId,
-  });
+/// ABA or Wing app was launched via deep link.
+final class ExternalAppLaunched extends PaymentState {
+  /// Creates an [ExternalAppLaunched] state.
+  const ExternalAppLaunched({required this.method});
 
   /// Which banking app was launched.
   final PaymentMethod method;
 
-  /// Amount being paid.
-  final double amountKHR;
-
-  /// Invoice ID for reference.
-  final String invoiceId;
-
   @override
-  List<Object?> get props => [method, amountKHR, invoiceId];
-}
-
-/// Device is offline — cannot initiate KHQR payment.
-final class PaymentOffline extends PaymentState {
-  const PaymentOffline({
-    required this.amountKHR,
-    required this.invoiceId,
-  });
-
-  final double amountKHR;
-  final String invoiceId;
-
-  @override
-  List<Object?> get props => [amountKHR, invoiceId];
+  List<Object?> get props => [method];
 }

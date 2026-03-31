@@ -1,68 +1,58 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/core/network/network_info.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/domain/entities/merchant_info.dart';
 import 'package:khmerbiz_pos/domain/entities/payment_status.dart';
 import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
+import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_state.dart';
 
 /// BLoC managing the KHQR and deep-link payment flows.
-///
-/// Lifecycle:
-/// 1. [InitiateKhqrPayment] → generates QR, starts countdown + polling
-/// 2. [PollPaymentStatus] (every 3s) → checks Bakong API
-/// 3. [CountdownTick] (every 1s) → updates remaining time
-/// 4. Terminal states: [PaymentConfirmed], [PaymentTimedOut],
-///    [PaymentFailed], [PaymentCancelled]
-///
-/// For ABA/Wing:
-/// 1. [InitiateDeepLinkPayment] → launches banking app
-/// 2. [ConfirmManualPayment] → user confirms after returning
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
+  /// Creates a [PaymentBloc] with required services.
   PaymentBloc({
     required KhqrRepository khqrRepository,
     required ExchangeRateRepository exchangeRateRepository,
     required NetworkInfo networkInfo,
+    required DeepLinkHelper deepLinkHelper,
     MerchantInfo? merchantInfo,
   })  : _khqrRepository = khqrRepository,
         _exchangeRateRepository = exchangeRateRepository,
         _networkInfo = networkInfo,
+        _deepLinkHelper = deepLinkHelper,
         _merchantInfo = merchantInfo ?? MerchantInfo.placeholder,
-        super(const PaymentInitial()) {
+        super(const PaymentIdle()) {
     on<InitiateKhqrPayment>(_onInitiateKhqr);
-    on<InitiateDeepLinkPayment>(_onInitiateDeepLink);
-    on<PollPaymentStatus>(_onPollStatus);
-    on<CountdownTick>(_onCountdownTick);
-    on<ConfirmManualPayment>(_onConfirmManual);
+    on<PollKhqrStatus>(_onPollStatus);
+    on<KhqrPaymentConfirmed>(_onPaymentConfirmed);
+    on<KhqrPaymentTimeout>(_onPaymentTimeout);
+    on<InitiateAbaDeepLink>(_onInitiateAba);
+    on<InitiateWingDeepLink>(_onInitiateWing);
+    on<MarkManualPayment>(_onMarkManual);
     on<CancelPayment>(_onCancel);
     on<RetryPayment>(_onRetry);
+    on<CountdownTick>(_onCountdownTick);
   }
 
   final KhqrRepository _khqrRepository;
   final ExchangeRateRepository _exchangeRateRepository;
   final NetworkInfo _networkInfo;
+  final DeepLinkHelper _deepLinkHelper;
   final MerchantInfo _merchantInfo;
 
-  /// Polling interval: check payment status every 3 seconds.
   static const _pollInterval = Duration(seconds: 3);
+  static const _maxPollAttempts = 100;
 
-  /// Countdown tick interval: update UI every second.
-  static const _tickInterval = Duration(seconds: 1);
-
-  /// Timers for polling and countdown.
   Timer? _pollTimer;
   Timer? _countdownTimer;
 
-  /// Track the current payment context for retry.
   double? _lastAmountKHR;
   String? _lastInvoiceId;
-  String? _currentMd5Hash;
-  int _pollAttempts = 0;
 
   // ── InitiateKhqrPayment ─────────────────────────────────────────────────
 
@@ -71,30 +61,20 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     Emitter<PaymentState> emit,
   ) async {
     _stopTimers();
-
-    // Store for retry
     _lastAmountKHR = event.amountKHR;
     _lastInvoiceId = event.invoiceId;
-    _pollAttempts = 0;
 
-    // Check connectivity first
     final isConnected = await _networkInfo.isConnected;
     if (!isConnected) {
-      emit(PaymentOffline(
-        amountKHR: event.amountKHR,
-        invoiceId: event.invoiceId,
-      ));
+      emit(const PaymentFailed(failure: NetworkFailure(
+        messageEn: 'Network connection required for KHQR.',
+        messageKm: 'ត្រូវការការតភ្ជាប់បណ្តាញសម្រាប់ KHQR។',
+      ),),);
       return;
     }
 
-    emit(const PaymentGenerating());
+    emit(const KhqrGenerating());
 
-    // Refresh exchange rate if stale
-    if (_exchangeRateRepository.isRateStale()) {
-      await _exchangeRateRepository.fetchLatestRate();
-    }
-
-    // Generate dynamic QR
     final result = await _khqrRepository.generateDynamicQR(
       amountKHR: event.amountKHR,
       invoiceId: event.invoiceId,
@@ -102,198 +82,209 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     );
 
     result.fold(
-      (failure) {
-        emit(PaymentFailed(
-          messageEn: failure.messageEn,
-          messageKm: failure.messageKm,
-        ));
-      },
+      (failure) => emit(PaymentFailed(failure: failure)),
       (khqrData) {
-        _currentMd5Hash = khqrData.md5Hash;
-
-        emit(PaymentAwaitingConfirmation(
-          khqrData: khqrData,
+        emit(KhqrReady(
+          qrString: khqrData.qrString,
+          md5Hash: khqrData.md5Hash,
+          amountKHR: khqrData.amountKHR,
+          amountUSD: khqrData.amountUSD,
+          invoiceId: khqrData.invoiceId,
+          expiresAt: khqrData.expiresAt,
+          pollAttempt: 0,
           remaining: khqrData.remainingDuration,
-          pollAttempts: 0,
-        ));
+        ),);
 
-        // Start polling timer
-        _pollTimer = Timer.periodic(_pollInterval, (_) {
-          add(const PollPaymentStatus());
-        });
-
-        // Start countdown timer
-        _countdownTimer = Timer.periodic(_tickInterval, (_) {
-          final remaining = khqrData.expiresAt.difference(DateTime.now());
-          add(CountdownTick(
-            remaining: remaining.isNegative ? Duration.zero : remaining,
-          ));
-        });
+        _startTimers(khqrData.md5Hash);
       },
     );
   }
 
-  // ── PollPaymentStatus ───────────────────────────────────────────────────
+  // ── Polling ─────────────────────────────────────────────────────────────
 
   Future<void> _onPollStatus(
-    PollPaymentStatus event,
+    PollKhqrStatus event,
     Emitter<PaymentState> emit,
   ) async {
-    final md5 = _currentMd5Hash;
-    if (md5 == null) return;
+    if (event.attemptNumber >= _maxPollAttempts) {
+      add(const KhqrPaymentTimeout());
+      return;
+    }
 
-    _pollAttempts++;
-
-    final result = await _khqrRepository.checkPaymentStatus(md5);
+    final result = await _khqrRepository.checkPaymentStatus(event.md5Hash);
 
     result.fold(
-      (failure) {
-        // Don't stop polling on transient errors — keep trying
-        // until timeout. Only emit failure on terminal errors.
-      },
+      (_) => null,
       (status) {
         switch (status) {
           case PaymentPending():
-            // Update poll count in current state
             final currentState = state;
-            if (currentState is PaymentAwaitingConfirmation) {
-              emit(PaymentAwaitingConfirmation(
-                khqrData: currentState.khqrData,
+            if (currentState is KhqrReady) {
+              emit(KhqrReady(
+                qrString: currentState.qrString,
+                md5Hash: currentState.md5Hash,
+                amountKHR: currentState.amountKHR,
+                amountUSD: currentState.amountUSD,
+                invoiceId: currentState.invoiceId,
+                expiresAt: currentState.expiresAt,
+                pollAttempt: event.attemptNumber,
                 remaining: currentState.remaining,
-                pollAttempts: _pollAttempts,
-              ));
+              ),);
             }
-
-          case PaymentConfirmedStatus(:final reference, :final amount):
-            _stopTimers();
-            final exchangeRate = _exchangeRateRepository.getCachedRate();
-            emit(PaymentConfirmed(
-              reference: reference,
-              amountKHR: amount,
-              amountUSD: double.parse(
-                  (amount / exchangeRate).toStringAsFixed(2)),
-              md5Hash: md5,
-            ));
-
+          case PaymentConfirmedStatus(:final reference):
+            add(KhqrPaymentConfirmed(reference: reference));
           case PaymentExpired():
-            _stopTimers();
-            emit(PaymentTimedOut(
-              amountKHR: _lastAmountKHR ?? 0,
-              invoiceId: _lastInvoiceId ?? '',
-            ));
-
+            add(const KhqrPaymentTimeout());
           case PaymentFailedStatus(:final reason):
             _stopTimers();
             emit(PaymentFailed(
-              messageEn: 'Payment failed: $reason',
-              messageKm: 'ការទូទាត់បរាជ័យ៖ $reason',
-            ));
+              failure: PaymentFailure(
+                messageEn: 'Payment failed: $reason',
+                messageKm: 'ការទូទាត់បរាជ័យ៖ $reason',
+              ),
+            ),);
         }
       },
     );
   }
 
-  // ── CountdownTick ───────────────────────────────────────────────────────
+  // ── Terminal States ─────────────────────────────────────────────────────
 
-  void _onCountdownTick(
-    CountdownTick event,
+  void _onPaymentConfirmed(
+    KhqrPaymentConfirmed event,
     Emitter<PaymentState> emit,
   ) {
-    if (event.remaining == Duration.zero) {
-      _stopTimers();
-      emit(PaymentTimedOut(
-        amountKHR: _lastAmountKHR ?? 0,
-        invoiceId: _lastInvoiceId ?? '',
-      ));
-      return;
-    }
-
-    final currentState = state;
-    if (currentState is PaymentAwaitingConfirmation) {
-      emit(PaymentAwaitingConfirmation(
-        khqrData: currentState.khqrData,
-        remaining: event.remaining,
-        pollAttempts: currentState.pollAttempts,
-      ));
-    }
+    _stopTimers();
+    emit(PaymentConfirmed(
+      method: PaymentMethod.khqr,
+      reference: event.reference,
+      amountKHR: _lastAmountKHR ?? 0,
+    ),);
   }
 
-  // ── InitiateDeepLinkPayment ─────────────────────────────────────────────
+  void _onPaymentTimeout(
+    KhqrPaymentTimeout event,
+    Emitter<PaymentState> emit,
+  ) {
+    _stopTimers();
+    emit(const PaymentTimeout());
+  }
 
-  Future<void> _onInitiateDeepLink(
-    InitiateDeepLinkPayment event,
+  // ── Deep Links ──────────────────────────────────────────────────────────
+
+  Future<void> _onInitiateAba(
+    InitiateAbaDeepLink event,
     Emitter<PaymentState> emit,
   ) async {
     _stopTimers();
-
     _lastAmountKHR = event.amountKHR;
-    _lastInvoiceId = event.invoiceId;
 
-    // Deep link launching is handled by the UI layer via url_launcher.
-    // The bloc just transitions to the "launched" state.
-    emit(PaymentDeepLinkLaunched(
-      method: event.method,
-      amountKHR: event.amountKHR,
+    final success = await _deepLinkHelper.launchAbaPay(
+      amount: event.amountKHR,
       invoiceId: event.invoiceId,
-    ));
+      merchantId: _merchantInfo.merchantId,
+    );
+
+    if (success) {
+      emit(const ExternalAppLaunched(method: PaymentMethod.aba));
+    } else {
+      emit(const PaymentFailed(failure: PaymentFailure(
+        messageEn: 'Could not launch ABA app.',
+        messageKm: 'មិនអាចបើកកម្មវិធី ABA បានទេ។',
+      ),),);
+    }
   }
 
-  // ── ConfirmManualPayment ────────────────────────────────────────────────
+  Future<void> _onInitiateWing(
+    InitiateWingDeepLink event,
+    Emitter<PaymentState> emit,
+  ) async {
+    _stopTimers();
+    _lastAmountKHR = event.amountKHR;
 
-  void _onConfirmManual(
-    ConfirmManualPayment event,
+    final success = await _deepLinkHelper.launchWingMoney(
+      amount: event.amountKHR,
+      invoiceId: event.invoiceId,
+      merchantPhone: _merchantInfo.accountId,
+    );
+
+    if (success) {
+      emit(const ExternalAppLaunched(method: PaymentMethod.wing));
+    } else {
+      emit(const PaymentFailed(failure: PaymentFailure(
+        messageEn: 'Could not launch Wing app.',
+        messageKm: 'មិនអាចបើកកម្មវិធី Wing បានទេ។',
+      ),),);
+    }
+  }
+
+  // ── Manual Payment ──────────────────────────────────────────────────────
+
+  void _onMarkManual(
+    MarkManualPayment event,
     Emitter<PaymentState> emit,
   ) {
     _stopTimers();
-    final exchangeRate = _exchangeRateRepository.getCachedRate();
-    final amount = _lastAmountKHR ?? 0;
-
     emit(PaymentConfirmed(
-      reference: event.reference,
-      amountKHR: amount,
-      amountUSD: double.parse((amount / exchangeRate).toStringAsFixed(2)),
-      md5Hash: '',
-    ));
+      method: event.method,
+      reference: event.notes,
+      amountKHR: _lastAmountKHR ?? 0,
+    ),);
   }
 
-  // ── CancelPayment ──────────────────────────────────────────────────────
+  // ── Utils ──────────────────────────────────────────────────────────────
 
-  void _onCancel(
-    CancelPayment event,
-    Emitter<PaymentState> emit,
-  ) {
+  void _onCancel(CancelPayment event, Emitter<PaymentState> emit) {
     _stopTimers();
     emit(const PaymentCancelled());
   }
 
-  // ── RetryPayment ───────────────────────────────────────────────────────
-
-  Future<void> _onRetry(
-    RetryPayment event,
-    Emitter<PaymentState> emit,
-  ) async {
-    final amount = _lastAmountKHR;
-    final invoice = _lastInvoiceId;
-
-    if (amount == null || invoice == null) {
-      emit(const PaymentFailed(
-        messageEn: 'Cannot retry — missing payment context.',
-        messageKm: 'មិនអាចព្យាយាមម្ដងទៀត — បាត់បង់ព័ត៌មានការទូទាត់។',
-      ));
-      return;
+  void _onRetry(RetryPayment event, Emitter<PaymentState> emit) {
+    if (_lastAmountKHR != null && _lastInvoiceId != null) {
+      add(InitiateKhqrPayment(
+        amountKHR: _lastAmountKHR!,
+        invoiceId: _lastInvoiceId!,
+      ),);
     }
-
-    add(InitiateKhqrPayment(amountKHR: amount, invoiceId: invoice));
   }
 
-  // ── Timer Management ───────────────────────────────────────────────────
+  void _onCountdownTick(CountdownTick event, Emitter<PaymentState> emit) {
+    final currentState = state;
+    if (currentState is KhqrReady) {
+      emit(KhqrReady(
+          qrString: currentState.qrString,
+          md5Hash: currentState.md5Hash,
+          amountKHR: currentState.amountKHR,
+          amountUSD: currentState.amountUSD,
+          invoiceId: currentState.invoiceId,
+          expiresAt: currentState.expiresAt,
+          pollAttempt: currentState.pollAttempt,
+          remaining: event.remaining,
+      ),);
+    }
+  }
+
+  void _startTimers(String md5Hash) {
+    int attempts = 0;
+    _pollTimer = Timer.periodic(_pollInterval, (_) {
+      attempts++;
+      add(PollKhqrStatus(md5Hash: md5Hash, attemptNumber: attempts));
+    });
+
+    _countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      final currentState = state;
+      if (currentState is KhqrReady) {
+        final remaining = currentState.expiresAt.difference(DateTime.now());
+        add(CountdownTick(remaining: remaining));
+      }
+    });
+  }
 
   void _stopTimers() {
     _pollTimer?.cancel();
     _pollTimer = null;
     _countdownTimer?.cancel();
     _countdownTimer = null;
-    _currentMd5Hash = null;
   }
 
   @override

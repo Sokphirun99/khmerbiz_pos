@@ -152,6 +152,15 @@ final class AppTextStyles {
         height: 1,
       );
 
+  /// Label Large: Button text
+  static TextStyle get labelLarge => buttonLabel;
+
+  /// Label Medium: Chip text, small headers
+  static TextStyle get labelMedium => chipLabel;
+
+  /// Label Small: Captions, helper text
+  static TextStyle get labelSmall => bodySmall;
+
   /// Receipt Body: Thermal printer receipt text
   static TextStyle get receiptBody => robotoMono.copyWith(
         fontSize: 12,
@@ -207,7 +216,9 @@ final class AppTextStyles {
   }
 }
 
-/// Pre-built text theme for ThemeData
+/// Pre-built [TextTheme] for [ThemeData].
+///
+/// Maps [AppTextStyles] to standard Material 3 typography roles.
 TextTheme createTextTheme() {
   return TextTheme(
     displayLarge: AppTextStyles.displayLarge,

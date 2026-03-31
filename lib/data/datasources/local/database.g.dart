@@ -3,7 +3,7 @@
 part of 'database.dart';
 
 // ignore_for_file: type=lint
-class $UsersTable extends Users with TableInfo<$UsersTable, UserModel> {
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -93,7 +93,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserModel> {
   String get actualTableName => $name;
   static const String $name = 'users';
   @override
-  VerificationContext validateIntegrity(Insertable<UserModel> instance,
+  VerificationContext validateIntegrity(Insertable<User> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -162,9 +162,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserModel> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  UserModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return UserModel(
+    return User(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       username: attachedDatabase.typeMapping
@@ -194,18 +194,37 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserModel> {
   }
 }
 
-class UserModel extends DataClass implements Insertable<UserModel> {
+class User extends DataClass implements Insertable<User> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Unique username for login.
   final String username;
+
+  /// Hashed PIN for authentication.
   final String pinHash;
+
+  /// Full name in Khmer script.
   final String fullNameKh;
+
+  /// Full name in English.
   final String fullNameEn;
+
+  /// System role (e.g., admin, staff).
   final String role;
+
+  /// Path to avatar image.
   final String? avatarPath;
+
+  /// Whether the user account is active.
   final bool isActive;
+
+  /// Last successful login timestamp.
   final DateTime? lastLoginAt;
+
+  /// Record creation timestamp.
   final DateTime createdAt;
-  const UserModel(
+  const User(
       {required this.id,
       required this.username,
       required this.pinHash,
@@ -255,10 +274,10 @@ class UserModel extends DataClass implements Insertable<UserModel> {
     );
   }
 
-  factory UserModel.fromJson(Map<String, dynamic> json,
+  factory User.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return UserModel(
+    return User(
       id: serializer.fromJson<String>(json['id']),
       username: serializer.fromJson<String>(json['username']),
       pinHash: serializer.fromJson<String>(json['pinHash']),
@@ -288,7 +307,7 @@ class UserModel extends DataClass implements Insertable<UserModel> {
     };
   }
 
-  UserModel copyWith(
+  User copyWith(
           {String? id,
           String? username,
           String? pinHash,
@@ -299,7 +318,7 @@ class UserModel extends DataClass implements Insertable<UserModel> {
           bool? isActive,
           Value<DateTime?> lastLoginAt = const Value.absent(),
           DateTime? createdAt}) =>
-      UserModel(
+      User(
         id: id ?? this.id,
         username: username ?? this.username,
         pinHash: pinHash ?? this.pinHash,
@@ -311,8 +330,8 @@ class UserModel extends DataClass implements Insertable<UserModel> {
         lastLoginAt: lastLoginAt.present ? lastLoginAt.value : this.lastLoginAt,
         createdAt: createdAt ?? this.createdAt,
       );
-  UserModel copyWithCompanion(UsersCompanion data) {
-    return UserModel(
+  User copyWithCompanion(UsersCompanion data) {
+    return User(
       id: data.id.present ? data.id.value : this.id,
       username: data.username.present ? data.username.value : this.username,
       pinHash: data.pinHash.present ? data.pinHash.value : this.pinHash,
@@ -332,7 +351,7 @@ class UserModel extends DataClass implements Insertable<UserModel> {
 
   @override
   String toString() {
-    return (StringBuffer('UserModel(')
+    return (StringBuffer('User(')
           ..write('id: $id, ')
           ..write('username: $username, ')
           ..write('pinHash: $pinHash, ')
@@ -353,7 +372,7 @@ class UserModel extends DataClass implements Insertable<UserModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is UserModel &&
+      (other is User &&
           other.id == this.id &&
           other.username == this.username &&
           other.pinHash == this.pinHash &&
@@ -366,7 +385,7 @@ class UserModel extends DataClass implements Insertable<UserModel> {
           other.createdAt == this.createdAt);
 }
 
-class UsersCompanion extends UpdateCompanion<UserModel> {
+class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> id;
   final Value<String> username;
   final Value<String> pinHash;
@@ -409,7 +428,7 @@ class UsersCompanion extends UpdateCompanion<UserModel> {
         fullNameEn = Value(fullNameEn),
         role = Value(role),
         createdAt = Value(createdAt);
-  static Insertable<UserModel> custom({
+  static Insertable<User> custom({
     Expression<String>? id,
     Expression<String>? username,
     Expression<String>? pinHash,
@@ -523,7 +542,7 @@ class UsersCompanion extends UpdateCompanion<UserModel> {
 }
 
 class $CategoriesTable extends Categories
-    with TableInfo<$CategoriesTable, CategoryModel> {
+    with TableInfo<$CategoriesTable, Category> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -593,7 +612,7 @@ class $CategoriesTable extends Categories
   String get actualTableName => $name;
   static const String $name = 'categories';
   @override
-  VerificationContext validateIntegrity(Insertable<CategoryModel> instance,
+  VerificationContext validateIntegrity(Insertable<Category> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -638,9 +657,9 @@ class $CategoriesTable extends Categories
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CategoryModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Category map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CategoryModel(
+    return Category(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       nameKh: attachedDatabase.typeMapping
@@ -666,16 +685,31 @@ class $CategoriesTable extends Categories
   }
 }
 
-class CategoryModel extends DataClass implements Insertable<CategoryModel> {
+class Category extends DataClass implements Insertable<Category> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Category name in Khmer script.
   final String nameKh;
+
+  /// Category name in English.
   final String nameEn;
+
+  /// Parent category ID for hierarchical structures.
   final String? parentId;
+
+  /// Name of the icon representing this category.
   final String? iconName;
+
+  /// Hex color code for category branding/UI.
   final String? colorHex;
+
+  /// Order for sorting categories in lists.
   final int sortOrder;
+
+  /// Whether the category is active.
   final bool isActive;
-  const CategoryModel(
+  const Category(
       {required this.id,
       required this.nameKh,
       required this.nameEn,
@@ -723,10 +757,10 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
     );
   }
 
-  factory CategoryModel.fromJson(Map<String, dynamic> json,
+  factory Category.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CategoryModel(
+    return Category(
       id: serializer.fromJson<String>(json['id']),
       nameKh: serializer.fromJson<String>(json['nameKh']),
       nameEn: serializer.fromJson<String>(json['nameEn']),
@@ -752,7 +786,7 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
     };
   }
 
-  CategoryModel copyWith(
+  Category copyWith(
           {String? id,
           String? nameKh,
           String? nameEn,
@@ -761,7 +795,7 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
           Value<String?> colorHex = const Value.absent(),
           int? sortOrder,
           bool? isActive}) =>
-      CategoryModel(
+      Category(
         id: id ?? this.id,
         nameKh: nameKh ?? this.nameKh,
         nameEn: nameEn ?? this.nameEn,
@@ -771,8 +805,8 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
         sortOrder: sortOrder ?? this.sortOrder,
         isActive: isActive ?? this.isActive,
       );
-  CategoryModel copyWithCompanion(CategoriesCompanion data) {
-    return CategoryModel(
+  Category copyWithCompanion(CategoriesCompanion data) {
+    return Category(
       id: data.id.present ? data.id.value : this.id,
       nameKh: data.nameKh.present ? data.nameKh.value : this.nameKh,
       nameEn: data.nameEn.present ? data.nameEn.value : this.nameEn,
@@ -786,7 +820,7 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
 
   @override
   String toString() {
-    return (StringBuffer('CategoryModel(')
+    return (StringBuffer('Category(')
           ..write('id: $id, ')
           ..write('nameKh: $nameKh, ')
           ..write('nameEn: $nameEn, ')
@@ -805,7 +839,7 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CategoryModel &&
+      (other is Category &&
           other.id == this.id &&
           other.nameKh == this.nameKh &&
           other.nameEn == this.nameEn &&
@@ -816,7 +850,7 @@ class CategoryModel extends DataClass implements Insertable<CategoryModel> {
           other.isActive == this.isActive);
 }
 
-class CategoriesCompanion extends UpdateCompanion<CategoryModel> {
+class CategoriesCompanion extends UpdateCompanion<Category> {
   final Value<String> id;
   final Value<String> nameKh;
   final Value<String> nameEn;
@@ -849,7 +883,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryModel> {
     this.rowid = const Value.absent(),
   })  : nameKh = Value(nameKh),
         nameEn = Value(nameEn);
-  static Insertable<CategoryModel> custom({
+  static Insertable<Category> custom({
     Expression<String>? id,
     Expression<String>? nameKh,
     Expression<String>? nameEn,
@@ -946,8 +980,7 @@ class CategoriesCompanion extends UpdateCompanion<CategoryModel> {
   }
 }
 
-class $ProductsTable extends Products
-    with TableInfo<$ProductsTable, ProductModel> {
+class $ProductsTable extends Products with TableInfo<$ProductsTable, Product> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1127,7 +1160,7 @@ class $ProductsTable extends Products
   String get actualTableName => $name;
   static const String $name = 'products';
   @override
-  VerificationContext validateIntegrity(Insertable<ProductModel> instance,
+  VerificationContext validateIntegrity(Insertable<Product> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -1238,9 +1271,9 @@ class $ProductsTable extends Products
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ProductModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Product map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ProductModel(
+    return Product(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       barcode: attachedDatabase.typeMapping
@@ -1290,28 +1323,67 @@ class $ProductsTable extends Products
   }
 }
 
-class ProductModel extends DataClass implements Insertable<ProductModel> {
+class Product extends DataClass implements Insertable<Product> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Barcode for quick lookup.
   final String? barcode;
+
+  /// Product name in Khmer script.
   final String nameKh;
+
+  /// Product name in English.
   final String nameEn;
+
+  /// Associated category ID.
   final String? categoryId;
+
+  /// Unit of measurement (e.g., pcs, box).
   final String unit;
+
+  /// Unit cost price.
   final double costPrice;
+
+  /// Standard retail price.
   final double retailPrice;
+
+  /// Optional wholesale price.
   final double? wholesalePrice;
+
+  /// Current stock level.
   final double stock;
+
+  /// Stock reserved for pending orders.
   final double reservedStock;
+
+  /// Alert threshold for low stock.
   final double lowStockThreshold;
+
+  /// Path to product image.
   final String? imagePath;
+
+  /// Whether the product is available for sale.
   final bool isActive;
+
+  /// Whether the product is featured in highlights.
   final bool isFeatured;
+
+  /// Order for sorting products.
   final int sortOrder;
+
+  /// Last modification timestamp.
   final DateTime updatedAt;
+
+  /// Record creation timestamp.
   final DateTime createdAt;
+
+  /// Associated remote system identifier.
   final String? remoteId;
+
+  /// Whether the record has been synced to server.
   final bool isSynced;
-  const ProductModel(
+  const Product(
       {required this.id,
       this.barcode,
       required this.nameKh,
@@ -1403,10 +1475,10 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
     );
   }
 
-  factory ProductModel.fromJson(Map<String, dynamic> json,
+  factory Product.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ProductModel(
+    return Product(
       id: serializer.fromJson<String>(json['id']),
       barcode: serializer.fromJson<String?>(json['barcode']),
       nameKh: serializer.fromJson<String>(json['nameKh']),
@@ -1456,7 +1528,7 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
     };
   }
 
-  ProductModel copyWith(
+  Product copyWith(
           {String? id,
           Value<String?> barcode = const Value.absent(),
           String? nameKh,
@@ -1477,7 +1549,7 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
           DateTime? createdAt,
           Value<String?> remoteId = const Value.absent(),
           bool? isSynced}) =>
-      ProductModel(
+      Product(
         id: id ?? this.id,
         barcode: barcode.present ? barcode.value : this.barcode,
         nameKh: nameKh ?? this.nameKh,
@@ -1500,8 +1572,8 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
         remoteId: remoteId.present ? remoteId.value : this.remoteId,
         isSynced: isSynced ?? this.isSynced,
       );
-  ProductModel copyWithCompanion(ProductsCompanion data) {
-    return ProductModel(
+  Product copyWithCompanion(ProductsCompanion data) {
+    return Product(
       id: data.id.present ? data.id.value : this.id,
       barcode: data.barcode.present ? data.barcode.value : this.barcode,
       nameKh: data.nameKh.present ? data.nameKh.value : this.nameKh,
@@ -1536,7 +1608,7 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
 
   @override
   String toString() {
-    return (StringBuffer('ProductModel(')
+    return (StringBuffer('Product(')
           ..write('id: $id, ')
           ..write('barcode: $barcode, ')
           ..write('nameKh: $nameKh, ')
@@ -1586,7 +1658,7 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ProductModel &&
+      (other is Product &&
           other.id == this.id &&
           other.barcode == this.barcode &&
           other.nameKh == this.nameKh &&
@@ -1609,7 +1681,7 @@ class ProductModel extends DataClass implements Insertable<ProductModel> {
           other.isSynced == this.isSynced);
 }
 
-class ProductsCompanion extends UpdateCompanion<ProductModel> {
+class ProductsCompanion extends UpdateCompanion<Product> {
   final Value<String> id;
   final Value<String?> barcode;
   final Value<String> nameKh;
@@ -1681,7 +1753,7 @@ class ProductsCompanion extends UpdateCompanion<ProductModel> {
         retailPrice = Value(retailPrice),
         updatedAt = Value(updatedAt),
         createdAt = Value(createdAt);
-  static Insertable<ProductModel> custom({
+  static Insertable<Product> custom({
     Expression<String>? id,
     Expression<String>? barcode,
     Expression<String>? nameKh,
@@ -1875,7 +1947,7 @@ class ProductsCompanion extends UpdateCompanion<ProductModel> {
 }
 
 class $CustomersTable extends Customers
-    with TableInfo<$CustomersTable, CustomerModel> {
+    with TableInfo<$CustomersTable, Customer> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -1965,7 +2037,7 @@ class $CustomersTable extends Customers
   String get actualTableName => $name;
   static const String $name = 'customers';
   @override
-  VerificationContext validateIntegrity(Insertable<CustomerModel> instance,
+  VerificationContext validateIntegrity(Insertable<Customer> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2026,9 +2098,9 @@ class $CustomersTable extends Customers
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  CustomerModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Customer map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return CustomerModel(
+    return Customer(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       phone: attachedDatabase.typeMapping
@@ -2058,18 +2130,37 @@ class $CustomersTable extends Customers
   }
 }
 
-class CustomerModel extends DataClass implements Insertable<CustomerModel> {
+class Customer extends DataClass implements Insertable<Customer> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Unique mobile phone number.
   final String phone;
+
+  /// Customer's name.
   final String name;
+
+  /// Contact email address.
   final String? email;
+
+  /// Accumulated loyalty points.
   final double loyaltyPoints;
+
+  /// Total amount spent by the customer.
   final double totalSpent;
+
+  /// Total number of transactions.
   final int totalTransactions;
+
+  /// Loyalty tier (e.g., regular, silver, gold).
   final String tier;
+
+  /// Additional notes about the customer.
   final String? notes;
+
+  /// Record creation timestamp.
   final DateTime createdAt;
-  const CustomerModel(
+  const Customer(
       {required this.id,
       required this.phone,
       required this.name,
@@ -2117,10 +2208,10 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
     );
   }
 
-  factory CustomerModel.fromJson(Map<String, dynamic> json,
+  factory Customer.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return CustomerModel(
+    return Customer(
       id: serializer.fromJson<String>(json['id']),
       phone: serializer.fromJson<String>(json['phone']),
       name: serializer.fromJson<String>(json['name']),
@@ -2150,7 +2241,7 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
     };
   }
 
-  CustomerModel copyWith(
+  Customer copyWith(
           {String? id,
           String? phone,
           String? name,
@@ -2161,7 +2252,7 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
           String? tier,
           Value<String?> notes = const Value.absent(),
           DateTime? createdAt}) =>
-      CustomerModel(
+      Customer(
         id: id ?? this.id,
         phone: phone ?? this.phone,
         name: name ?? this.name,
@@ -2173,8 +2264,8 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
         notes: notes.present ? notes.value : this.notes,
         createdAt: createdAt ?? this.createdAt,
       );
-  CustomerModel copyWithCompanion(CustomersCompanion data) {
-    return CustomerModel(
+  Customer copyWithCompanion(CustomersCompanion data) {
+    return Customer(
       id: data.id.present ? data.id.value : this.id,
       phone: data.phone.present ? data.phone.value : this.phone,
       name: data.name.present ? data.name.value : this.name,
@@ -2195,7 +2286,7 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
 
   @override
   String toString() {
-    return (StringBuffer('CustomerModel(')
+    return (StringBuffer('Customer(')
           ..write('id: $id, ')
           ..write('phone: $phone, ')
           ..write('name: $name, ')
@@ -2216,7 +2307,7 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is CustomerModel &&
+      (other is Customer &&
           other.id == this.id &&
           other.phone == this.phone &&
           other.name == this.name &&
@@ -2229,7 +2320,7 @@ class CustomerModel extends DataClass implements Insertable<CustomerModel> {
           other.createdAt == this.createdAt);
 }
 
-class CustomersCompanion extends UpdateCompanion<CustomerModel> {
+class CustomersCompanion extends UpdateCompanion<Customer> {
   final Value<String> id;
   final Value<String> phone;
   final Value<String> name;
@@ -2269,7 +2360,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerModel> {
   })  : phone = Value(phone),
         name = Value(name),
         createdAt = Value(createdAt);
-  static Insertable<CustomerModel> custom({
+  static Insertable<Customer> custom({
     Expression<String>? id,
     Expression<String>? phone,
     Expression<String>? name,
@@ -2383,7 +2474,7 @@ class CustomersCompanion extends UpdateCompanion<CustomerModel> {
 }
 
 class $TransactionsTable extends Transactions
-    with TableInfo<$TransactionsTable, TransactionModel> {
+    with TableInfo<$TransactionsTable, Transaction> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -2579,7 +2670,7 @@ class $TransactionsTable extends Transactions
   String get actualTableName => $name;
   static const String $name = 'transactions';
   @override
-  VerificationContext validateIntegrity(Insertable<TransactionModel> instance,
+  VerificationContext validateIntegrity(Insertable<Transaction> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -2720,9 +2811,9 @@ class $TransactionsTable extends Transactions
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  TransactionModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  Transaction map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TransactionModel(
+    return Transaction(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       receiptNumber: attachedDatabase.typeMapping
@@ -2778,32 +2869,76 @@ class $TransactionsTable extends Transactions
   }
 }
 
-class TransactionModel extends DataClass
-    implements Insertable<TransactionModel> {
+class Transaction extends DataClass implements Insertable<Transaction> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Human-readable receipt number.
   final String receiptNumber;
+
+  /// Date and time of the transaction.
   final DateTime transactionDate;
+
+  /// ID of the staff who processed the sale.
   final String staffId;
+
+  /// ID of the customer (optional).
   final String? customerId;
+
+  /// Sum of item subtotals before discounts/tax.
   final double subtotal;
+
+  /// Type of discount (percentage, fixed).
   final String? discountType;
+
+  /// Value of the discount given.
   final double discountValue;
+
+  /// Calculated discount amount.
   final double discountAmount;
+
+  /// Applicable tax rate.
   final double taxRate;
+
+  /// Calculated tax amount.
   final double taxAmount;
+
+  /// Total final amount in KHR.
   final double totalAmount;
+
+  /// Total final amount in USD.
   final double totalAmountUSD;
+
+  /// Payment method used (cash, khqr).
   final String paymentMethod;
+
+  /// Amount of cash received from customer.
   final double? cashReceived;
+
+  /// Amount of change given to customer.
   final double? changeGiven;
+
+  /// Reference number for KHQR payments.
   final String? khqrReference;
+
+  /// MD5 hash for payment status verification.
   final String? khqrMd5;
+
+  /// Order status (completed, voided, pending).
   final String status;
+
+  /// Whether the transaction has been synced.
   final bool isSynced;
+
+  /// Timestamp of successful synchronization.
   final DateTime? syncedAt;
+
+  /// Additional notes for the transaction.
   final String? notes;
+
+  /// Record creation timestamp.
   final DateTime createdAt;
-  const TransactionModel(
+  const Transaction(
       {required this.id,
       required this.receiptNumber,
       required this.transactionDate,
@@ -2915,10 +3050,10 @@ class TransactionModel extends DataClass
     );
   }
 
-  factory TransactionModel.fromJson(Map<String, dynamic> json,
+  factory Transaction.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TransactionModel(
+    return Transaction(
       id: serializer.fromJson<String>(json['id']),
       receiptNumber: serializer.fromJson<String>(json['receiptNumber']),
       transactionDate: serializer.fromJson<DateTime>(json['transactionDate']),
@@ -2974,7 +3109,7 @@ class TransactionModel extends DataClass
     };
   }
 
-  TransactionModel copyWith(
+  Transaction copyWith(
           {String? id,
           String? receiptNumber,
           DateTime? transactionDate,
@@ -2998,7 +3133,7 @@ class TransactionModel extends DataClass
           Value<DateTime?> syncedAt = const Value.absent(),
           Value<String?> notes = const Value.absent(),
           DateTime? createdAt}) =>
-      TransactionModel(
+      Transaction(
         id: id ?? this.id,
         receiptNumber: receiptNumber ?? this.receiptNumber,
         transactionDate: transactionDate ?? this.transactionDate,
@@ -3026,8 +3161,8 @@ class TransactionModel extends DataClass
         notes: notes.present ? notes.value : this.notes,
         createdAt: createdAt ?? this.createdAt,
       );
-  TransactionModel copyWithCompanion(TransactionsCompanion data) {
-    return TransactionModel(
+  Transaction copyWithCompanion(TransactionsCompanion data) {
+    return Transaction(
       id: data.id.present ? data.id.value : this.id,
       receiptNumber: data.receiptNumber.present
           ? data.receiptNumber.value
@@ -3077,7 +3212,7 @@ class TransactionModel extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('TransactionModel(')
+    return (StringBuffer('Transaction(')
           ..write('id: $id, ')
           ..write('receiptNumber: $receiptNumber, ')
           ..write('transactionDate: $transactionDate, ')
@@ -3134,7 +3269,7 @@ class TransactionModel extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TransactionModel &&
+      (other is Transaction &&
           other.id == this.id &&
           other.receiptNumber == this.receiptNumber &&
           other.transactionDate == this.transactionDate &&
@@ -3160,7 +3295,7 @@ class TransactionModel extends DataClass
           other.createdAt == this.createdAt);
 }
 
-class TransactionsCompanion extends UpdateCompanion<TransactionModel> {
+class TransactionsCompanion extends UpdateCompanion<Transaction> {
   final Value<String> id;
   final Value<String> receiptNumber;
   final Value<DateTime> transactionDate;
@@ -3244,7 +3379,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionModel> {
         totalAmountUSD = Value(totalAmountUSD),
         paymentMethod = Value(paymentMethod),
         createdAt = Value(createdAt);
-  static Insertable<TransactionModel> custom({
+  static Insertable<Transaction> custom({
     Expression<String>? id,
     Expression<String>? receiptNumber,
     Expression<DateTime>? transactionDate,
@@ -3462,7 +3597,7 @@ class TransactionsCompanion extends UpdateCompanion<TransactionModel> {
 }
 
 class $TransactionItemsTable extends TransactionItems
-    with TableInfo<$TransactionItemsTable, TransactionItemModel> {
+    with TableInfo<$TransactionItemsTable, TransactionItem> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -3562,8 +3697,7 @@ class $TransactionItemsTable extends TransactionItems
   String get actualTableName => $name;
   static const String $name = 'transaction_items';
   @override
-  VerificationContext validateIntegrity(
-      Insertable<TransactionItemModel> instance,
+  VerificationContext validateIntegrity(Insertable<TransactionItem> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -3640,9 +3774,9 @@ class $TransactionItemsTable extends TransactionItems
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  TransactionItemModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  TransactionItem map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return TransactionItemModel(
+    return TransactionItem(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       transactionId: attachedDatabase.typeMapping
@@ -3676,20 +3810,40 @@ class $TransactionItemsTable extends TransactionItems
   }
 }
 
-class TransactionItemModel extends DataClass
-    implements Insertable<TransactionItemModel> {
+class TransactionItem extends DataClass implements Insertable<TransactionItem> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Reference to the parent transaction header.
   final String transactionId;
+
+  /// Reference to the product sold.
   final String productId;
+
+  /// Snapshot of the product core name in Khmer script.
   final String productNameSnapshot;
+
+  /// Snapshot of the product core name in English.
   final String productNameEnSnapshot;
+
+  /// Quantity of product sold.
   final double quantity;
+
+  /// Unit price at time of sale.
   final double unitPrice;
+
+  /// Unit cost price for margin calculation.
   final double costPrice;
+
+  /// Discount amount applied directly to this item.
   final double discountAmount;
+
+  /// Calculated subtotal for this item.
   final double subtotal;
+
+  /// JSON serialized modifiers/options.
   final String? modifiers;
-  const TransactionItemModel(
+  const TransactionItem(
       {required this.id,
       required this.transactionId,
       required this.productId,
@@ -3738,10 +3892,10 @@ class TransactionItemModel extends DataClass
     );
   }
 
-  factory TransactionItemModel.fromJson(Map<String, dynamic> json,
+  factory TransactionItem.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return TransactionItemModel(
+    return TransactionItem(
       id: serializer.fromJson<String>(json['id']),
       transactionId: serializer.fromJson<String>(json['transactionId']),
       productId: serializer.fromJson<String>(json['productId']),
@@ -3775,7 +3929,7 @@ class TransactionItemModel extends DataClass
     };
   }
 
-  TransactionItemModel copyWith(
+  TransactionItem copyWith(
           {String? id,
           String? transactionId,
           String? productId,
@@ -3787,7 +3941,7 @@ class TransactionItemModel extends DataClass
           double? discountAmount,
           double? subtotal,
           Value<String?> modifiers = const Value.absent()}) =>
-      TransactionItemModel(
+      TransactionItem(
         id: id ?? this.id,
         transactionId: transactionId ?? this.transactionId,
         productId: productId ?? this.productId,
@@ -3801,8 +3955,8 @@ class TransactionItemModel extends DataClass
         subtotal: subtotal ?? this.subtotal,
         modifiers: modifiers.present ? modifiers.value : this.modifiers,
       );
-  TransactionItemModel copyWithCompanion(TransactionItemsCompanion data) {
-    return TransactionItemModel(
+  TransactionItem copyWithCompanion(TransactionItemsCompanion data) {
+    return TransactionItem(
       id: data.id.present ? data.id.value : this.id,
       transactionId: data.transactionId.present
           ? data.transactionId.value
@@ -3827,7 +3981,7 @@ class TransactionItemModel extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('TransactionItemModel(')
+    return (StringBuffer('TransactionItem(')
           ..write('id: $id, ')
           ..write('transactionId: $transactionId, ')
           ..write('productId: $productId, ')
@@ -3859,7 +4013,7 @@ class TransactionItemModel extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is TransactionItemModel &&
+      (other is TransactionItem &&
           other.id == this.id &&
           other.transactionId == this.transactionId &&
           other.productId == this.productId &&
@@ -3873,7 +4027,7 @@ class TransactionItemModel extends DataClass
           other.modifiers == this.modifiers);
 }
 
-class TransactionItemsCompanion extends UpdateCompanion<TransactionItemModel> {
+class TransactionItemsCompanion extends UpdateCompanion<TransactionItem> {
   final Value<String> id;
   final Value<String> transactionId;
   final Value<String> productId;
@@ -3921,7 +4075,7 @@ class TransactionItemsCompanion extends UpdateCompanion<TransactionItemModel> {
         unitPrice = Value(unitPrice),
         costPrice = Value(costPrice),
         subtotal = Value(subtotal);
-  static Insertable<TransactionItemModel> custom({
+  static Insertable<TransactionItem> custom({
     Expression<String>? id,
     Expression<String>? transactionId,
     Expression<String>? productId,
@@ -4048,7 +4202,7 @@ class TransactionItemsCompanion extends UpdateCompanion<TransactionItemModel> {
 }
 
 class $InventoryLogsTable extends InventoryLogs
-    with TableInfo<$InventoryLogsTable, InventoryLogModel> {
+    with TableInfo<$InventoryLogsTable, InventoryLog> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -4139,7 +4293,7 @@ class $InventoryLogsTable extends InventoryLogs
   String get actualTableName => $name;
   static const String $name = 'inventory_logs';
   @override
-  VerificationContext validateIntegrity(Insertable<InventoryLogModel> instance,
+  VerificationContext validateIntegrity(Insertable<InventoryLog> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -4208,9 +4362,9 @@ class $InventoryLogsTable extends InventoryLogs
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  InventoryLogModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  InventoryLog map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return InventoryLogModel(
+    return InventoryLog(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       productId: attachedDatabase.typeMapping
@@ -4240,19 +4394,37 @@ class $InventoryLogsTable extends InventoryLogs
   }
 }
 
-class InventoryLogModel extends DataClass
-    implements Insertable<InventoryLogModel> {
+class InventoryLog extends DataClass implements Insertable<InventoryLog> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Reference to the affected product.
   final String productId;
+
+  /// Amount changed (positive for stock-in, negative for stock-out).
   final double changeAmount;
+
+  /// Stock level before change.
   final double stockBefore;
+
+  /// Stock level after change.
   final double stockAfter;
+
+  /// Reason for the change (sale, return, adjustment, restock).
   final String reason;
+
+  /// Reference ID (e.g., transaction ID, shipment ID).
   final String? referenceId;
+
+  /// Staff member who performed the action.
   final String staffId;
+
+  /// Optional notes for the log entry.
   final String? notes;
+
+  /// Timestamp of the inventory event.
   final DateTime timestamp;
-  const InventoryLogModel(
+  const InventoryLog(
       {required this.id,
       required this.productId,
       required this.changeAmount,
@@ -4301,10 +4473,10 @@ class InventoryLogModel extends DataClass
     );
   }
 
-  factory InventoryLogModel.fromJson(Map<String, dynamic> json,
+  factory InventoryLog.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return InventoryLogModel(
+    return InventoryLog(
       id: serializer.fromJson<String>(json['id']),
       productId: serializer.fromJson<String>(json['productId']),
       changeAmount: serializer.fromJson<double>(json['changeAmount']),
@@ -4334,7 +4506,7 @@ class InventoryLogModel extends DataClass
     };
   }
 
-  InventoryLogModel copyWith(
+  InventoryLog copyWith(
           {String? id,
           String? productId,
           double? changeAmount,
@@ -4345,7 +4517,7 @@ class InventoryLogModel extends DataClass
           String? staffId,
           Value<String?> notes = const Value.absent(),
           DateTime? timestamp}) =>
-      InventoryLogModel(
+      InventoryLog(
         id: id ?? this.id,
         productId: productId ?? this.productId,
         changeAmount: changeAmount ?? this.changeAmount,
@@ -4357,8 +4529,8 @@ class InventoryLogModel extends DataClass
         notes: notes.present ? notes.value : this.notes,
         timestamp: timestamp ?? this.timestamp,
       );
-  InventoryLogModel copyWithCompanion(InventoryLogsCompanion data) {
-    return InventoryLogModel(
+  InventoryLog copyWithCompanion(InventoryLogsCompanion data) {
+    return InventoryLog(
       id: data.id.present ? data.id.value : this.id,
       productId: data.productId.present ? data.productId.value : this.productId,
       changeAmount: data.changeAmount.present
@@ -4379,7 +4551,7 @@ class InventoryLogModel extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('InventoryLogModel(')
+    return (StringBuffer('InventoryLog(')
           ..write('id: $id, ')
           ..write('productId: $productId, ')
           ..write('changeAmount: $changeAmount, ')
@@ -4400,7 +4572,7 @@ class InventoryLogModel extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is InventoryLogModel &&
+      (other is InventoryLog &&
           other.id == this.id &&
           other.productId == this.productId &&
           other.changeAmount == this.changeAmount &&
@@ -4413,7 +4585,7 @@ class InventoryLogModel extends DataClass
           other.timestamp == this.timestamp);
 }
 
-class InventoryLogsCompanion extends UpdateCompanion<InventoryLogModel> {
+class InventoryLogsCompanion extends UpdateCompanion<InventoryLog> {
   final Value<String> id;
   final Value<String> productId;
   final Value<double> changeAmount;
@@ -4456,7 +4628,7 @@ class InventoryLogsCompanion extends UpdateCompanion<InventoryLogModel> {
         stockAfter = Value(stockAfter),
         reason = Value(reason),
         staffId = Value(staffId);
-  static Insertable<InventoryLogModel> custom({
+  static Insertable<InventoryLog> custom({
     Expression<String>? id,
     Expression<String>? productId,
     Expression<double>? changeAmount,
@@ -4570,7 +4742,7 @@ class InventoryLogsCompanion extends UpdateCompanion<InventoryLogModel> {
 }
 
 class $SyncQueueTable extends SyncQueue
-    with TableInfo<$SyncQueueTable, SyncQueueModel> {
+    with TableInfo<$SyncQueueTable, SyncQueueData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -4667,7 +4839,7 @@ class $SyncQueueTable extends SyncQueue
   String get actualTableName => $name;
   static const String $name = 'sync_queue';
   @override
-  VerificationContext validateIntegrity(Insertable<SyncQueueModel> instance,
+  VerificationContext validateIntegrity(Insertable<SyncQueueData> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -4740,9 +4912,9 @@ class $SyncQueueTable extends SyncQueue
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  SyncQueueModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  SyncQueueData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return SyncQueueModel(
+    return SyncQueueData(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       operationType: attachedDatabase.typeMapping
@@ -4774,19 +4946,40 @@ class $SyncQueueTable extends SyncQueue
   }
 }
 
-class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
+class SyncQueueData extends DataClass implements Insertable<SyncQueueData> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Type of operation (create, update, delete).
   final String operationType;
+
+  /// Entity being synced (product, transaction, etc).
   final String entityType;
+
+  /// Local identifier of the entity.
   final String entityId;
+
+  /// JSON payload representation of the entity.
   final String payload;
+
+  /// Number of sync attempts.
   final int attemptCount;
+
+  /// Timestamp of the last sync attempt.
   final DateTime? lastAttemptAt;
+
+  /// Status of the sync task (pending, processing, failed, completed).
   final String status;
+
+  /// Last error message encountered during sync.
   final String? errorMessage;
+
+  /// Operation priority.
   final int priority;
+
+  /// Record creation timestamp.
   final DateTime createdAt;
-  const SyncQueueModel(
+  const SyncQueueData(
       {required this.id,
       required this.operationType,
       required this.entityType,
@@ -4839,10 +5032,10 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
     );
   }
 
-  factory SyncQueueModel.fromJson(Map<String, dynamic> json,
+  factory SyncQueueData.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return SyncQueueModel(
+    return SyncQueueData(
       id: serializer.fromJson<String>(json['id']),
       operationType: serializer.fromJson<String>(json['operationType']),
       entityType: serializer.fromJson<String>(json['entityType']),
@@ -4874,7 +5067,7 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
     };
   }
 
-  SyncQueueModel copyWith(
+  SyncQueueData copyWith(
           {String? id,
           String? operationType,
           String? entityType,
@@ -4886,7 +5079,7 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
           Value<String?> errorMessage = const Value.absent(),
           int? priority,
           DateTime? createdAt}) =>
-      SyncQueueModel(
+      SyncQueueData(
         id: id ?? this.id,
         operationType: operationType ?? this.operationType,
         entityType: entityType ?? this.entityType,
@@ -4901,8 +5094,8 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
         priority: priority ?? this.priority,
         createdAt: createdAt ?? this.createdAt,
       );
-  SyncQueueModel copyWithCompanion(SyncQueueCompanion data) {
-    return SyncQueueModel(
+  SyncQueueData copyWithCompanion(SyncQueueCompanion data) {
+    return SyncQueueData(
       id: data.id.present ? data.id.value : this.id,
       operationType: data.operationType.present
           ? data.operationType.value
@@ -4928,7 +5121,7 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
 
   @override
   String toString() {
-    return (StringBuffer('SyncQueueModel(')
+    return (StringBuffer('SyncQueueData(')
           ..write('id: $id, ')
           ..write('operationType: $operationType, ')
           ..write('entityType: $entityType, ')
@@ -4960,7 +5153,7 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is SyncQueueModel &&
+      (other is SyncQueueData &&
           other.id == this.id &&
           other.operationType == this.operationType &&
           other.entityType == this.entityType &&
@@ -4974,7 +5167,7 @@ class SyncQueueModel extends DataClass implements Insertable<SyncQueueModel> {
           other.createdAt == this.createdAt);
 }
 
-class SyncQueueCompanion extends UpdateCompanion<SyncQueueModel> {
+class SyncQueueCompanion extends UpdateCompanion<SyncQueueData> {
   final Value<String> id;
   final Value<String> operationType;
   final Value<String> entityType;
@@ -5019,7 +5212,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueModel> {
         entityId = Value(entityId),
         payload = Value(payload),
         createdAt = Value(createdAt);
-  static Insertable<SyncQueueModel> custom({
+  static Insertable<SyncQueueData> custom({
     Expression<String>? id,
     Expression<String>? operationType,
     Expression<String>? entityType,
@@ -5141,7 +5334,7 @@ class SyncQueueCompanion extends UpdateCompanion<SyncQueueModel> {
 }
 
 class $ExchangeRatesTable extends ExchangeRates
-    with TableInfo<$ExchangeRatesTable, ExchangeRateModel> {
+    with TableInfo<$ExchangeRatesTable, ExchangeRate> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -5204,7 +5397,7 @@ class $ExchangeRatesTable extends ExchangeRates
   String get actualTableName => $name;
   static const String $name = 'exchange_rates';
   @override
-  VerificationContext validateIntegrity(Insertable<ExchangeRateModel> instance,
+  VerificationContext validateIntegrity(Insertable<ExchangeRate> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -5251,9 +5444,9 @@ class $ExchangeRatesTable extends ExchangeRates
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  ExchangeRateModel map(Map<String, dynamic> data, {String? tablePrefix}) {
+  ExchangeRate map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return ExchangeRateModel(
+    return ExchangeRate(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       baseCurrency: attachedDatabase.typeMapping
@@ -5277,16 +5470,28 @@ class $ExchangeRatesTable extends ExchangeRates
   }
 }
 
-class ExchangeRateModel extends DataClass
-    implements Insertable<ExchangeRateModel> {
+class ExchangeRate extends DataClass implements Insertable<ExchangeRate> {
+  /// Unique identifier (UUID).
   final String id;
+
+  /// Base currency (defaults to KHR).
   final String baseCurrency;
+
+  /// Target currency (defaults to USD).
   final String targetCurrency;
+
+  /// Conversion rate.
   final double rate;
+
+  /// Source of the rate data (e.g., nbc, manual).
   final String source;
+
+  /// Timestamp when the rate was fetched/set.
   final DateTime fetchedAt;
+
+  /// Whether the rate is currently active.
   final bool isActive;
-  const ExchangeRateModel(
+  const ExchangeRate(
       {required this.id,
       required this.baseCurrency,
       required this.targetCurrency,
@@ -5319,10 +5524,10 @@ class ExchangeRateModel extends DataClass
     );
   }
 
-  factory ExchangeRateModel.fromJson(Map<String, dynamic> json,
+  factory ExchangeRate.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return ExchangeRateModel(
+    return ExchangeRate(
       id: serializer.fromJson<String>(json['id']),
       baseCurrency: serializer.fromJson<String>(json['baseCurrency']),
       targetCurrency: serializer.fromJson<String>(json['targetCurrency']),
@@ -5346,7 +5551,7 @@ class ExchangeRateModel extends DataClass
     };
   }
 
-  ExchangeRateModel copyWith(
+  ExchangeRate copyWith(
           {String? id,
           String? baseCurrency,
           String? targetCurrency,
@@ -5354,7 +5559,7 @@ class ExchangeRateModel extends DataClass
           String? source,
           DateTime? fetchedAt,
           bool? isActive}) =>
-      ExchangeRateModel(
+      ExchangeRate(
         id: id ?? this.id,
         baseCurrency: baseCurrency ?? this.baseCurrency,
         targetCurrency: targetCurrency ?? this.targetCurrency,
@@ -5363,8 +5568,8 @@ class ExchangeRateModel extends DataClass
         fetchedAt: fetchedAt ?? this.fetchedAt,
         isActive: isActive ?? this.isActive,
       );
-  ExchangeRateModel copyWithCompanion(ExchangeRatesCompanion data) {
-    return ExchangeRateModel(
+  ExchangeRate copyWithCompanion(ExchangeRatesCompanion data) {
+    return ExchangeRate(
       id: data.id.present ? data.id.value : this.id,
       baseCurrency: data.baseCurrency.present
           ? data.baseCurrency.value
@@ -5381,7 +5586,7 @@ class ExchangeRateModel extends DataClass
 
   @override
   String toString() {
-    return (StringBuffer('ExchangeRateModel(')
+    return (StringBuffer('ExchangeRate(')
           ..write('id: $id, ')
           ..write('baseCurrency: $baseCurrency, ')
           ..write('targetCurrency: $targetCurrency, ')
@@ -5399,7 +5604,7 @@ class ExchangeRateModel extends DataClass
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is ExchangeRateModel &&
+      (other is ExchangeRate &&
           other.id == this.id &&
           other.baseCurrency == this.baseCurrency &&
           other.targetCurrency == this.targetCurrency &&
@@ -5409,7 +5614,7 @@ class ExchangeRateModel extends DataClass
           other.isActive == this.isActive);
 }
 
-class ExchangeRatesCompanion extends UpdateCompanion<ExchangeRateModel> {
+class ExchangeRatesCompanion extends UpdateCompanion<ExchangeRate> {
   final Value<String> id;
   final Value<String> baseCurrency;
   final Value<String> targetCurrency;
@@ -5440,7 +5645,7 @@ class ExchangeRatesCompanion extends UpdateCompanion<ExchangeRateModel> {
   })  : rate = Value(rate),
         source = Value(source),
         fetchedAt = Value(fetchedAt);
-  static Insertable<ExchangeRateModel> custom({
+  static Insertable<ExchangeRate> custom({
     Expression<String>? id,
     Expression<String>? baseCurrency,
     Expression<String>? targetCurrency,
@@ -5542,56 +5747,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $InventoryLogsTable inventoryLogs = $InventoryLogsTable(this);
   late final $SyncQueueTable syncQueue = $SyncQueueTable(this);
   late final $ExchangeRatesTable exchangeRates = $ExchangeRatesTable(this);
-  late final Index userUsernameIdx = Index('user_username_idx',
-      'CREATE INDEX user_username_idx ON users (username)');
-  late final Index userRoleIdx =
-      Index('user_role_idx', 'CREATE INDEX user_role_idx ON users (role)');
-  late final Index userIsActiveIdx = Index('user_is_active_idx',
-      'CREATE INDEX user_is_active_idx ON users (is_active)');
-  late final Index categoryParentIdx = Index('category_parent_idx',
-      'CREATE INDEX category_parent_idx ON categories (parent_id)');
-  late final Index categoryActiveSortIdx = Index('category_active_sort_idx',
-      'CREATE INDEX category_active_sort_idx ON categories (is_active, sort_order)');
-  late final Index productBarcodeIdx = Index('product_barcode_idx',
-      'CREATE INDEX product_barcode_idx ON products (barcode)');
-  late final Index productCategoryIdx = Index('product_category_idx',
-      'CREATE INDEX product_category_idx ON products (category_id)');
-  late final Index productActiveFeaturedIdx = Index(
-      'product_active_featured_idx',
-      'CREATE INDEX product_active_featured_idx ON products (is_active, is_featured)');
-  late final Index productActiveSortIdx = Index('product_active_sort_idx',
-      'CREATE INDEX product_active_sort_idx ON products (is_active, sort_order)');
-  late final Index customerPhoneIdx = Index('customer_phone_idx',
-      'CREATE INDEX customer_phone_idx ON customers (phone)');
-  late final Index customerTierIdx = Index('customer_tier_idx',
-      'CREATE INDEX customer_tier_idx ON customers (tier)');
-  late final Index transactionDateIdx = Index('transaction_date_idx',
-      'CREATE INDEX transaction_date_idx ON transactions (transaction_date)');
-  late final Index transactionStaffIdx = Index('transaction_staff_idx',
-      'CREATE INDEX transaction_staff_idx ON transactions (staff_id)');
-  late final Index transactionCustomerIdx = Index('transaction_customer_idx',
-      'CREATE INDEX transaction_customer_idx ON transactions (customer_id)');
-  late final Index transactionStatusIdx = Index('transaction_status_idx',
-      'CREATE INDEX transaction_status_idx ON transactions (status)');
-  late final Index transactionSyncIdx = Index('transaction_sync_idx',
-      'CREATE INDEX transaction_sync_idx ON transactions (is_synced)');
-  late final Index transactionItemTxIdx = Index('transaction_item_tx_idx',
-      'CREATE INDEX transaction_item_tx_idx ON transaction_items (transaction_id)');
-  late final Index transactionItemProductIdx = Index(
-      'transaction_item_product_idx',
-      'CREATE INDEX transaction_item_product_idx ON transaction_items (product_id)');
-  late final Index inventoryLogProductTimeIdx = Index(
-      'inventory_log_product_time_idx',
-      'CREATE INDEX inventory_log_product_time_idx ON inventory_logs (product_id, timestamp)');
-  late final Index inventoryLogReasonIdx = Index('inventory_log_reason_idx',
-      'CREATE INDEX inventory_log_reason_idx ON inventory_logs (reason)');
-  late final Index inventoryLogStaffIdx = Index('inventory_log_staff_idx',
-      'CREATE INDEX inventory_log_staff_idx ON inventory_logs (staff_id)');
-  late final Index syncQueueStatusPriorityIdx = Index(
-      'sync_queue_status_priority_idx',
-      'CREATE INDEX sync_queue_status_priority_idx ON sync_queue (status, priority, created_at)');
-  late final Index syncQueueEntityIdx = Index('sync_queue_entity_idx',
-      'CREATE INDEX sync_queue_entity_idx ON sync_queue (entity_type, entity_id)');
   late final ProductsDao productsDao = ProductsDao(this as AppDatabase);
   late final TransactionsDao transactionsDao =
       TransactionsDao(this as AppDatabase);
@@ -5611,30 +5766,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         transactionItems,
         inventoryLogs,
         syncQueue,
-        exchangeRates,
-        userUsernameIdx,
-        userRoleIdx,
-        userIsActiveIdx,
-        categoryParentIdx,
-        categoryActiveSortIdx,
-        productBarcodeIdx,
-        productCategoryIdx,
-        productActiveFeaturedIdx,
-        productActiveSortIdx,
-        customerPhoneIdx,
-        customerTierIdx,
-        transactionDateIdx,
-        transactionStaffIdx,
-        transactionCustomerIdx,
-        transactionStatusIdx,
-        transactionSyncIdx,
-        transactionItemTxIdx,
-        transactionItemProductIdx,
-        inventoryLogProductTimeIdx,
-        inventoryLogReasonIdx,
-        inventoryLogStaffIdx,
-        syncQueueStatusPriorityIdx,
-        syncQueueEntityIdx
+        exchangeRates
       ];
 }
 
@@ -5666,10 +5798,10 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
 });
 
 final class $$UsersTableReferences
-    extends BaseReferences<_$AppDatabase, $UsersTable, UserModel> {
+    extends BaseReferences<_$AppDatabase, $UsersTable, User> {
   $$UsersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$TransactionsTable, List<TransactionModel>>
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
       _transactionsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.transactions,
               aliasName:
@@ -5684,7 +5816,7 @@ final class $$UsersTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<$InventoryLogsTable, List<InventoryLogModel>>
+  static MultiTypedResultKey<$InventoryLogsTable, List<InventoryLog>>
       _inventoryLogsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.inventoryLogs,
               aliasName:
@@ -5906,14 +6038,14 @@ class $$UsersTableAnnotationComposer
 class $$UsersTableTableManager extends RootTableManager<
     _$AppDatabase,
     $UsersTable,
-    UserModel,
+    User,
     $$UsersTableFilterComposer,
     $$UsersTableOrderingComposer,
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (UserModel, $$UsersTableReferences),
-    UserModel,
+    (User, $$UsersTableReferences),
+    User,
     PrefetchHooks Function({bool transactionsRefs, bool inventoryLogsRefs})> {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
       : super(TableManagerState(
@@ -5993,8 +6125,7 @@ class $$UsersTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (transactionsRefs)
-                    await $_getPrefetchedData<UserModel, $UsersTable,
-                            TransactionModel>(
+                    await $_getPrefetchedData<User, $UsersTable, Transaction>(
                         currentTable: table,
                         referencedTable:
                             $$UsersTableReferences._transactionsRefsTable(db),
@@ -6006,8 +6137,7 @@ class $$UsersTableTableManager extends RootTableManager<
                             referencedItems.where((e) => e.staffId == item.id),
                         typedResults: items),
                   if (inventoryLogsRefs)
-                    await $_getPrefetchedData<UserModel, $UsersTable,
-                            InventoryLogModel>(
+                    await $_getPrefetchedData<User, $UsersTable, InventoryLog>(
                         currentTable: table,
                         referencedTable:
                             $$UsersTableReferences._inventoryLogsRefsTable(db),
@@ -6028,14 +6158,14 @@ class $$UsersTableTableManager extends RootTableManager<
 typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $UsersTable,
-    UserModel,
+    User,
     $$UsersTableFilterComposer,
     $$UsersTableOrderingComposer,
     $$UsersTableAnnotationComposer,
     $$UsersTableCreateCompanionBuilder,
     $$UsersTableUpdateCompanionBuilder,
-    (UserModel, $$UsersTableReferences),
-    UserModel,
+    (User, $$UsersTableReferences),
+    User,
     PrefetchHooks Function({bool transactionsRefs, bool inventoryLogsRefs})>;
 typedef $$CategoriesTableCreateCompanionBuilder = CategoriesCompanion Function({
   Value<String> id,
@@ -6061,7 +6191,7 @@ typedef $$CategoriesTableUpdateCompanionBuilder = CategoriesCompanion Function({
 });
 
 final class $$CategoriesTableReferences
-    extends BaseReferences<_$AppDatabase, $CategoriesTable, CategoryModel> {
+    extends BaseReferences<_$AppDatabase, $CategoriesTable, Category> {
   $$CategoriesTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $CategoriesTable _parentIdTable(_$AppDatabase db) =>
@@ -6079,9 +6209,9 @@ final class $$CategoriesTableReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static MultiTypedResultKey<$ProductsTable, List<ProductModel>>
-      _productsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
-          db.products,
+  static MultiTypedResultKey<$ProductsTable, List<Product>> _productsRefsTable(
+          _$AppDatabase db) =>
+      MultiTypedResultKey.fromTable(db.products,
           aliasName:
               $_aliasNameGenerator(db.categories.id, db.products.categoryId));
 
@@ -6293,14 +6423,14 @@ class $$CategoriesTableAnnotationComposer
 class $$CategoriesTableTableManager extends RootTableManager<
     _$AppDatabase,
     $CategoriesTable,
-    CategoryModel,
+    Category,
     $$CategoriesTableFilterComposer,
     $$CategoriesTableOrderingComposer,
     $$CategoriesTableAnnotationComposer,
     $$CategoriesTableCreateCompanionBuilder,
     $$CategoriesTableUpdateCompanionBuilder,
-    (CategoryModel, $$CategoriesTableReferences),
-    CategoryModel,
+    (Category, $$CategoriesTableReferences),
+    Category,
     PrefetchHooks Function({bool parentId, bool productsRefs})> {
   $$CategoriesTableTableManager(_$AppDatabase db, $CategoriesTable table)
       : super(TableManagerState(
@@ -6395,8 +6525,8 @@ class $$CategoriesTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (productsRefs)
-                    await $_getPrefetchedData<CategoryModel, $CategoriesTable,
-                            ProductModel>(
+                    await $_getPrefetchedData<Category, $CategoriesTable,
+                            Product>(
                         currentTable: table,
                         referencedTable:
                             $$CategoriesTableReferences._productsRefsTable(db),
@@ -6417,14 +6547,14 @@ class $$CategoriesTableTableManager extends RootTableManager<
 typedef $$CategoriesTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $CategoriesTable,
-    CategoryModel,
+    Category,
     $$CategoriesTableFilterComposer,
     $$CategoriesTableOrderingComposer,
     $$CategoriesTableAnnotationComposer,
     $$CategoriesTableCreateCompanionBuilder,
     $$CategoriesTableUpdateCompanionBuilder,
-    (CategoryModel, $$CategoriesTableReferences),
-    CategoryModel,
+    (Category, $$CategoriesTableReferences),
+    Category,
     PrefetchHooks Function({bool parentId, bool productsRefs})>;
 typedef $$ProductsTableCreateCompanionBuilder = ProductsCompanion Function({
   Value<String> id,
@@ -6474,7 +6604,7 @@ typedef $$ProductsTableUpdateCompanionBuilder = ProductsCompanion Function({
 });
 
 final class $$ProductsTableReferences
-    extends BaseReferences<_$AppDatabase, $ProductsTable, ProductModel> {
+    extends BaseReferences<_$AppDatabase, $ProductsTable, Product> {
   $$ProductsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $CategoriesTable _categoryIdTable(_$AppDatabase db) =>
@@ -6492,7 +6622,7 @@ final class $$ProductsTableReferences
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static MultiTypedResultKey<$TransactionItemsTable, List<TransactionItemModel>>
+  static MultiTypedResultKey<$TransactionItemsTable, List<TransactionItem>>
       _transactionItemsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.transactionItems,
               aliasName: $_aliasNameGenerator(
@@ -6509,7 +6639,7 @@ final class $$ProductsTableReferences
         manager.$state.copyWith(prefetchedData: cache));
   }
 
-  static MultiTypedResultKey<$InventoryLogsTable, List<InventoryLogModel>>
+  static MultiTypedResultKey<$InventoryLogsTable, List<InventoryLog>>
       _inventoryLogsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.inventoryLogs,
               aliasName: $_aliasNameGenerator(
@@ -6878,14 +7008,14 @@ class $$ProductsTableAnnotationComposer
 class $$ProductsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $ProductsTable,
-    ProductModel,
+    Product,
     $$ProductsTableFilterComposer,
     $$ProductsTableOrderingComposer,
     $$ProductsTableAnnotationComposer,
     $$ProductsTableCreateCompanionBuilder,
     $$ProductsTableUpdateCompanionBuilder,
-    (ProductModel, $$ProductsTableReferences),
-    ProductModel,
+    (Product, $$ProductsTableReferences),
+    Product,
     PrefetchHooks Function(
         {bool categoryId, bool transactionItemsRefs, bool inventoryLogsRefs})> {
   $$ProductsTableTableManager(_$AppDatabase db, $ProductsTable table)
@@ -7033,8 +7163,8 @@ class $$ProductsTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (transactionItemsRefs)
-                    await $_getPrefetchedData<ProductModel, $ProductsTable,
-                            TransactionItemModel>(
+                    await $_getPrefetchedData<Product, $ProductsTable,
+                            TransactionItem>(
                         currentTable: table,
                         referencedTable: $$ProductsTableReferences
                             ._transactionItemsRefsTable(db),
@@ -7046,7 +7176,8 @@ class $$ProductsTableTableManager extends RootTableManager<
                                 .where((e) => e.productId == item.id),
                         typedResults: items),
                   if (inventoryLogsRefs)
-                    await $_getPrefetchedData<ProductModel, $ProductsTable, InventoryLogModel>(
+                    await $_getPrefetchedData<Product, $ProductsTable,
+                            InventoryLog>(
                         currentTable: table,
                         referencedTable: $$ProductsTableReferences
                             ._inventoryLogsRefsTable(db),
@@ -7067,14 +7198,14 @@ class $$ProductsTableTableManager extends RootTableManager<
 typedef $$ProductsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $ProductsTable,
-    ProductModel,
+    Product,
     $$ProductsTableFilterComposer,
     $$ProductsTableOrderingComposer,
     $$ProductsTableAnnotationComposer,
     $$ProductsTableCreateCompanionBuilder,
     $$ProductsTableUpdateCompanionBuilder,
-    (ProductModel, $$ProductsTableReferences),
-    ProductModel,
+    (Product, $$ProductsTableReferences),
+    Product,
     PrefetchHooks Function(
         {bool categoryId, bool transactionItemsRefs, bool inventoryLogsRefs})>;
 typedef $$CustomersTableCreateCompanionBuilder = CustomersCompanion Function({
@@ -7105,10 +7236,10 @@ typedef $$CustomersTableUpdateCompanionBuilder = CustomersCompanion Function({
 });
 
 final class $$CustomersTableReferences
-    extends BaseReferences<_$AppDatabase, $CustomersTable, CustomerModel> {
+    extends BaseReferences<_$AppDatabase, $CustomersTable, Customer> {
   $$CustomersTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static MultiTypedResultKey<$TransactionsTable, List<TransactionModel>>
+  static MultiTypedResultKey<$TransactionsTable, List<Transaction>>
       _transactionsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.transactions,
               aliasName: $_aliasNameGenerator(
@@ -7292,14 +7423,14 @@ class $$CustomersTableAnnotationComposer
 class $$CustomersTableTableManager extends RootTableManager<
     _$AppDatabase,
     $CustomersTable,
-    CustomerModel,
+    Customer,
     $$CustomersTableFilterComposer,
     $$CustomersTableOrderingComposer,
     $$CustomersTableAnnotationComposer,
     $$CustomersTableCreateCompanionBuilder,
     $$CustomersTableUpdateCompanionBuilder,
-    (CustomerModel, $$CustomersTableReferences),
-    CustomerModel,
+    (Customer, $$CustomersTableReferences),
+    Customer,
     PrefetchHooks Function({bool transactionsRefs})> {
   $$CustomersTableTableManager(_$AppDatabase db, $CustomersTable table)
       : super(TableManagerState(
@@ -7377,8 +7508,8 @@ class $$CustomersTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (transactionsRefs)
-                    await $_getPrefetchedData<CustomerModel, $CustomersTable,
-                            TransactionModel>(
+                    await $_getPrefetchedData<Customer, $CustomersTable,
+                            Transaction>(
                         currentTable: table,
                         referencedTable: $$CustomersTableReferences
                             ._transactionsRefsTable(db),
@@ -7399,14 +7530,14 @@ class $$CustomersTableTableManager extends RootTableManager<
 typedef $$CustomersTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $CustomersTable,
-    CustomerModel,
+    Customer,
     $$CustomersTableFilterComposer,
     $$CustomersTableOrderingComposer,
     $$CustomersTableAnnotationComposer,
     $$CustomersTableCreateCompanionBuilder,
     $$CustomersTableUpdateCompanionBuilder,
-    (CustomerModel, $$CustomersTableReferences),
-    CustomerModel,
+    (Customer, $$CustomersTableReferences),
+    Customer,
     PrefetchHooks Function({bool transactionsRefs})>;
 typedef $$TransactionsTableCreateCompanionBuilder = TransactionsCompanion
     Function({
@@ -7463,8 +7594,8 @@ typedef $$TransactionsTableUpdateCompanionBuilder = TransactionsCompanion
   Value<int> rowid,
 });
 
-final class $$TransactionsTableReferences extends BaseReferences<_$AppDatabase,
-    $TransactionsTable, TransactionModel> {
+final class $$TransactionsTableReferences
+    extends BaseReferences<_$AppDatabase, $TransactionsTable, Transaction> {
   $$TransactionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
   static $UsersTable _staffIdTable(_$AppDatabase db) => db.users
@@ -7496,7 +7627,7 @@ final class $$TransactionsTableReferences extends BaseReferences<_$AppDatabase,
         manager.$state.copyWith(prefetchedData: [item]));
   }
 
-  static MultiTypedResultKey<$TransactionItemsTable, List<TransactionItemModel>>
+  static MultiTypedResultKey<$TransactionItemsTable, List<TransactionItem>>
       _transactionItemsRefsTable(_$AppDatabase db) =>
           MultiTypedResultKey.fromTable(db.transactionItems,
               aliasName: $_aliasNameGenerator(
@@ -7910,14 +8041,14 @@ class $$TransactionsTableAnnotationComposer
 class $$TransactionsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $TransactionsTable,
-    TransactionModel,
+    Transaction,
     $$TransactionsTableFilterComposer,
     $$TransactionsTableOrderingComposer,
     $$TransactionsTableAnnotationComposer,
     $$TransactionsTableCreateCompanionBuilder,
     $$TransactionsTableUpdateCompanionBuilder,
-    (TransactionModel, $$TransactionsTableReferences),
-    TransactionModel,
+    (Transaction, $$TransactionsTableReferences),
+    Transaction,
     PrefetchHooks Function(
         {bool staffId, bool customerId, bool transactionItemsRefs})> {
   $$TransactionsTableTableManager(_$AppDatabase db, $TransactionsTable table)
@@ -8088,8 +8219,8 @@ class $$TransactionsTableTableManager extends RootTableManager<
               getPrefetchedDataCallback: (items) async {
                 return [
                   if (transactionItemsRefs)
-                    await $_getPrefetchedData<TransactionModel,
-                            $TransactionsTable, TransactionItemModel>(
+                    await $_getPrefetchedData<Transaction, $TransactionsTable,
+                            TransactionItem>(
                         currentTable: table,
                         referencedTable: $$TransactionsTableReferences
                             ._transactionItemsRefsTable(db),
@@ -8110,14 +8241,14 @@ class $$TransactionsTableTableManager extends RootTableManager<
 typedef $$TransactionsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $TransactionsTable,
-    TransactionModel,
+    Transaction,
     $$TransactionsTableFilterComposer,
     $$TransactionsTableOrderingComposer,
     $$TransactionsTableAnnotationComposer,
     $$TransactionsTableCreateCompanionBuilder,
     $$TransactionsTableUpdateCompanionBuilder,
-    (TransactionModel, $$TransactionsTableReferences),
-    TransactionModel,
+    (Transaction, $$TransactionsTableReferences),
+    Transaction,
     PrefetchHooks Function(
         {bool staffId, bool customerId, bool transactionItemsRefs})>;
 typedef $$TransactionItemsTableCreateCompanionBuilder
@@ -8152,7 +8283,7 @@ typedef $$TransactionItemsTableUpdateCompanionBuilder
 });
 
 final class $$TransactionItemsTableReferences extends BaseReferences<
-    _$AppDatabase, $TransactionItemsTable, TransactionItemModel> {
+    _$AppDatabase, $TransactionItemsTable, TransactionItem> {
   $$TransactionItemsTableReferences(
       super.$_db, super.$_table, super.$_typedResult);
 
@@ -8427,14 +8558,14 @@ class $$TransactionItemsTableAnnotationComposer
 class $$TransactionItemsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $TransactionItemsTable,
-    TransactionItemModel,
+    TransactionItem,
     $$TransactionItemsTableFilterComposer,
     $$TransactionItemsTableOrderingComposer,
     $$TransactionItemsTableAnnotationComposer,
     $$TransactionItemsTableCreateCompanionBuilder,
     $$TransactionItemsTableUpdateCompanionBuilder,
-    (TransactionItemModel, $$TransactionItemsTableReferences),
-    TransactionItemModel,
+    (TransactionItem, $$TransactionItemsTableReferences),
+    TransactionItem,
     PrefetchHooks Function({bool transactionId, bool productId})> {
   $$TransactionItemsTableTableManager(
       _$AppDatabase db, $TransactionItemsTable table)
@@ -8562,14 +8693,14 @@ class $$TransactionItemsTableTableManager extends RootTableManager<
 typedef $$TransactionItemsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $TransactionItemsTable,
-    TransactionItemModel,
+    TransactionItem,
     $$TransactionItemsTableFilterComposer,
     $$TransactionItemsTableOrderingComposer,
     $$TransactionItemsTableAnnotationComposer,
     $$TransactionItemsTableCreateCompanionBuilder,
     $$TransactionItemsTableUpdateCompanionBuilder,
-    (TransactionItemModel, $$TransactionItemsTableReferences),
-    TransactionItemModel,
+    (TransactionItem, $$TransactionItemsTableReferences),
+    TransactionItem,
     PrefetchHooks Function({bool transactionId, bool productId})>;
 typedef $$InventoryLogsTableCreateCompanionBuilder = InventoryLogsCompanion
     Function({
@@ -8600,8 +8731,8 @@ typedef $$InventoryLogsTableUpdateCompanionBuilder = InventoryLogsCompanion
   Value<int> rowid,
 });
 
-final class $$InventoryLogsTableReferences extends BaseReferences<_$AppDatabase,
-    $InventoryLogsTable, InventoryLogModel> {
+final class $$InventoryLogsTableReferences
+    extends BaseReferences<_$AppDatabase, $InventoryLogsTable, InventoryLog> {
   $$InventoryLogsTableReferences(
       super.$_db, super.$_table, super.$_typedResult);
 
@@ -8861,14 +8992,14 @@ class $$InventoryLogsTableAnnotationComposer
 class $$InventoryLogsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $InventoryLogsTable,
-    InventoryLogModel,
+    InventoryLog,
     $$InventoryLogsTableFilterComposer,
     $$InventoryLogsTableOrderingComposer,
     $$InventoryLogsTableAnnotationComposer,
     $$InventoryLogsTableCreateCompanionBuilder,
     $$InventoryLogsTableUpdateCompanionBuilder,
-    (InventoryLogModel, $$InventoryLogsTableReferences),
-    InventoryLogModel,
+    (InventoryLog, $$InventoryLogsTableReferences),
+    InventoryLog,
     PrefetchHooks Function({bool productId, bool staffId})> {
   $$InventoryLogsTableTableManager(_$AppDatabase db, $InventoryLogsTable table)
       : super(TableManagerState(
@@ -8989,14 +9120,14 @@ class $$InventoryLogsTableTableManager extends RootTableManager<
 typedef $$InventoryLogsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $InventoryLogsTable,
-    InventoryLogModel,
+    InventoryLog,
     $$InventoryLogsTableFilterComposer,
     $$InventoryLogsTableOrderingComposer,
     $$InventoryLogsTableAnnotationComposer,
     $$InventoryLogsTableCreateCompanionBuilder,
     $$InventoryLogsTableUpdateCompanionBuilder,
-    (InventoryLogModel, $$InventoryLogsTableReferences),
-    InventoryLogModel,
+    (InventoryLog, $$InventoryLogsTableReferences),
+    InventoryLog,
     PrefetchHooks Function({bool productId, bool staffId})>;
 typedef $$SyncQueueTableCreateCompanionBuilder = SyncQueueCompanion Function({
   Value<String> id,
@@ -9163,17 +9294,17 @@ class $$SyncQueueTableAnnotationComposer
 class $$SyncQueueTableTableManager extends RootTableManager<
     _$AppDatabase,
     $SyncQueueTable,
-    SyncQueueModel,
+    SyncQueueData,
     $$SyncQueueTableFilterComposer,
     $$SyncQueueTableOrderingComposer,
     $$SyncQueueTableAnnotationComposer,
     $$SyncQueueTableCreateCompanionBuilder,
     $$SyncQueueTableUpdateCompanionBuilder,
     (
-      SyncQueueModel,
-      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueModel>
+      SyncQueueData,
+      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>
     ),
-    SyncQueueModel,
+    SyncQueueData,
     PrefetchHooks Function()> {
   $$SyncQueueTableTableManager(_$AppDatabase db, $SyncQueueTable table)
       : super(TableManagerState(
@@ -9251,17 +9382,17 @@ class $$SyncQueueTableTableManager extends RootTableManager<
 typedef $$SyncQueueTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $SyncQueueTable,
-    SyncQueueModel,
+    SyncQueueData,
     $$SyncQueueTableFilterComposer,
     $$SyncQueueTableOrderingComposer,
     $$SyncQueueTableAnnotationComposer,
     $$SyncQueueTableCreateCompanionBuilder,
     $$SyncQueueTableUpdateCompanionBuilder,
     (
-      SyncQueueModel,
-      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueModel>
+      SyncQueueData,
+      BaseReferences<_$AppDatabase, $SyncQueueTable, SyncQueueData>
     ),
-    SyncQueueModel,
+    SyncQueueData,
     PrefetchHooks Function()>;
 typedef $$ExchangeRatesTableCreateCompanionBuilder = ExchangeRatesCompanion
     Function({
@@ -9385,17 +9516,17 @@ class $$ExchangeRatesTableAnnotationComposer
 class $$ExchangeRatesTableTableManager extends RootTableManager<
     _$AppDatabase,
     $ExchangeRatesTable,
-    ExchangeRateModel,
+    ExchangeRate,
     $$ExchangeRatesTableFilterComposer,
     $$ExchangeRatesTableOrderingComposer,
     $$ExchangeRatesTableAnnotationComposer,
     $$ExchangeRatesTableCreateCompanionBuilder,
     $$ExchangeRatesTableUpdateCompanionBuilder,
     (
-      ExchangeRateModel,
-      BaseReferences<_$AppDatabase, $ExchangeRatesTable, ExchangeRateModel>
+      ExchangeRate,
+      BaseReferences<_$AppDatabase, $ExchangeRatesTable, ExchangeRate>
     ),
-    ExchangeRateModel,
+    ExchangeRate,
     PrefetchHooks Function()> {
   $$ExchangeRatesTableTableManager(_$AppDatabase db, $ExchangeRatesTable table)
       : super(TableManagerState(
@@ -9457,17 +9588,17 @@ class $$ExchangeRatesTableTableManager extends RootTableManager<
 typedef $$ExchangeRatesTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $ExchangeRatesTable,
-    ExchangeRateModel,
+    ExchangeRate,
     $$ExchangeRatesTableFilterComposer,
     $$ExchangeRatesTableOrderingComposer,
     $$ExchangeRatesTableAnnotationComposer,
     $$ExchangeRatesTableCreateCompanionBuilder,
     $$ExchangeRatesTableUpdateCompanionBuilder,
     (
-      ExchangeRateModel,
-      BaseReferences<_$AppDatabase, $ExchangeRatesTable, ExchangeRateModel>
+      ExchangeRate,
+      BaseReferences<_$AppDatabase, $ExchangeRatesTable, ExchangeRate>
     ),
-    ExchangeRateModel,
+    ExchangeRate,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {

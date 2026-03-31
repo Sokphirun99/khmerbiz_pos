@@ -86,9 +86,9 @@ extension BuildContextMediaQueryExtension on BuildContext {
   bool get isLargeScreen => screenWidth >= 1200;
 }
 
-/// Extension on BuildContext for navigation.
+/// Extension on BuildContext for navigation and UI feedback.
 extension BuildContextNavigationExtension on BuildContext {
-  /// Show a snackbar.
+  /// Shows a standard [SnackBar] with the given [message].
   void showSnackBar(
     String message, {
     Duration? duration,
@@ -103,7 +103,7 @@ extension BuildContextNavigationExtension on BuildContext {
     );
   }
 
-  /// Show an error snackbar.
+  /// Shows an error-styled [SnackBar] with the given [message].
   void showErrorSnackBar(String message, {Duration? duration}) {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
@@ -114,7 +114,7 @@ extension BuildContextNavigationExtension on BuildContext {
     );
   }
 
-  /// Show a success snackbar.
+  /// Shows a success-styled [SnackBar] with the given [message].
   void showSuccessSnackBar(String message, {Duration? duration}) {
     ScaffoldMessenger.of(this).showSnackBar(
       SnackBar(
@@ -125,7 +125,7 @@ extension BuildContextNavigationExtension on BuildContext {
     );
   }
 
-  /// Show a dialog.
+  /// Shows a standard [AlertDialog].
   Future<T?> showAppDialog<T>({
     required WidgetBuilder builder,
     bool barrierDismissible = true,
@@ -137,7 +137,7 @@ extension BuildContextNavigationExtension on BuildContext {
     );
   }
 
-  /// Show a loading dialog.
+  /// Shows a non-dismissible loading dialog with an optional [message].
   void showLoadingDialog({String? message}) {
     showDialog<void>(
       context: this,
@@ -157,7 +157,7 @@ extension BuildContextNavigationExtension on BuildContext {
     );
   }
 
-  /// Hide the current dialog.
+  /// Pops the current dialog or route.
   void popDialog() {
     Navigator.of(this).pop();
   }

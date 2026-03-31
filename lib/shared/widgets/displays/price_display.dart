@@ -44,6 +44,7 @@ enum PriceSize {
 /// )
 /// ```
 class PriceDisplay extends StatelessWidget {
+  /// Creates a [PriceDisplay].
   const PriceDisplay({
     required this.amountKHR,
     super.key,
@@ -193,6 +194,7 @@ class PriceDisplay extends StatelessWidget {
 
 /// Compact price display for tight spaces
 class PriceCompact extends StatelessWidget {
+  /// Creates a [PriceCompact].
   const PriceCompact({
     required this.amountKHR,
     super.key,
@@ -200,9 +202,16 @@ class PriceCompact extends StatelessWidget {
     this.showUSD = false,
     this.color,
   });
+  /// Amount in Cambodian Riel (KHR).
   final double amountKHR;
+
+  /// Optional amount in USD.
   final double? amountUSD;
+
+  /// Whether to show USD amount.
   final bool showUSD;
+
+  /// Optional text color.
   final Color? color;
 
   @override

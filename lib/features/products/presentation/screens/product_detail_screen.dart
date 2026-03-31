@@ -12,9 +12,14 @@ import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_bloc
 import 'package:khmerbiz_pos/features/inventory/presentation/widgets/stock_adjustment_sheet.dart';
 import 'package:khmerbiz_pos/shared/widgets/displays/stock_badge.dart';
 
+/// A screen that displays detailed information about a specific product.
+///
+/// Shows product details, pricing, stock levels, and actions.
 class ProductDetailScreen extends StatelessWidget {
+  /// Creates a [ProductDetailScreen].
   const ProductDetailScreen({required this.productId, super.key});
 
+  /// The unique ID of the product to display.
   final String productId;
 
   @override
@@ -121,12 +126,12 @@ class ProductDetailScreen extends StatelessWidget {
           Text('Pricing', style: AppTextStyles.headlineMedium),
           const SizedBox(height: AppSpacing.sm),
           _buildInfoRow(
-              'Cost Price', '${product.costPrice.toStringAsFixed(0)}R'),
+              'Cost Price', '${product.costPrice.toStringAsFixed(0)}R',),
           _buildInfoRow(
-              'Retail Price', '${product.retailPrice.toStringAsFixed(0)}R'),
+              'Retail Price', '${product.retailPrice.toStringAsFixed(0)}R',),
           if (product.wholesalePrice != null)
             _buildInfoRow('Wholesale Price',
-                '${product.wholesalePrice!.toStringAsFixed(0)}R'),
+                '${product.wholesalePrice!.toStringAsFixed(0)}R',),
 
           _buildProfitRow(product),
 
@@ -158,7 +163,7 @@ class ProductDetailScreen extends StatelessWidget {
             ],
           ),
           _buildInfoRow('Low Stock Threshold',
-              product.lowStockThreshold.toStringAsFixed(0)),
+              product.lowStockThreshold.toStringAsFixed(0),),
 
           const SizedBox(height: AppSpacing.lg),
 
@@ -174,7 +179,7 @@ class ProductDetailScreen extends StatelessWidget {
                 backgroundColor: AppColors.primary,
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(
-                    vertical: AppSpacing.md),
+                    vertical: AppSpacing.md,),
                 shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(AppSpacing.radiusMedium),
@@ -188,10 +193,8 @@ class ProductDetailScreen extends StatelessWidget {
           // Status
           _buildInfoRow('Featured', product.isFeatured ? 'Yes' : 'No'),
           _buildInfoRow('Active', product.isActive ? 'Yes' : 'No'),
-          if (product.createdAt != null)
-            _buildInfoRow('Created', _formatDate(product.createdAt!)),
-          if (product.updatedAt != null)
-            _buildInfoRow('Updated', _formatDate(product.updatedAt!)),
+          _buildInfoRow('Created', _formatDate(product.createdAt)),
+          _buildInfoRow('Updated', _formatDate(product.updatedAt)),
         ],
       ),
     );
@@ -243,5 +246,11 @@ class ProductDetailScreen extends StatelessWidget {
 
   String _formatDate(DateTime date) {
     return '${date.day}/${date.month}/${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(StringProperty('productId', productId));
   }
 }

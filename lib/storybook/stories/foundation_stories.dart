@@ -5,7 +5,9 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
+/// A story collection for foundational design tokens (colors, typography).
 class FoundationStories extends StatelessWidget {
+  /// Creates a [FoundationStories].
   const FoundationStories({super.key});
 
   @override
@@ -14,10 +16,10 @@ class FoundationStories extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
         const Text('Foundation',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
         const SizedBox(height: AppSpacing.base),
         const Text(
-            'Core design tokens including Colors, Spacing, and Typography.'),
+            'Core design tokens including Colors, Spacing, and Typography.',),
         const SizedBox(height: AppSpacing.xl),
         const StorySection(
           title: 'Brand Colors',
@@ -70,11 +72,11 @@ class FoundationStories extends StatelessWidget {
           title: 'Typography (Body)',
           children: [
             Text('Body Large - For primary content',
-                style: AppTextStyles.bodyLarge),
+                style: AppTextStyles.bodyLarge,),
             Text('Body Medium - For secondary info',
-                style: AppTextStyles.bodyMedium),
+                style: AppTextStyles.bodyMedium,),
             Text('Body Small - For labels and hints',
-                style: AppTextStyles.bodySmall),
+                style: AppTextStyles.bodySmall,),
           ],
         ),
       ],
@@ -102,7 +104,7 @@ class _ColorSwatch extends StatelessWidget {
             border: Border.all(color: AppColors.borderLight, width: 2),
             boxShadow: const [
               BoxShadow(
-                  color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2)),
+                  color: AppColors.shadow, blurRadius: 4, offset: Offset(0, 2),),
             ],
           ),
         ),

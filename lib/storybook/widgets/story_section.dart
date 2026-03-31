@@ -5,7 +5,11 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 import 'package:khmerbiz_pos/core/theme/foundation/app_radius.dart';
 
+/// A widget that represents a section in the storybook.
+///
+/// Groups related component variants together with a title and description.
 class StorySection extends StatelessWidget {
+  /// Creates a [StorySection].
   const StorySection({
     required this.title,
     required this.children,
@@ -13,8 +17,13 @@ class StorySection extends StatelessWidget {
     this.description,
   });
 
+  /// The title of the section.
   final String title;
+
+  /// An optional description for the section.
   final String? description;
+
+  /// The list of widget variants to display.
   final List<Widget> children;
 
   @override
@@ -29,7 +38,7 @@ class StorySection extends StatelessWidget {
             const SizedBox(height: AppSpacing.xs),
             Text(description!,
                 style: AppTextStyles.bodyMedium
-                    .copyWith(color: AppColors.textSecondary)),
+                    .copyWith(color: AppColors.textSecondary),),
           ],
           const SizedBox(height: AppSpacing.base),
           Container(

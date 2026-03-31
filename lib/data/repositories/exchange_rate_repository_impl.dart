@@ -6,7 +6,11 @@ import 'package:khmerbiz_pos/data/datasources/local/database.dart';
 import 'package:khmerbiz_pos/domain/entities/exchange_rate.dart';
 import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
 
+/// Implementation of [ExchangeRateRepository] using [AppDatabase] for persistence and local caching.
+///
+/// Handles latest rate retrieval, updates, and staleness detection.
 class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
+  /// Creates a new [ExchangeRateRepositoryImpl] with the given [AppDatabase].
   ExchangeRateRepositoryImpl(this._db);
   final AppDatabase _db;
 
@@ -27,7 +31,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
 
       if (rateModel == null) {
         return left(
-            CacheFailure.defaultError(details: 'No exchange rate found'));
+            CacheFailure.defaultError(details: 'No exchange rate found'),);
       }
 
       // Update in-memory cache
@@ -42,7 +46,7 @@ class ExchangeRateRepositoryImpl implements ExchangeRateRepository {
         source: rateModel.source,
         fetchedAt: rateModel.fetchedAt,
         isActive: rateModel.isActive,
-      ));
+      ),);
     } catch (e) {
       return left(CacheFailure.defaultError(details: e.toString()));
     }

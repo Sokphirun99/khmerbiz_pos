@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// Login credentials for authentication.
 final class LoginCredentials extends Equatable {
+  /// Creates [LoginCredentials].
   const LoginCredentials({
     required this.email,
     required this.password,

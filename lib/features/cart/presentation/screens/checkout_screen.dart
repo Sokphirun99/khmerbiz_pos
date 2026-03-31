@@ -4,9 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
-import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
-import 'package:khmerbiz_pos/shared/widgets/feedback/app_snackbar.dart';
-import 'package:khmerbiz_pos/shared/widgets/feedback/app_toast.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_bloc.dart';
 import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
@@ -14,9 +11,16 @@ import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/screens/khqr_payment_sheet.dart';
-import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
+import 'package:khmerbiz_pos/shared/widgets/feedback/app_snackbar.dart';
+import 'package:khmerbiz_pos/shared/widgets/feedback/app_toast.dart';
+import 'package:khmerbiz_pos/shared/widgets/widgets.dart';
 
+/// Screen for reviewing the cart and processing the final checkout.
+///
+/// Supports multiple payment methods (Cash, KHQR, ABA, Wing) and
+/// displays a detailed order summary including taxes and discounts.
 class CheckoutScreen extends StatefulWidget {
+  /// Creates a [CheckoutScreen].
   const CheckoutScreen({super.key});
 
   @override
@@ -80,12 +84,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             return Scaffold(
               body: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     flex: 6,
                     child: ColoredBox(
                       color: AppColors.surfaceAlt,
-                      child: const Center(
-                          child: Text('ProductListScreen Placeholder')),
+                      child: Center(
+                          child: Text('ProductListScreen Placeholder'),),
                     ),
                   ),
                   const VerticalDivider(width: 1),
@@ -112,7 +116,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   _buildCartContent(context, state),
                   if (state.isCheckingOut)
                     ColoredBox(
-                      color: Colors.black.withOpacity(0.3),
+                      color: Colors.black.withValues(alpha: 0.3),
                       child: const Center(child: CircularProgressIndicator()),
                     ),
                 ],
@@ -142,15 +146,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         _initiateKhqrPayment(context, state);
 
       case PaymentMethod.aba:
+        _initiateAbaPayment(context, state);
+
       case PaymentMethod.wing:
-        _initiateDeepLinkPayment(context, state);
+        _initiateWingPayment(context, state);
 
       case PaymentMethod.credit:
         // Credit not yet implemented
         AppSnackbar.show(
           context,
           message: 'Credit payment coming soon / ការទូទាត់ឥណទានមកដល់ឆាប់ៗ',
-          isError: false,
         );
     }
   }
@@ -177,7 +182,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     paymentBloc.add(InitiateKhqrPayment(
       amountKHR: state.total,
       invoiceId: invoiceId,
-    ));
+    ),);
 
     // Show the payment sheet
     showModalBottomSheet<void>(
@@ -209,20 +214,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     );
   }
 
-  /// Initiate ABA/Wing deep link payment.
-  void _initiateDeepLinkPayment(BuildContext context, CartLoaded state) {
+  /// Initiate ABA payment.
+  void _initiateAbaPayment(BuildContext context, CartLoaded state) {
     final paymentBloc = context.read<PaymentBloc>();
     final invoiceId =
         'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
 
-    // Dispatch deep link event to PaymentBloc
-    paymentBloc.add(InitiateDeepLinkPayment(
-      method: _selectedPaymentMethod,
+    paymentBloc.add(InitiateAbaDeepLink(
       amountKHR: state.total,
       invoiceId: invoiceId,
-    ));
+    ),);
 
-    // Show the payment sheet (reuses same sheet for deep link state)
+    _showPaymentSheet(context, paymentBloc, state.total, invoiceId);
+  }
+
+  /// Initiate Wing payment.
+  void _initiateWingPayment(BuildContext context, CartLoaded state) {
+    final paymentBloc = context.read<PaymentBloc>();
+    final invoiceId =
+        'INV-${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}';
+
+    paymentBloc.add(InitiateWingDeepLink(
+      amountKHR: state.total,
+      invoiceId: invoiceId,
+    ),);
+
+    _showPaymentSheet(context, paymentBloc, state.total, invoiceId);
+  }
+
+  /// Internal helper to show the payment sheet.
+  void _showPaymentSheet(
+    BuildContext context,
+    PaymentBloc paymentBloc,
+    double total,
+    String invoiceId,
+  ) {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
@@ -232,13 +258,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       builder: (_) => BlocProvider.value(
         value: paymentBloc,
         child: KhqrPaymentSheet(
-          amountKHR: state.total,
+          amountKHR: total,
           invoiceId: invoiceId,
           onPaymentConfirmed: (reference, md5Hash) {
             context.read<CartBloc>().add(
                   ProcessCheckout(
                     method: _selectedPaymentMethod,
                     khqrReference: reference,
+                    khqrMd5: md5Hash,
                   ),
                 );
           },
@@ -246,17 +273,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       ),
     );
-
-    // TODO: Launch actual deep link via url_launcher
-    // final uri = DeepLinkHelper.getDeepLinkUri(
-    //   method: _selectedPaymentMethod,
-    //   amountKHR: state.total,
-    //   invoiceId: invoiceId,
-    //   merchantInfo: merchantInfo,
-    // );
-    // if (uri != null) {
-    //   launchUrl(uri, mode: LaunchMode.externalApplication);
-    // }
   }
 
   // ── Cart Content ────────────────────────────────────────────────────────
@@ -327,7 +343,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   onTap: () {
                     context.read<CartBloc>().add(
                           const ApplyDiscount(
-                              type: DiscountType.percent, value: 10),
+                              type: DiscountType.percent, value: 10,),
                         );
                   },
                 ),
@@ -358,7 +374,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 _buildSummaryRow(
                   'Discount:',
                   PriceCompact(
-                      amountKHR: state.discountAmount, color: AppColors.error),
+                      amountKHR: state.discountAmount, color: AppColors.error,),
                 ),
               _buildSummaryRow(
                 'Tax (10%):',

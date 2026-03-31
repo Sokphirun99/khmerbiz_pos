@@ -51,6 +51,7 @@ enum SkeletonType {
 /// )
 /// ```
 class LoadingSkeleton extends StatelessWidget {
+  /// Creates a [LoadingSkeleton].
   const LoadingSkeleton({
     super.key,
     this.type = SkeletonType.textLines,
@@ -82,8 +83,8 @@ class LoadingSkeleton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: AppColors.border.withOpacity(0.3),
-      highlightColor: AppColors.border.withOpacity(0.1),
+      baseColor: AppColors.border.withValues(alpha: 0.3),
+      highlightColor: AppColors.border.withValues(alpha: 0.1),
       child: _buildSkeleton(),
     );
   }
@@ -307,12 +308,16 @@ class LoadingSkeleton extends StatelessWidget {
 
 /// Grid of loading skeletons for product grid
 class ProductGridSkeleton extends StatelessWidget {
+  /// Creates a [ProductGridSkeleton].
   const ProductGridSkeleton({
     super.key,
     this.itemCount = 8,
     this.crossAxisCount = 2,
   });
+  /// Number of items to show.
   final int itemCount;
+
+  /// Number of columns.
   final int crossAxisCount;
 
   @override
@@ -343,14 +348,20 @@ class ProductGridSkeleton extends StatelessWidget {
 
 /// List of loading skeletons
 class ListSkeleton extends StatelessWidget {
+  /// Creates a [ListSkeleton].
   const ListSkeleton({
     super.key,
     this.itemCount = 5,
     this.type = SkeletonType.listTile,
     this.itemHeight,
   });
+  /// Number of items to show.
   final int itemCount;
+
+  /// Skeleton type to use.
   final SkeletonType type;
+
+  /// Height of each item.
   final double? itemHeight;
 
   @override

@@ -10,21 +10,45 @@ import 'package:khmerbiz_pos/storybook/stories/foundation_stories.dart';
 import 'package:khmerbiz_pos/storybook/stories/input_stories.dart';
 import 'package:khmerbiz_pos/storybook/stories/khqr_stories.dart';
 
+/// Defines the different categories of UI components available in the Storybook.
 enum StoryLayer {
+  /// The foundational design tokens (colors, typography, spacing).
   foundation('Foundation'),
+
+  /// Interactive button components.
   buttons('Buttons'),
+
+  /// Card-based layout components.
   cards('Cards'),
+
+  /// User input and form components.
   inputs('Inputs'),
+
+  /// Data display and informational components.
   displays('Displays'),
+
+  /// User feedback and notification components.
   feedbacks('Feedback'),
+
+  /// States for empty, loading, or error conditions.
   emptyLoading('Empty/Loading'),
+
+  /// Specialized KHQR and payment display components.
   khqr('KHQR');
 
+  /// Creates a [StoryLayer] with a human-readable [label].
   const StoryLayer(this.label);
+
+  /// The label to display in the sidebar.
   final String label;
 }
 
+/// A developer-only screen for previewing and testing UI components in isolation.
+///
+/// Organized by [StoryLayer], it provides a sidebar for navigation and a content area
+/// for component demonstrations.
 class StorybookScreen extends StatefulWidget {
+  /// Creates a [StorybookScreen].
   const StorybookScreen({super.key});
 
   @override
@@ -41,7 +65,7 @@ class _StorybookScreenState extends State<StorybookScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('LDSG Storybook',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+            style: TextStyle(fontWeight: FontWeight.bold),),
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.onPrimary,
       ),

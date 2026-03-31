@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -12,9 +13,12 @@ import 'package:khmerbiz_pos/features/inventory/presentation/bloc/inventory_stat
 import 'package:khmerbiz_pos/shared/widgets/buttons/app_button.dart';
 import 'package:khmerbiz_pos/shared/widgets/inputs/app_text_field.dart';
 
+/// A bottom sheet for adjusting product stock levels.
 class StockAdjustmentSheet extends StatefulWidget {
+  /// Creates a [StockAdjustmentSheet].
   const StockAdjustmentSheet({required this.product, super.key});
 
+  /// The product whose stock will be adjusted.
   final Product product;
 
   /// Show the stock adjustment bottom sheet.
@@ -37,6 +41,12 @@ class StockAdjustmentSheet extends StatefulWidget {
 
   @override
   State<StockAdjustmentSheet> createState() => _StockAdjustmentSheetState();
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<Product>('product', product));
+  }
 }
 
 class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
@@ -77,7 +87,7 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
           reason: _selectedReason,
           notes:
               _notesController.text.isNotEmpty ? _notesController.text : null,
-        ));
+        ),);
   }
 
   @override
@@ -148,17 +158,17 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
                 child: Row(
                   children: [
                     const Icon(Icons.inventory_2_outlined,
-                        color: AppColors.primary),
+                        color: AppColors.primary,),
                     const SizedBox(width: AppSpacing.sm),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(widget.product.nameKh,
-                              style: AppTextStyles.labelMedium),
+                              style: AppTextStyles.labelMedium,),
                           Text(widget.product.nameEn,
                               style: AppTextStyles.bodySmall.copyWith(
-                                  color: AppColors.textSecondary)),
+                                  color: AppColors.textSecondary,),),
                         ],
                       ),
                     ),
@@ -220,7 +230,7 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
 
               // Reason dropdown
               DropdownButtonFormField<AdjustmentReason>(
-                value: _selectedReason,
+                initialValue: _selectedReason,
                 decoration: InputDecoration(
                   labelText: 'Reason',
                   filled: true,
@@ -235,7 +245,7 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
                     .map((r) => DropdownMenuItem(
                           value: r,
                           child: Text('${r.labelEn} (${r.labelKh})'),
-                        ))
+                        ),)
                     .toList(),
                 onChanged: (v) {
                   if (v != null) setState(() => _selectedReason = v);
@@ -283,12 +293,12 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '${widget.product.stock.toStringAsFixed(0)}',
+                        widget.product.stock.toStringAsFixed(0),
                         style: AppTextStyles.headlineLarge,
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm),
+                            horizontal: AppSpacing.sm,),
                         child: Icon(
                           Icons.arrow_forward,
                           color: _isStockIn
@@ -327,8 +337,7 @@ class _StockAdjustmentSheetState extends State<StockAdjustmentSheet> {
                 child: AppButton(
                   label: 'Confirm Adjustment',
                   labelKhmer: 'បញ្ជាក់ការកែតម្រូវ',
-                  type: AppButtonType.primary,
-                  onPressed: _submit,
+                  onTap: _submit,
                 ),
               ),
 

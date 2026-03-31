@@ -44,6 +44,7 @@ typedef OnConfirm = void Function();
 /// )
 /// ```
 class NumPad extends StatefulWidget {
+  /// Creates a [NumPad].
   const NumPad({
     super.key,
     this.onDigitTapped,
@@ -364,6 +365,7 @@ class _NumPadState extends State<NumPad> {
 
 /// Compact NumPad for smaller spaces
 class CompactNumPad extends StatelessWidget {
+  /// Creates a [CompactNumPad].
   const CompactNumPad({
     super.key,
     this.onDigitTapped,
@@ -373,11 +375,22 @@ class CompactNumPad extends StatelessWidget {
     this.decimalAllowed = true,
     this.showConfirm = false,
   });
+  /// Callback when digit is tapped.
   final OnDigitTapped? onDigitTapped;
+
+  /// Callback when backspace is tapped.
   final OnBackspace? onBackspace;
+
+  /// Callback when backspace is held (clear).
   final VoidCallback? onClear;
+
+  /// Callback when confirm is tapped.
   final OnConfirm? onConfirm;
+
+  /// Whether decimal point is allowed.
   final bool decimalAllowed;
+
+  /// Whether to show confirm button.
   final bool showConfirm;
 
   @override
@@ -410,6 +423,7 @@ class CompactNumPad extends StatelessWidget {
 
 /// NumPad with display for showing entered value
 class NumPadWithDisplay extends StatefulWidget {
+  /// Creates a [NumPadWithDisplay].
   const NumPadWithDisplay({
     super.key,
     this.initialValue,
@@ -423,15 +437,34 @@ class NumPadWithDisplay extends StatefulWidget {
     this.confirmLabel,
     this.maxLength,
   });
+  /// Initial numeric value.
   final String? initialValue;
+
+  /// English label for the display.
   final String? label;
+
+  /// Khmer label for the display.
   final String? labelKhmer;
+
+  /// Callback when digit is tapped.
   final OnDigitTapped? onDigitTapped;
+
+  /// Callback when backspace is tapped.
   final OnBackspace? onBackspace;
+
+  /// Callback when confirm is tapped.
   final OnConfirm? onConfirm;
+
+  /// Whether decimal point is allowed.
   final bool decimalAllowed;
+
+  /// Whether to show confirm button.
   final bool showConfirm;
+
+  /// Custom confirm button label.
   final String? confirmLabel;
+
+  /// Maximum number of digits allowed.
   final int? maxLength;
 
   @override

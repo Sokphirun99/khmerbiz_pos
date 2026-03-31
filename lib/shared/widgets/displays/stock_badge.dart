@@ -56,6 +56,7 @@ enum StockBadgeStyle {
 /// )
 /// ```
 class StockBadge extends StatelessWidget {
+  /// Creates a [StockBadge].
   const StockBadge({
     required this.status,
     super.key,
@@ -68,7 +69,7 @@ class StockBadge extends StatelessWidget {
     this.hideWhenInStock = false,
   });
 
-  /// Create from quantity and threshold
+  /// Creates a [StockBadge] from a [quantity] and [lowThreshold].
   factory StockBadge.fromQuantity({
     required int quantity,
     int lowThreshold = 10,
@@ -139,10 +140,10 @@ class StockBadge extends StatelessWidget {
         vertical: AppSpacing.xs,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(AppSpacing.radiusFull),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
         ),
       ),
       child: Row(
@@ -249,6 +250,7 @@ class StockBadge extends StatelessWidget {
 
 /// Stock badge with product name for low stock warnings
 class StockWarningBadge extends StatelessWidget {
+  /// Creates a [StockWarningBadge].
   const StockWarningBadge({
     required this.productName,
     required this.quantity,
@@ -257,10 +259,19 @@ class StockWarningBadge extends StatelessWidget {
     this.lowThreshold = 10,
     this.onTap,
   });
+  /// Product name in English.
   final String productName;
+
+  /// Product name in Khmer.
   final String? productNameKhmer;
+
+  /// Current stock quantity.
   final int quantity;
+
+  /// Low stock threshold.
   final int lowThreshold;
+
+  /// Callback when badge is tapped.
   final VoidCallback? onTap;
 
   @override
@@ -273,7 +284,7 @@ class StockWarningBadge extends StatelessWidget {
           color: AppColors.warningLight,
           borderRadius: BorderRadius.circular(AppSpacing.radiusMedium),
           border: Border.all(
-            color: AppColors.warning.withOpacity(0.3),
+            color: AppColors.warning.withValues(alpha: 0.3),
           ),
         ),
         child: Row(

@@ -1,20 +1,26 @@
 import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uuid/uuid.dart';
 import 'package:intl/intl.dart';
-import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
-import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
-import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
-import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
+import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/cart_item.dart';
+import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/domain/entities/transaction.dart' as entity_tx;
 import 'package:khmerbiz_pos/domain/entities/transaction_item.dart';
-import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
-import 'package:khmerbiz_pos/core/error/failures.dart';
+import 'package:khmerbiz_pos/domain/repositories/auth_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
+import 'package:khmerbiz_pos/domain/repositories/transaction_repository.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_event.dart';
+import 'package:khmerbiz_pos/features/cart/presentation/bloc/cart_state.dart';
+import 'package:uuid/uuid.dart';
 
+/// Bloc responsible for managing the shopping cart state.
+///
+/// Handles adding/removing items, updating quantities, applying discounts,
+/// and processing the checkout transaction.
 class CartBloc extends Bloc<CartEvent, CartState> {
+  /// Creates a [CartBloc] with the required repositories.
   CartBloc({
     required TransactionRepository transactionRepository,
     required ProductRepository productRepository,
@@ -45,8 +51,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final currentState =
         state is CartLoaded ? state as CartLoaded : _getEmptyCart();
 
-    var updatedItems = List<CartItem>.from(currentState.items);
-    var updatedWarnings =
+    final updatedItems = List<CartItem>.from(currentState.items);
+    final updatedWarnings =
         Map<String, String>.from(currentState.stockWarnings ?? {});
 
     final existingIndex =
@@ -110,8 +116,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       return;
     }
 
-    var updatedItems = List<CartItem>.from(currentState.items);
-    var updatedWarnings =
+    final updatedItems = List<CartItem>.from(currentState.items);
+    final updatedWarnings =
         Map<String, String>.from(currentState.stockWarnings ?? {});
 
     final index =
@@ -137,7 +143,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (state is! CartLoaded) return;
     final currentState = state as CartLoaded;
 
-    var updatedItems = List<CartItem>.from(currentState.items);
+    final updatedItems = List<CartItem>.from(currentState.items);
     final index =
         updatedItems.indexWhere((item) => item.productId == event.productId);
     if (index >= 0) {
@@ -146,7 +152,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
 
     _emitRecalculatedCart(
-        emit, currentState, updatedItems, currentState.stockWarnings);
+        emit, currentState, updatedItems, currentState.stockWarnings,);
   }
 
   void _onApplyDiscount(ApplyDiscount event, Emitter<CartState> emit) {
@@ -184,7 +190,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }
     final currentState = state as CartLoaded;
     emit(currentState.copyWith(
-        customer: event.customer, clearCustomer: event.customer == null));
+        customer: event.customer, clearCustomer: event.customer == null,),);
   }
 
   void _onClearCart(ClearCart event, Emitter<CartState> emit) {
@@ -192,14 +198,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _onProcessCheckout(
-      ProcessCheckout event, Emitter<CartState> emit) async {
+      ProcessCheckout event, Emitter<CartState> emit,) async {
     if (state is! CartLoaded) return;
     final currentState = state as CartLoaded;
 
     if (currentState.items.isEmpty) {
       emit(CartCheckoutFailure(
           failure: ValidationFailure.custom(
-              messageEn: 'Cart is empty', messageKm: 'រទេះទទេ')));
+              messageEn: 'Cart is empty', messageKm: 'រទេះទទេ',),),);
       return;
     }
 
@@ -209,7 +215,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         emit(CartCheckoutFailure(
             failure: ValidationFailure.custom(
                 messageEn: 'Insufficient cash received',
-                messageKm: 'ប្រាក់ទទួលមិនគ្រប់គ្រាន់')));
+                messageKm: 'ប្រាក់ទទួលមិនគ្រប់គ្រាន់',),),);
         return;
       }
     }
@@ -221,8 +227,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final productsResult =
         await _productRepository.getProductsByIds(productIds);
 
-    final List<String> errorMessagesEn = [];
-    final List<String> errorMessagesKm = [];
+    final errorMessagesEn = <String>[];
+    final errorMessagesKm = <String>[];
 
     productsResult.fold(
       (failure) {
@@ -230,7 +236,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
         errorMessagesKm.add('មានបញ្ហាក្នុងការត្រួតពិនិត្យស្តុក');
       },
       (products) {
-        final productMap = {for (var p in products) p.id: p};
+        final productMap = {for (final p in products) p.id: p};
 
         for (final item in currentState.items) {
           final product = productMap[item.productId];
@@ -305,7 +311,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     }).toList();
 
     final result = await _transactionRepository.processSale(
-        transaction: tx, items: txItems);
+        transaction: tx, items: txItems,);
 
     result.fold((failure) {
       emit(CartCheckoutFailure(failure: failure));
@@ -348,8 +354,8 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     if (discountAmount > subtotal) discountAmount = subtotal;
 
-    var taxable = subtotal - discountAmount;
-    var taxAmount = taxable * 0.10; // 10% tax rate
+    final taxable = subtotal - discountAmount;
+    final taxAmount = taxable * 0.10; // 10% tax rate
     var total = taxable + taxAmount;
 
     // Round to 0 decimal places for KHR
@@ -357,7 +363,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
     var exchangeRate = _exchangeRateRepository.getCachedRate();
     if (exchangeRate <= 0) exchangeRate = 4000; // fallback
-    var totalUSD = total / exchangeRate;
+    final totalUSD = total / exchangeRate;
 
     // Recalculate change if any cash received is part of state? We don't store cashReceived in state.
     // It's only passed during ProcessCheckout. We will default changeAmount to 0.

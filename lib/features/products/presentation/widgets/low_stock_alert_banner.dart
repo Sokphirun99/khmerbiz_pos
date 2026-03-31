@@ -4,14 +4,19 @@ import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/core/theme/app_text_styles.dart';
 
+/// A banner widget that alerts the user about low stock items.
 class LowStockAlertBanner extends StatelessWidget {
+  /// Creates a [LowStockAlertBanner].
   const LowStockAlertBanner({
     required this.count,
     super.key,
     this.onTap,
   });
 
+  /// The number of low stock products to display.
   final int count;
+
+  /// Callback when the banner is tapped.
   final VoidCallback? onTap;
 
   @override
@@ -68,5 +73,12 @@ class LowStockAlertBanner extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(IntProperty('count', count));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has('onTap', onTap));
   }
 }

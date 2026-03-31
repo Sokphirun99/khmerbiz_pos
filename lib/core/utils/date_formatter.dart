@@ -221,7 +221,7 @@ final class DateFormatter {
     final str = value.toString();
     final buffer = StringBuffer();
 
-    for (int i = 0; i < str.length; i++) {
+    for (var i = 0; i < str.length; i++) {
       final codeUnit = str.codeUnitAt(i);
       // English digits '0' (48) to '9' (57)
       if (codeUnit >= 48 && codeUnit <= 57) {

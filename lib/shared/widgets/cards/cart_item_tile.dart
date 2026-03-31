@@ -8,6 +8,7 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 
 /// Cart item data model
 class CartItemData {
+  /// Creates a [CartItemData].
   const CartItemData({
     required this.id,
     required this.productId,
@@ -19,14 +20,32 @@ class CartItemData {
     this.discount,
     this.note,
   });
+
+  /// Unique identifier for the cart item.
   final String id;
+
+  /// ID of the product.
   final String productId;
+
+  /// Product name in English.
   final String name;
+
+  /// Product name in Khmer.
   final String? nameKhmer;
+
+  /// Unit price in KHR.
   final double unitPriceKHR;
+
+  /// Unit price in USD.
   final double? unitPriceUSD;
+
+  /// Quantity of items.
   final int quantity;
+
+  /// Applied discount amount.
   final double? discount;
+
+  /// Optional note for the item.
   final String? note;
 
   /// Get line total in KHR
@@ -74,6 +93,7 @@ typedef OnQuantityChanged = void Function(int newQuantity);
 /// )
 /// ```
 class CartItemTile extends StatefulWidget {
+  /// Creates a [CartItemTile].
   const CartItemTile({
     required this.item,
     super.key,

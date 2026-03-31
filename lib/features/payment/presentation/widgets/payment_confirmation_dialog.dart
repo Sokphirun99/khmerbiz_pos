@@ -23,15 +23,21 @@ import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
 /// if (result == PaymentConfirmationResult.confirmed) { ... }
 /// ```
 class PaymentConfirmationDialog extends StatelessWidget {
+  /// Creates a [PaymentConfirmationDialog].
   const PaymentConfirmationDialog({
-    super.key,
     required this.method,
     required this.amountKHR,
     required this.invoiceId,
+    super.key,
   });
 
+  /// The payment method used for the transaction.
   final PaymentMethod method;
+
+  /// The total transaction amount in KHR.
   final double amountKHR;
+
+  /// The unique invoice ID or reference for the transaction.
   final String invoiceId;
 
   /// Show the dialog and return the user's choice.
@@ -72,7 +78,7 @@ class PaymentConfirmationDialog extends StatelessWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: brandColor.withOpacity(0.1),
+              color: brandColor.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -153,7 +159,7 @@ class PaymentConfirmationDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.of(context)
               .pop(PaymentConfirmationResult.cancelled),
-          child: Text(
+          child: const Text(
             'Cancel',
             style: TextStyle(color: AppColors.textSecondary),
           ),
@@ -162,7 +168,7 @@ class PaymentConfirmationDialog extends StatelessWidget {
         TextButton(
           onPressed: () => Navigator.of(context)
               .pop(PaymentConfirmationResult.notYet),
-          child: Text(
+          child: const Text(
             'Not Yet',
             style: TextStyle(color: AppColors.warning),
           ),
@@ -182,6 +188,14 @@ class PaymentConfirmationDialog extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(EnumProperty<PaymentMethod>('method', method));
+    properties.add(DoubleProperty('amountKHR', amountKHR));
+    properties.add(StringProperty('invoiceId', invoiceId));
   }
 }
 

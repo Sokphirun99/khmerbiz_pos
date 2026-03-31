@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 ///
 /// This is a pure domain object with no dependencies on Flutter or data layers.
 final class User extends Equatable {
+  /// Creates a [User].
   const User({
     required this.id,
     required this.email,
@@ -118,6 +119,7 @@ enum UserRole {
   inventory,
 }
 
+/// Extension on [UserRole] for display helpers.
 extension UserRoleExtension on UserRole {
   /// Display name for the role
   String get displayName {

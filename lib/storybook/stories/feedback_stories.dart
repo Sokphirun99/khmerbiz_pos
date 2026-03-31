@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 import 'package:khmerbiz_pos/storybook/widgets/story_section.dart';
 
+/// A story collection for feedback components (toasts, dialogs).
 class FeedbackStories extends StatelessWidget {
+  /// Creates a [FeedbackStories].
   const FeedbackStories({super.key});
 
   @override
@@ -11,7 +13,7 @@ class FeedbackStories extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.xl),
       children: [
         const Text('Feedback',
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),),
         const SizedBox(height: AppSpacing.base),
         const Text('Toasts, Snackbars, and dialogs.'),
         const SizedBox(height: AppSpacing.xl),

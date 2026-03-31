@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 
 /// Product data model for ProductCard
 class ProductCardData {
+  /// Creates a [ProductCardData].
   const ProductCardData({
     required this.id,
     required this.name,
@@ -21,16 +22,38 @@ class ProductCardData {
     this.imageUrl,
     this.category,
   });
+
+  /// Unique identifier for the product.
   final String id;
+
+  /// English name of the product.
   final String name;
+
+  /// Khmer name of the product.
   final String? nameKhmer;
+
+  /// English description of the product.
   final String? description;
+
+  /// Khmer description of the product.
   final String? descriptionKhmer;
+
+  /// Retail price in KHR.
   final double priceKHR;
+
+  /// Retail price in USD.
   final double? priceUSD;
+
+  /// Current available stock quantity.
   final int stockQuantity;
+
+  /// Threshold for low stock warning.
   final int lowStockThreshold;
+
+  /// URL of the product image.
   final String? imageUrl;
+
+  /// Product category name.
   final String? category;
 
   /// Get stock status based on quantity
@@ -70,6 +93,7 @@ class ProductCardData {
 /// )
 /// ```
 class ProductCard extends StatefulWidget {
+  /// Creates a [ProductCard].
   const ProductCard({
     required this.product,
     super.key,
@@ -256,7 +280,7 @@ class _ProductCardState extends State<ProductCard>
                           end: Alignment.bottomCenter,
                           colors: [
                             Colors.transparent,
-                            AppColors.surface.withOpacity(0.9),
+                            AppColors.surface.withValues(alpha: 0.9),
                           ],
                         ),
                       ),
@@ -290,7 +314,7 @@ class _ProductCardState extends State<ProductCard>
                 if (widget.product.stockStatus == StockStatus.outOfStock)
                   Positioned.fill(
                     child: ColoredBox(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       child: Center(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
@@ -344,7 +368,7 @@ class _ProductCardState extends State<ProductCard>
       child: Icon(
         Icons.shopping_bag_outlined,
         size: 48,
-        color: AppColors.textHint.withOpacity(0.5),
+        color: AppColors.textHint.withValues(alpha: 0.5),
       ),
     );
   }
@@ -514,12 +538,16 @@ class _ProductCardState extends State<ProductCard>
 
 /// Shimmer loading placeholder for ProductCard
 class ProductCardShimmer extends StatelessWidget {
+  /// Creates a [ProductCardShimmer].
   const ProductCardShimmer({
     super.key,
     this.width,
     this.height,
   });
+  /// Shimmer width.
   final double? width;
+
+  /// Shimmer height.
   final double? height;
 
   @override
@@ -528,8 +556,8 @@ class ProductCardShimmer extends StatelessWidget {
     final cardHeight = height ?? AppSpacing.productCardHeight;
 
     return Shimmer.fromColors(
-      baseColor: AppColors.border.withOpacity(0.3),
-      highlightColor: AppColors.border.withOpacity(0.1),
+      baseColor: AppColors.border.withValues(alpha: 0.3),
+      highlightColor: AppColors.border.withValues(alpha: 0.1),
       child: SizedBox(
         width: cardWidth,
         height: cardHeight,

@@ -1,8 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/domain/entities/category.dart';
 import 'package:khmerbiz_pos/domain/entities/product.dart';
@@ -11,6 +9,7 @@ import 'package:khmerbiz_pos/domain/repositories/product_repository.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_bloc.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_event.dart';
 import 'package:khmerbiz_pos/features/products/presentation/bloc/product_state.dart';
+import 'package:mocktail/mocktail.dart';
 
 // ── Mocks ──────────────────────────────────────────────────────────────────
 
@@ -31,7 +30,6 @@ final _testProduct = Product(
   retailPrice: 10000,
   costPrice: 5000,
   stock: 10,
-  lowStockThreshold: 5,
   updatedAt: _now,
   createdAt: _now,
 );
@@ -43,19 +41,17 @@ final _lowStockProduct = Product(
   retailPrice: 8000,
   costPrice: 4000,
   stock: 2,
-  lowStockThreshold: 5,
   updatedAt: _now,
   createdAt: _now,
 );
 
-final _testCategory = Category(
+const _testCategory = Category(
   id: 'cat1',
   nameKh: 'ភេសជ្ជៈ',
   nameEn: 'Beverages',
-  isActive: true,
 );
 
-final _validInput = ProductInput(
+const _validInput = ProductInput(
   nameKh: 'កាហ្វេថ្មី',
   nameEn: 'New Coffee',
   retailPrice: 12000,
@@ -154,7 +150,7 @@ void main() {
             .thenAnswer((_) async => Right(_testProduct));
         return productBloc;
       },
-      act: (bloc) => bloc.add(AddProduct(input: _validInput)),
+      act: (bloc) => bloc.add(const AddProduct(input: _validInput)),
       expect: () => [
         isA<ProductSaved>()
             .having((s) => s.product.id, 'product id', 'p1'),
@@ -168,7 +164,7 @@ void main() {
             .thenAnswer((_) async => Left(CacheFailure.defaultError()));
         return productBloc;
       },
-      act: (bloc) => bloc.add(AddProduct(input: _validInput)),
+      act: (bloc) => bloc.add(const AddProduct(input: _validInput)),
       expect: () => [isA<ProductsError>()],
     );
   });
@@ -184,7 +180,7 @@ void main() {
         return productBloc;
       },
       act: (bloc) =>
-          bloc.add(UpdateProduct(id: 'p1', input: _validInput)),
+          bloc.add(const UpdateProduct(id: 'p1', input: _validInput)),
       expect: () => [
         isA<ProductSaved>()
             .having((s) => s.product.id, 'product id', 'p1'),
@@ -199,7 +195,7 @@ void main() {
         return productBloc;
       },
       act: (bloc) =>
-          bloc.add(UpdateProduct(id: 'p1', input: _validInput)),
+          bloc.add(const UpdateProduct(id: 'p1', input: _validInput)),
       expect: () => [isA<ProductsError>()],
     );
   });
@@ -259,7 +255,7 @@ void main() {
         when(() => mockRepo.watchAllActiveProducts())
             .thenAnswer((_) => Stream.value(Right([_testProduct, _lowStockProduct])));
         when(() => mockRepo.watchActiveCategories())
-            .thenAnswer((_) => Stream.value(Right([_testCategory])));
+            .thenAnswer((_) => Stream.value(const Right([_testCategory])));
         return productBloc;
       },
       act: (bloc) => bloc.add(const LoadProducts()),
@@ -270,7 +266,7 @@ void main() {
             .having((s) => s.products.length, 'product count', 2)
             .having((s) => s.categories.length, 'category count', 1)
             .having(
-                (s) => s.lowStockAlerts.length, 'low stock count', 1),
+                (s) => s.lowStockAlerts.length, 'low stock count', 1,),
       ],
     );
 
@@ -280,7 +276,7 @@ void main() {
         when(() => mockRepo.watchProductsByCategory('cat1'))
             .thenAnswer((_) => Stream.value(Right([_testProduct])));
         when(() => mockRepo.watchActiveCategories())
-            .thenAnswer((_) => Stream.value(Right([_testCategory])));
+            .thenAnswer((_) => Stream.value(const Right([_testCategory])));
         return productBloc;
       },
       act: (bloc) => bloc.add(const LoadProducts(categoryId: 'cat1')),
@@ -290,7 +286,7 @@ void main() {
         isA<ProductsLoaded>()
             .having((s) => s.products.length, 'product count', 1)
             .having(
-                (s) => s.selectedCategoryId, 'selected category', 'cat1'),
+                (s) => s.selectedCategoryId, 'selected category', 'cat1',),
       ],
     );
   });

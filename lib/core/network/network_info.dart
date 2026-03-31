@@ -19,18 +19,35 @@ abstract class NetworkInfo {
 }
 
 /// Connection type enum.
+/// Represents different types of network connections.
 enum ConnectionType {
+  /// No network connection available
   none,
+
+  /// Connected via WiFi
   wifi,
+
+  /// Connected via cellular data
   mobile,
+
+  /// Connected via ethernet cable
   ethernet,
+
+  /// Connected via bluetooth tethering
   bluetooth,
+
+  /// Connected via Virtual Private Network
   vpn,
+
+  /// Connection status cannot be determined
   unknown,
 }
 
 /// Implementation of [NetworkInfo] using `connectivity_plus`.
 final class NetworkInfoImpl implements NetworkInfo {
+  /// Creates a new [NetworkInfoImpl].
+  ///
+  /// [connectivity] - Optional [Connectivity] instance for testing
   NetworkInfoImpl({Connectivity? connectivity})
       : _connectivity = connectivity ?? Connectivity();
   final Connectivity _connectivity;
@@ -77,12 +94,15 @@ final class NetworkInfoImpl implements NetworkInfo {
 
   ConnectionType _mapResults(List<ConnectivityResult> results) {
     if (results.contains(ConnectivityResult.wifi)) return ConnectionType.wifi;
-    if (results.contains(ConnectivityResult.mobile))
+    if (results.contains(ConnectivityResult.mobile)) {
       return ConnectionType.mobile;
-    if (results.contains(ConnectivityResult.ethernet))
+    }
+    if (results.contains(ConnectivityResult.ethernet)) {
       return ConnectionType.ethernet;
-    if (results.contains(ConnectivityResult.bluetooth))
+    }
+    if (results.contains(ConnectivityResult.bluetooth)) {
       return ConnectionType.bluetooth;
+    }
     if (results.contains(ConnectivityResult.vpn)) return ConnectionType.vpn;
     if (results.contains(ConnectivityResult.none)) return ConnectionType.none;
     return ConnectionType.unknown;
@@ -91,33 +111,42 @@ final class NetworkInfoImpl implements NetworkInfo {
   @override
   Stream<ConnectionType> get onConnectivityChanged {
     return _connectivity.onConnectivityChanged
-        .map<ConnectionType>((List<ConnectivityResult> results) {
-      return _mapResults(results);
-    });
+        .map<ConnectionType>(_mapResults);
   }
 }
 
-/// Network monitor that can be used to track connectivity state.
+/// Network monitor that tracks and provides synchronous access to connectivity state.
 final class NetworkMonitor {
+  /// Creates a new [NetworkMonitor].
+  ///
+  /// [_networkInfo] - The [NetworkInfo] source to monitor
   NetworkMonitor(this._networkInfo);
   final NetworkInfo _networkInfo;
 
   ConnectionType _currentConnectionType = ConnectionType.unknown;
   bool _isInitialized = false;
 
+  /// The current active connection type
   ConnectionType get currentConnectionType => _currentConnectionType;
 
+  /// Whether the device has any internet connection
   bool get isConnected =>
       _currentConnectionType != ConnectionType.none &&
       _currentConnectionType != ConnectionType.unknown;
 
+  /// Whether the device is connected via WiFi
   bool get isWifiConnected => _currentConnectionType == ConnectionType.wifi;
 
+  /// Whether the device is connected via mobile data
   bool get isMobileDataConnected =>
       _currentConnectionType == ConnectionType.mobile;
 
+  /// Whether the monitor has been initialized with the current state
   bool get isInitialized => _isInitialized;
 
+  /// Initializes the monitor with the current connection state.
+  ///
+  /// Starts listening to connectivity changes.
   Future<void> initialize() async {
     _currentConnectionType = await _networkInfo.connectionType;
     _isInitialized = true;
@@ -127,6 +156,7 @@ final class NetworkMonitor {
     });
   }
 
+  /// Ensures a connection is available, throwing an exception otherwise.
   Future<void> requireConnection() async {
     if (!_isInitialized) {
       await initialize();
@@ -137,6 +167,7 @@ final class NetworkMonitor {
     }
   }
 
+  /// Gets a human-readable status message in English.
   String getStatusMessage() {
     return switch (_currentConnectionType) {
       ConnectionType.none => 'No internet connection',
@@ -149,6 +180,7 @@ final class NetworkMonitor {
     };
   }
 
+  /// Gets a human-readable status message in Khmer.
   String getStatusMessageKhmer() {
     return switch (_currentConnectionType) {
       ConnectionType.none => 'គ្មានការតភ្ជាប់អ៊ីនធឺណិត',

@@ -1,5 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
+import 'package:screen_brightness/screen_brightness.dart';
 
 import 'package:khmerbiz_pos/core/theme/app_colors.dart';
 import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
@@ -8,8 +11,8 @@ import 'package:khmerbiz_pos/core/utils/currency_formatter.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_state.dart';
-import 'package:khmerbiz_pos/features/payment/presentation/widgets/qr_code_widget.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/widgets/payment_countdown_ring.dart';
+import 'package:khmerbiz_pos/features/payment/presentation/widgets/qr_code_widget.dart';
 
 /// Full-screen KHQR payment bottom sheet.
 ///
@@ -31,16 +34,19 @@ import 'package:khmerbiz_pos/features/payment/presentation/widgets/payment_count
 ///   ),
 /// );
 /// ```
-class KhqrPaymentSheet extends StatelessWidget {
+class KhqrPaymentSheet extends StatefulWidget {
   const KhqrPaymentSheet({
-    super.key,
     required this.amountKHR,
     required this.invoiceId,
+    super.key,
     this.onPaymentConfirmed,
     this.onPaymentCancelled,
   });
 
+  /// Total amount in KHR to be paid.
   final double amountKHR;
+
+  /// Unique invoice or receipt identifier.
   final String invoiceId;
 
   /// Callback when payment is confirmed — parent should process checkout.
@@ -50,20 +56,65 @@ class KhqrPaymentSheet extends StatelessWidget {
   final VoidCallback? onPaymentCancelled;
 
   @override
+  State<KhqrPaymentSheet> createState() => _KhqrPaymentSheetState();
+}
+
+class _KhqrPaymentSheetState extends State<KhqrPaymentSheet>
+    with SingleTickerProviderStateMixin {
+  double? _originalBrightness;
+  late AnimationController _pulseController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(reverse: true);
+    _boostBrightness();
+  }
+
+  @override
+  void dispose() {
+    _restoreBrightness();
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _boostBrightness() async {
+    try {
+      _originalBrightness = await ScreenBrightness().current;
+      await ScreenBrightness().setScreenBrightness(1.0);
+    } catch (e) {
+      debugPrint('Error boosting brightness: $e');
+    }
+  }
+
+  Future<void> _restoreBrightness() async {
+    try {
+      if (_originalBrightness != null) {
+        await ScreenBrightness().setScreenBrightness(_originalBrightness!);
+      }
+    } catch (e) {
+      debugPrint('Error restoring brightness: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocConsumer<PaymentBloc, PaymentState>(
       listener: (context, state) {
         if (state is PaymentConfirmed) {
           // Auto-close after 2 seconds on success
           Future.delayed(const Duration(seconds: 2), () {
-            if (context.mounted) {
+            if (mounted) {
               Navigator.of(context).pop();
-              onPaymentConfirmed?.call(state.reference, state.md5Hash);
+              widget.onPaymentConfirmed?.call(state.reference, state.md5Hash);
             }
           });
         } else if (state is PaymentCancelled) {
           Navigator.of(context).pop();
-          onPaymentCancelled?.call();
+          widget.onPaymentCancelled?.call();
         }
       },
       builder: (context, state) {
@@ -141,13 +192,9 @@ class KhqrPaymentSheet extends StatelessWidget {
       padding: const EdgeInsets.all(AppSpacing.base),
       child: Row(
         children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: statusColor,
-              shape: BoxShape.circle,
-            ),
+          StatusPulsingIndicator(
+            color: statusColor,
+            animation: _pulseController,
           ),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
@@ -174,14 +221,14 @@ class KhqrPaymentSheet extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                amountKHR.formatKHR,
+                widget.amountKHR.formatKHR,
                 style: AppTextStyles.priceDisplay.copyWith(
                   color: AppColors.textPrimary,
                   fontSize: 18,
                 ),
               ),
               Text(
-                amountKHR.formatUSD,
+                widget.amountKHR.formatUSD,
                 style: AppTextStyles.priceSub.copyWith(
                   color: AppColors.textSecondary,
                 ),
@@ -236,7 +283,7 @@ class KhqrPaymentSheet extends StatelessWidget {
   // ── Awaiting Confirmation State ─────────────────────────────────────────
 
   Widget _buildAwaitingState(
-      BuildContext context, PaymentAwaitingConfirmation state) {
+      BuildContext context, PaymentAwaitingConfirmation state,) {
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.base),
       child: Column(
@@ -282,10 +329,12 @@ class KhqrPaymentSheet extends StatelessWidget {
             child: Column(
               children: [
                 _buildInfoRow(
-                    'Invoice / វិក្កយបត្រ', state.khqrData.invoiceId),
+                    'Invoice / វិក្កយបត្រ', state.khqrData.invoiceId,),
                 const SizedBox(height: AppSpacing.xs),
                 _buildInfoRow(
-                    'Amount / ចំនួន', amountKHR.formatDual),
+            'Amount / ចំនួន',
+            widget.amountKHR.formatDual,
+          ),
                 const SizedBox(height: AppSpacing.xs),
                 _buildInfoRow(
                   'Poll attempts / ការពិនិត្យ',
@@ -326,7 +375,7 @@ class KhqrPaymentSheet extends StatelessWidget {
   // ── Confirmed State ─────────────────────────────────────────────────────
 
   Widget _buildConfirmedState(
-      BuildContext context, PaymentConfirmed state) {
+      BuildContext context, PaymentConfirmed state,) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -393,7 +442,7 @@ class KhqrPaymentSheet extends StatelessWidget {
   // ── Timed Out State ─────────────────────────────────────────────────────
 
   Widget _buildTimedOutState(
-      BuildContext context, PaymentTimedOut state) {
+      BuildContext context, PaymentTimedOut state,) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xl),
@@ -403,7 +452,7 @@ class KhqrPaymentSheet extends StatelessWidget {
             Container(
               width: 96,
               height: 96,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.warningLight,
                 shape: BoxShape.circle,
               ),
@@ -502,48 +551,70 @@ class KhqrPaymentSheet extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 96,
-              height: 96,
+              width: 120,
+              height: 120,
               decoration: BoxDecoration(
-                color: AppColors.warningLight,
+                color: AppColors.warning.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(
-                Icons.wifi_off,
+                Icons.cloud_off,
                 color: AppColors.warning,
                 size: 64,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),
             Text(
-              'No Internet Connection',
+              'Network Interrupted',
               style: AppTextStyles.headlineLarge.copyWith(
                 color: AppColors.warning,
               ),
             ),
             const SizedBox(height: AppSpacing.xs),
             Text(
-              'គ្មានការតភ្ជាប់អ៊ីនធឺណិត',
+              'ការតភ្ជាប់ត្រូវបានបង្អាក់',
               style: AppTextStyles.headlineMedium.copyWith(
                 color: AppColors.warning,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.md),
             Text(
-              'KHQR requires internet to generate QR codes.\n'
-              'Please check your connection and try again.',
+              'Bakong systems require a stable connection to verify transactions. Polling will resume automatically when online.',
               textAlign: TextAlign.center,
               style: AppTextStyles.bodyMedium.copyWith(
                 color: AppColors.textSecondary,
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              'Tip: Switch to Cash payment for offline transactions.',
-              textAlign: TextAlign.center,
-              style: AppTextStyles.bodySmall.copyWith(
-                color: AppColors.textHint,
-                fontStyle: FontStyle.italic,
+            const SizedBox(height: AppSpacing.lg),
+            // Offline Action Card
+            Container(
+              padding: const EdgeInsets.all(AppSpacing.base),
+              decoration: BoxDecoration(
+                color: AppColors.surfaceAlt,
+                borderRadius: BorderRadius.circular(AppSpacing.md),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      const Icon(Icons.lightbulb_outline,
+                          color: AppColors.info, size: 20),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        'What can you do?',
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.sm),
+                  _buildOfflineTip('1. Check your Wi-Fi or Mobile Data.'),
+                  _buildOfflineTip('2. Ask customer to wait a moment.'),
+                  _buildOfflineTip('3. Switch to Cash if urgent.'),
+                ],
               ),
             ),
           ],
@@ -552,10 +623,30 @@ class KhqrPaymentSheet extends StatelessWidget {
     );
   }
 
+  Widget _buildOfflineTip(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('• ', style: TextStyle(color: AppColors.textHint)),
+          Expanded(
+            child: Text(
+              text,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ── Deep Link State ─────────────────────────────────────────────────────
 
   Widget _buildDeepLinkState(
-      BuildContext context, PaymentDeepLinkLaunched state) {
+      BuildContext context, PaymentDeepLinkLaunched state,) {
     final appName = state.method.name.toUpperCase();
     return Center(
       child: Padding(
@@ -605,7 +696,7 @@ class KhqrPaymentSheet extends StatelessWidget {
           PaymentFailed() => _buildRetryAndCancelButtons(context),
           PaymentConfirmed() => const SizedBox(height: AppSpacing.base),
           PaymentDeepLinkLaunched() =>
-            _buildDeepLinkActions(context, state as PaymentDeepLinkLaunched),
+            _buildDeepLinkActions(context, state),
           _ => _buildCancelButton(context),
         },
       ),
@@ -677,7 +768,7 @@ class KhqrPaymentSheet extends StatelessWidget {
   }
 
   Widget _buildDeepLinkActions(
-      BuildContext context, PaymentDeepLinkLaunched state) {
+      BuildContext context, PaymentDeepLinkLaunched state,) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -688,9 +779,10 @@ class KhqrPaymentSheet extends StatelessWidget {
             onPressed: () {
               // Manual confirmation — user confirms payment was made
               context.read<PaymentBloc>().add(
-                    ConfirmManualPayment(
-                      reference:
-                          '${state.method.name.toUpperCase()}-MANUAL-${DateTime.now().millisecondsSinceEpoch}',
+                    MarkManualPayment(
+                      method: state.method,
+                      notes:
+                          'Manual confirmation after ${state.method.name.toUpperCase()} deep-link launch.',
                     ),
                   );
             },
@@ -701,7 +793,7 @@ class KhqrPaymentSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppSpacing.sm),
               ),
             ),
-            child: const Text('I\'ve Paid / ខ្ញុំបានបង់រួចហើយ'),
+            child: const Text("I've Paid / ខ្ញុំបានបង់រួចហើយ"),
           ),
         ),
         const SizedBox(height: AppSpacing.sm),
@@ -748,6 +840,60 @@ class KhqrPaymentSheet extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DoubleProperty('amountKHR', widget.amountKHR));
+    properties.add(StringProperty('invoiceId', widget.invoiceId));
+    properties.add(ObjectFlagProperty<
+            void Function(String reference, String md5Hash)?>.has(
+        'onPaymentConfirmed', widget.onPaymentConfirmed));
+    properties.add(ObjectFlagProperty<VoidCallback?>.has(
+        'onPaymentCancelled', widget.onPaymentCancelled));
+  }
+}
+
+/// A pulsing dot indicator for status.
+class StatusPulsingIndicator extends StatelessWidget {
+  const StatusPulsingIndicator({
+    required this.color,
+    required this.animation,
+    super.key,
+  });
+
+  final Color color;
+  final Animation<double> animation;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: animation,
+      builder: (context, child) {
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              width: 16 * (1 + animation.value * 0.5),
+              height: 16 * (1 + animation.value * 0.5),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.3 * (1 - animation.value)),
+                shape: BoxShape.circle,
+              ),
+            ),
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

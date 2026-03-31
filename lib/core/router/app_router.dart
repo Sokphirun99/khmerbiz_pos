@@ -1,14 +1,15 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:khmerbiz_pos/storybook/storybook_screen.dart';
-import 'package:khmerbiz_pos/features/products/presentation/screens/product_list_screen.dart';
-import 'package:khmerbiz_pos/features/products/presentation/screens/add_edit_product_screen.dart';
-import 'package:khmerbiz_pos/features/products/presentation/screens/product_detail_screen.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/screens/inventory_screen.dart';
 import 'package:khmerbiz_pos/features/inventory/presentation/widgets/stock_adjustment_sheet.dart';
-import 'package:khmerbiz_pos/domain/entities/product.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/add_edit_product_screen.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/product_detail_screen.dart';
+import 'package:khmerbiz_pos/features/products/presentation/screens/product_list_screen.dart';
+import 'package:khmerbiz_pos/features/settings/presentation/screens/settings_screen.dart';
+import 'package:khmerbiz_pos/storybook/storybook_screen.dart';
+
 
 /// App router configuration using go_router.
 ///
@@ -128,35 +129,97 @@ final class AppRouter {
   // ROUTE NAMES
   // ═══════════════════════════════════════════════════════════════════════════
 
+  /// Name for splash screen route
   static const String splashName = 'splash';
+
+  /// Name for login screen route
   static const String loginName = 'login';
+
+  /// Name for register screen route
   static const String registerName = 'register';
+
+  /// Name for forgot password screen route
   static const String forgotPasswordName = 'forgot-password';
+
+  /// Name for home screen route
   static const String homeName = 'home';
+
+  /// Name for POS screen route
   static const String posName = 'pos';
+
+  /// Name for products list route
   static const String productsName = 'products';
+
+  /// Name for product detail route
   static const String productDetailName = 'product-detail';
+
+  /// Name for add product route
   static const String productAddName = 'product-add';
+
+  /// Name for edit product route
   static const String productEditName = 'product-edit';
+
+  /// Name for inventory screen route
   static const String inventoryName = 'inventory';
+
+  /// Name for stock adjustment route
   static const String stockAdjustmentName = 'stock-adjustment';
+
+  /// Alias for stock adjustment name for compatibility
+  static const String inventoryAdjustName = stockAdjustmentName;
+
+  /// Name for transactions list route
   static const String transactionsName = 'transactions';
+
+  /// Name for transaction detail route
   static const String transactionDetailName = 'transaction-detail';
+
+  /// Name for cart screen route
   static const String cartName = 'cart';
+
+  /// Name for checkout screen route
   static const String checkoutName = 'checkout';
+
+  /// Name for payment screen route
   static const String paymentName = 'payment';
+
+  /// Name for receipt screen route
   static const String receiptName = 'receipt';
+
+  /// Name for customers list route
   static const String customersName = 'customers';
+
+  /// Name for customer detail route
   static const String customerDetailName = 'customer-detail';
+
+  /// Name for add customer route
   static const String customerAddName = 'customer-add';
+
+  /// Name for reports screen route
   static const String reportsName = 'reports';
+
+  /// Name for sales report route
   static const String salesReportName = 'sales-report';
+
+  /// Name for inventory report route
   static const String inventoryReportName = 'inventory-report';
+
+  /// Name for settings screen route
   static const String settingsName = 'settings';
+
+  /// Name for business settings route
   static const String settingsBusinessName = 'settings-business';
+
+  /// Name for printer settings route
   static const String settingsPrinterName = 'settings-printer';
+
+  /// Name for language settings route
   static const String settingsLanguageName = 'settings-language';
+
+  /// Name for about screen route
   static const String aboutName = 'about';
+
+  /// Name for storybook screen route
   static const String storybookName = 'storybook';
 
   /// Create the GoRouter configuration.
@@ -366,7 +429,8 @@ final class AppRouter {
             GoRoute(
               path: settings,
               name: settingsName,
-              builder: (context, state) => const PlaceholderSettingsScreen(),
+              builder: (context, state) => const SettingsScreen(),
+
               routes: [
                 GoRoute(
                   path: 'business',
@@ -460,7 +524,7 @@ final class AppRouter {
   /// Example:
   /// ```dart
   /// final router = AppRouter.createRouter(
-  ///   redirect: AppRouter.authRedirect(isLoggedIn),
+  ///   redirect: AppRouter.authRedirect(() => isLoggedIn),
   /// );
   /// ```
   static Future<String?> Function(BuildContext, GoRouterState) authRedirect(
@@ -498,7 +562,9 @@ final class AppRouter {
 // These will be replaced with actual screens in subsequent prompts
 // ═══════════════════════════════════════════════════════════════════════════════
 
+/// Temporary placeholder for the Splash screen.
 class PlaceholderSplashScreen extends StatelessWidget {
+  /// Creates a [PlaceholderSplashScreen].
   const PlaceholderSplashScreen({super.key});
 
   @override
@@ -518,7 +584,9 @@ class PlaceholderSplashScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Login screen.
 class PlaceholderLoginScreen extends StatelessWidget {
+  /// Creates a [PlaceholderLoginScreen].
   const PlaceholderLoginScreen({super.key});
 
   @override
@@ -530,7 +598,9 @@ class PlaceholderLoginScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Register screen.
 class PlaceholderRegisterScreen extends StatelessWidget {
+  /// Creates a [PlaceholderRegisterScreen].
   const PlaceholderRegisterScreen({super.key});
 
   @override
@@ -542,7 +612,9 @@ class PlaceholderRegisterScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Forgot Password screen.
 class PlaceholderForgotPasswordScreen extends StatelessWidget {
+  /// Creates a [PlaceholderForgotPasswordScreen].
   const PlaceholderForgotPasswordScreen({super.key});
 
   @override
@@ -556,8 +628,11 @@ class PlaceholderForgotPasswordScreen extends StatelessWidget {
   }
 }
 
+/// Main layout scaffold for authenticated users.
 class PlaceholderMainScaffold extends StatelessWidget {
+  /// Creates a [PlaceholderMainScaffold] with a [child] widget.
   const PlaceholderMainScaffold({required this.child, super.key});
+  /// The main content area of the scaffold
   final Widget child;
 
   @override
@@ -603,7 +678,9 @@ class PlaceholderMainScaffold extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Home screen.
 class PlaceholderHomeScreen extends StatelessWidget {
+  /// Creates a [PlaceholderHomeScreen].
   const PlaceholderHomeScreen({super.key});
 
   @override
@@ -615,7 +692,9 @@ class PlaceholderHomeScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the POS screen.
 class PlaceholderPOSScreen extends StatelessWidget {
+  /// Creates a [PlaceholderPOSScreen].
   const PlaceholderPOSScreen({super.key});
 
   @override
@@ -627,7 +706,9 @@ class PlaceholderPOSScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Products list screen.
 class PlaceholderProductsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderProductsScreen].
   const PlaceholderProductsScreen({super.key});
 
   @override
@@ -643,8 +724,11 @@ class PlaceholderProductsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Product Detail screen.
 class PlaceholderProductDetailScreen extends StatelessWidget {
+  /// Creates a [PlaceholderProductDetailScreen] for [productId].
   const PlaceholderProductDetailScreen({required this.productId, super.key});
+  /// The unique identifier of the product to display
   final String productId;
 
   @override
@@ -662,7 +746,9 @@ class PlaceholderProductDetailScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Product Form screen.
 class PlaceholderProductFormScreen extends StatelessWidget {
+  /// Creates a [PlaceholderProductFormScreen].
   const PlaceholderProductFormScreen({super.key});
 
   @override
@@ -674,7 +760,9 @@ class PlaceholderProductFormScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Inventory screen.
 class PlaceholderInventoryScreen extends StatelessWidget {
+  /// Creates a [PlaceholderInventoryScreen].
   const PlaceholderInventoryScreen({super.key});
 
   @override
@@ -686,7 +774,9 @@ class PlaceholderInventoryScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Stock Adjustment screen.
 class PlaceholderStockAdjustmentScreen extends StatelessWidget {
+  /// Creates a [PlaceholderStockAdjustmentScreen].
   const PlaceholderStockAdjustmentScreen({super.key});
 
   @override
@@ -698,7 +788,9 @@ class PlaceholderStockAdjustmentScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Transactions list screen.
 class PlaceholderTransactionsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderTransactionsScreen].
   const PlaceholderTransactionsScreen({super.key});
 
   @override
@@ -710,11 +802,14 @@ class PlaceholderTransactionsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Transaction Detail screen.
 class PlaceholderTransactionDetailScreen extends StatelessWidget {
+  /// Creates a [PlaceholderTransactionDetailScreen] for [transactionId].
   const PlaceholderTransactionDetailScreen({
     required this.transactionId,
     super.key,
   });
+  /// The unique identifier of the transaction to display
   final String transactionId;
 
   @override
@@ -732,7 +827,9 @@ class PlaceholderTransactionDetailScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Cart screen.
 class PlaceholderCartScreen extends StatelessWidget {
+  /// Creates a [PlaceholderCartScreen].
   const PlaceholderCartScreen({super.key});
 
   @override
@@ -744,7 +841,9 @@ class PlaceholderCartScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Checkout screen.
 class PlaceholderCheckoutScreen extends StatelessWidget {
+  /// Creates a [PlaceholderCheckoutScreen].
   const PlaceholderCheckoutScreen({super.key});
 
   @override
@@ -756,7 +855,9 @@ class PlaceholderCheckoutScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Payment screen.
 class PlaceholderPaymentScreen extends StatelessWidget {
+  /// Creates a [PlaceholderPaymentScreen].
   const PlaceholderPaymentScreen({super.key});
 
   @override
@@ -768,8 +869,11 @@ class PlaceholderPaymentScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Receipt screen.
 class PlaceholderReceiptScreen extends StatelessWidget {
+  /// Creates a [PlaceholderReceiptScreen] for [transactionId].
   const PlaceholderReceiptScreen({required this.transactionId, super.key});
+  /// The unique identifier of the transaction for the receipt
   final String transactionId;
 
   @override
@@ -787,7 +891,9 @@ class PlaceholderReceiptScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Customers list screen.
 class PlaceholderCustomersScreen extends StatelessWidget {
+  /// Creates a [PlaceholderCustomersScreen].
   const PlaceholderCustomersScreen({super.key});
 
   @override
@@ -803,8 +909,11 @@ class PlaceholderCustomersScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Customer Detail screen.
 class PlaceholderCustomerDetailScreen extends StatelessWidget {
+  /// Creates a [PlaceholderCustomerDetailScreen] for [customerId].
   const PlaceholderCustomerDetailScreen({required this.customerId, super.key});
+  /// The unique identifier of the customer to display
   final String customerId;
 
   @override
@@ -822,7 +931,9 @@ class PlaceholderCustomerDetailScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Customer Form screen.
 class PlaceholderCustomerFormScreen extends StatelessWidget {
+  /// Creates a [PlaceholderCustomerFormScreen].
   const PlaceholderCustomerFormScreen({super.key});
 
   @override
@@ -834,7 +945,9 @@ class PlaceholderCustomerFormScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Reports screen.
 class PlaceholderReportsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderReportsScreen].
   const PlaceholderReportsScreen({super.key});
 
   @override
@@ -846,7 +959,9 @@ class PlaceholderReportsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Sales Report screen.
 class PlaceholderSalesReportScreen extends StatelessWidget {
+  /// Creates a [PlaceholderSalesReportScreen].
   const PlaceholderSalesReportScreen({super.key});
 
   @override
@@ -858,7 +973,9 @@ class PlaceholderSalesReportScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Inventory Report screen.
 class PlaceholderInventoryReportScreen extends StatelessWidget {
+  /// Creates a [PlaceholderInventoryReportScreen].
   const PlaceholderInventoryReportScreen({super.key});
 
   @override
@@ -870,34 +987,12 @@ class PlaceholderInventoryReportScreen extends StatelessWidget {
   }
 }
 
-class PlaceholderSettingsScreen extends StatelessWidget {
-  const PlaceholderSettingsScreen({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Settings Screen - To be implemented'),
-            if (kDebugMode) ...[
-              const SizedBox(height: 32),
-              ElevatedButton.icon(
-                icon: const Icon(Icons.developer_mode),
-                label: const Text('Developer Storybook'),
-                onPressed: () => context.go(AppRouter.storybook),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-}
 
+
+/// Temporary placeholder for the Business Settings screen.
 class PlaceholderBusinessSettingsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderBusinessSettingsScreen].
   const PlaceholderBusinessSettingsScreen({super.key});
 
   @override
@@ -909,7 +1004,9 @@ class PlaceholderBusinessSettingsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Printer Settings screen.
 class PlaceholderPrinterSettingsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderPrinterSettingsScreen].
   const PlaceholderPrinterSettingsScreen({super.key});
 
   @override
@@ -921,7 +1018,9 @@ class PlaceholderPrinterSettingsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the Language Settings screen.
 class PlaceholderLanguageSettingsScreen extends StatelessWidget {
+  /// Creates a [PlaceholderLanguageSettingsScreen].
   const PlaceholderLanguageSettingsScreen({super.key});
 
   @override
@@ -933,7 +1032,9 @@ class PlaceholderLanguageSettingsScreen extends StatelessWidget {
   }
 }
 
+/// Temporary placeholder for the About screen.
 class PlaceholderAboutScreen extends StatelessWidget {
+  /// Creates a [PlaceholderAboutScreen].
   const PlaceholderAboutScreen({super.key});
 
   @override

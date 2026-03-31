@@ -22,6 +22,7 @@ abstract class UseCase<Type, Params> {
 
 /// Use case for no parameters.
 class NoParams extends Equatable {
+  /// Creates [NoParams].
   const NoParams();
 
   @override

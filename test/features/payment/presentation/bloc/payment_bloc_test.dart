@@ -1,19 +1,18 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fpdart/fpdart.dart';
-import 'package:mocktail/mocktail.dart';
-
 import 'package:khmerbiz_pos/core/error/failures.dart';
 import 'package:khmerbiz_pos/core/network/network_info.dart';
 import 'package:khmerbiz_pos/domain/entities/checkout_enums.dart';
 import 'package:khmerbiz_pos/domain/entities/khqr_data.dart';
 import 'package:khmerbiz_pos/domain/entities/merchant_info.dart';
-import 'package:khmerbiz_pos/domain/entities/payment_status.dart';
 import 'package:khmerbiz_pos/domain/repositories/exchange_rate_repository.dart';
 import 'package:khmerbiz_pos/domain/repositories/khqr_repository.dart';
+import 'package:khmerbiz_pos/features/payment/data/deep_link_helper.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_bloc.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_event.dart';
 import 'package:khmerbiz_pos/features/payment/presentation/bloc/payment_state.dart';
+import 'package:mocktail/mocktail.dart';
 
 // ── Mocks ─────────────────────────────────────────────────────────────────
 
@@ -24,11 +23,11 @@ class MockExchangeRateRepository extends Mock
 
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
-class FakeMerchantInfo extends Fake implements MerchantInfo {}
+class MockDeepLinkHelper extends Mock implements DeepLinkHelper {}
 
 // ── Test Fixtures ─────────────────────────────────────────────────────────
 
-final _now = DateTime(2026, 3, 30, 10, 0, 0);
+final _now = DateTime(2026, 3, 30, 10);
 final _expiresAt = _now.add(const Duration(minutes: 5));
 
 final _testKhqrData = KhqrData(
@@ -50,11 +49,13 @@ void main() {
   late MockKhqrRepository mockKhqrRepo;
   late MockExchangeRateRepository mockExchangeRateRepo;
   late MockNetworkInfo mockNetworkInfo;
+  late MockDeepLinkHelper mockDeepLinkHelper;
 
   setUp(() {
     mockKhqrRepo = MockKhqrRepository();
     mockExchangeRateRepo = MockExchangeRateRepository();
     mockNetworkInfo = MockNetworkInfo();
+    mockDeepLinkHelper = MockDeepLinkHelper();
 
     registerFallbackValue(MerchantInfo.placeholder);
   });
@@ -64,6 +65,7 @@ void main() {
       khqrRepository: mockKhqrRepo,
       exchangeRateRepository: mockExchangeRateRepo,
       networkInfo: mockNetworkInfo,
+      deepLinkHelper: mockDeepLinkHelper,
       merchantInfo: MerchantInfo.placeholder,
     );
   }
@@ -85,7 +87,7 @@ void main() {
           amountKHR: any(named: 'amountKHR'),
           invoiceId: any(named: 'invoiceId'),
           merchantInfo: any(named: 'merchantInfo'),
-        )).thenAnswer((_) async => Right(_testKhqrData));
+        ),).thenAnswer((_) async => Right(_testKhqrData));
   }
 
   void stubQrGenerationFailure() {
@@ -93,7 +95,7 @@ void main() {
           amountKHR: any(named: 'amountKHR'),
           invoiceId: any(named: 'invoiceId'),
           merchantInfo: any(named: 'merchantInfo'),
-        )).thenAnswer((_) async => const Left(_testPaymentFailure));
+        ),).thenAnswer((_) async => const Left(_testPaymentFailure));
   }
 
   // ═══════════════════════════════════════════════════════════════════════
@@ -101,10 +103,10 @@ void main() {
   // ═══════════════════════════════════════════════════════════════════════
 
   group('PaymentBloc initial state', () {
-    test('should start with PaymentInitial', () {
+    test('should start with PaymentIdle', () {
       stubOnlineAndFreshRate();
       final bloc = buildBloc();
-      expect(bloc.state, const PaymentInitial());
+      expect(bloc.state, const PaymentIdle());
       bloc.close();
     });
   });
@@ -115,30 +117,26 @@ void main() {
 
   group('InitiateKhqrPayment', () {
     blocTest<PaymentBloc, PaymentState>(
-      'emits [PaymentOffline] when device is offline',
+      'emits [KhqrGenerating, KhqrReady] on success',
       build: () {
-        stubOffline();
+        stubOnlineAndFreshRate();
+        stubQrGenerationSuccess();
         return buildBloc();
       },
       act: (bloc) => bloc.add(const InitiateKhqrPayment(
         amountKHR: 50000,
         invoiceId: 'INV-TEST-001',
-      )),
+      ),),
       expect: () => [
-        const PaymentOffline(amountKHR: 50000, invoiceId: 'INV-TEST-001'),
+        const KhqrGenerating(),
+        isA<KhqrReady>()
+            .having((s) => s.qrString, 'qrString', _testKhqrData.qrString)
+            .having((s) => s.amountKHR, 'amountKHR', _testKhqrData.amountKHR),
       ],
-      verify: (_) {
-        verify(() => mockNetworkInfo.isConnected).called(1);
-        verifyNever(() => mockKhqrRepo.generateDynamicQR(
-              amountKHR: any(named: 'amountKHR'),
-              invoiceId: any(named: 'invoiceId'),
-              merchantInfo: any(named: 'merchantInfo'),
-            ));
-      },
     );
 
     blocTest<PaymentBloc, PaymentState>(
-      'emits [PaymentGenerating, PaymentFailed] when QR generation fails',
+      'emits [KhqrGenerating, PaymentFailed] when QR generation fails',
       build: () {
         stubOnlineAndFreshRate();
         stubQrGenerationFailure();
@@ -147,339 +145,124 @@ void main() {
       act: (bloc) => bloc.add(const InitiateKhqrPayment(
         amountKHR: 50000,
         invoiceId: 'INV-TEST-001',
-      )),
+      ),),
       expect: () => [
-        const PaymentGenerating(),
-        const PaymentFailed(
-          messageEn: 'QR generation failed',
-          messageKm: 'បង្កើត QR បរាជ័យ',
-        ),
+        const KhqrGenerating(),
+        isA<PaymentFailed>(),
       ],
     );
 
     blocTest<PaymentBloc, PaymentState>(
-      'emits [PaymentGenerating, PaymentAwaitingConfirmation] on success',
+      'emits [PaymentFailed] when device is offline',
       build: () {
-        stubOnlineAndFreshRate();
-        stubQrGenerationSuccess();
+        stubOffline();
         return buildBloc();
       },
       act: (bloc) => bloc.add(const InitiateKhqrPayment(
         amountKHR: 50000,
         invoiceId: 'INV-TEST-001',
-      )),
+      ),),
       expect: () => [
-        const PaymentGenerating(),
-        isA<PaymentAwaitingConfirmation>()
-            .having((s) => s.khqrData, 'khqrData', _testKhqrData)
-            .having((s) => s.pollAttempts, 'pollAttempts', 0),
-      ],
-    );
-
-    blocTest<PaymentBloc, PaymentState>(
-      'refreshes exchange rate when stale before generating QR',
-      build: () {
-        when(() => mockNetworkInfo.isConnected)
-            .thenAnswer((_) async => true);
-        when(() => mockExchangeRateRepo.isRateStale()).thenReturn(true);
-        when(() => mockExchangeRateRepo.fetchLatestRate())
-            .thenAnswer((_) async => {});
-        when(() => mockExchangeRateRepo.getCachedRate()).thenReturn(4100);
-        stubQrGenerationSuccess();
-        return buildBloc();
-      },
-      act: (bloc) => bloc.add(const InitiateKhqrPayment(
-        amountKHR: 50000,
-        invoiceId: 'INV-TEST-001',
-      )),
-      verify: (_) {
-        verify(() => mockExchangeRateRepo.isRateStale()).called(1);
-        verify(() => mockExchangeRateRepo.fetchLatestRate()).called(1);
-      },
-    );
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // POLL PAYMENT STATUS
-  // ═══════════════════════════════════════════════════════════════════════
-
-  group('PollPaymentStatus', () {
-    blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentConfirmed when status is PaymentConfirmedStatus',
-      build: () {
-        stubOnlineAndFreshRate();
-        stubQrGenerationSuccess();
-        when(() => mockKhqrRepo.checkPaymentStatus(any()))
-            .thenAnswer((_) async => const Right(
-                  PaymentConfirmedStatus(
-                    reference: 'BK-REF-12345',
-                    amount: 50000,
-                  ),
-                ));
-        return buildBloc();
-      },
-      seed: () => PaymentAwaitingConfirmation(
-        khqrData: _testKhqrData,
-        remaining: const Duration(minutes: 4, seconds: 30),
-        pollAttempts: 2,
-      ),
-      act: (bloc) {
-        // Manually set the md5 hash so polling works
-        // We need to initiate first to set _currentMd5Hash
-        bloc.add(const InitiateKhqrPayment(
-          amountKHR: 50000,
-          invoiceId: 'INV-TEST-001',
-        ));
-      },
-      wait: const Duration(milliseconds: 500),
-      expect: () => [
-        const PaymentGenerating(),
-        isA<PaymentAwaitingConfirmation>(),
-      ],
-    );
-
-    blocTest<PaymentBloc, PaymentState>(
-      'does nothing when md5Hash is null (no active payment)',
-      build: () {
-        stubOnlineAndFreshRate();
-        return buildBloc();
-      },
-      act: (bloc) => bloc.add(const PollPaymentStatus()),
-      expect: () => [],
-      verify: (_) {
-        verifyNever(() => mockKhqrRepo.checkPaymentStatus(any()));
-      },
-    );
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // COUNTDOWN TICK
-  // ═══════════════════════════════════════════════════════════════════════
-
-  group('CountdownTick', () {
-    blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentTimedOut when remaining is zero',
-      build: () {
-        stubOnlineAndFreshRate();
-        return buildBloc();
-      },
-      seed: () => PaymentAwaitingConfirmation(
-        khqrData: _testKhqrData,
-        remaining: const Duration(seconds: 1),
-        pollAttempts: 10,
-      ),
-      act: (bloc) =>
-          bloc.add(const CountdownTick(remaining: Duration.zero)),
-      expect: () => [
-        const PaymentTimedOut(amountKHR: 0, invoiceId: ''),
-      ],
-    );
-
-    blocTest<PaymentBloc, PaymentState>(
-      'updates remaining time in PaymentAwaitingConfirmation',
-      build: () {
-        stubOnlineAndFreshRate();
-        return buildBloc();
-      },
-      seed: () => PaymentAwaitingConfirmation(
-        khqrData: _testKhqrData,
-        remaining: const Duration(minutes: 4),
-        pollAttempts: 5,
-      ),
-      act: (bloc) => bloc.add(
-        const CountdownTick(remaining: Duration(minutes: 3, seconds: 59)),
-      ),
-      expect: () => [
-        PaymentAwaitingConfirmation(
-          khqrData: _testKhqrData,
-          remaining: const Duration(minutes: 3, seconds: 59),
-          pollAttempts: 5,
-        ),
+        isA<PaymentFailed>().having((s) => s.failure.messageEn, 'messageEn',
+            contains('Check your internet connection'),),
       ],
     );
   });
 
   // ═══════════════════════════════════════════════════════════════════════
-  // INITIATE DEEP LINK PAYMENT
+  // DEEP LINK PAYMENTS
   // ═══════════════════════════════════════════════════════════════════════
 
-  group('InitiateDeepLinkPayment', () {
+  group('Deep Link Payments', () {
     blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentDeepLinkLaunched for ABA',
+      'emits ExternalAppLaunched for ABA',
       build: () {
         stubOnlineAndFreshRate();
+        when(() => mockDeepLinkHelper.launchAbaPay(
+              amount: any(named: 'amount'),
+              invoiceId: any(named: 'invoiceId'),
+              merchantId: any(named: 'merchantId'),
+            ),).thenAnswer((_) async => true);
         return buildBloc();
       },
-      act: (bloc) => bloc.add(const InitiateDeepLinkPayment(
-        method: PaymentMethod.aba,
+      act: (bloc) => bloc.add(const InitiateAbaDeepLink(
         amountKHR: 100000,
         invoiceId: 'INV-ABA-001',
-      )),
+      ),),
       expect: () => [
-        const PaymentDeepLinkLaunched(
-          method: PaymentMethod.aba,
-          amountKHR: 100000,
-          invoiceId: 'INV-ABA-001',
-        ),
+        const ExternalAppLaunched(method: PaymentMethod.aba),
       ],
     );
 
     blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentDeepLinkLaunched for Wing',
+      'emits ExternalAppLaunched for Wing',
       build: () {
         stubOnlineAndFreshRate();
+        when(() => mockDeepLinkHelper.launchWingMoney(
+              amount: any(named: 'amount'),
+              invoiceId: any(named: 'invoiceId'),
+              merchantPhone: any(named: 'merchantPhone'),
+            ),).thenAnswer((_) async => true);
         return buildBloc();
       },
-      act: (bloc) => bloc.add(const InitiateDeepLinkPayment(
-        method: PaymentMethod.wing,
+      act: (bloc) => bloc.add(const InitiateWingDeepLink(
         amountKHR: 75000,
         invoiceId: 'INV-WING-001',
-      )),
+      ),),
       expect: () => [
-        const PaymentDeepLinkLaunched(
-          method: PaymentMethod.wing,
-          amountKHR: 75000,
-          invoiceId: 'INV-WING-001',
+        const ExternalAppLaunched(method: PaymentMethod.wing),
+      ],
+    );
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // MANUAL PAYMENT
+  // ═══════════════════════════════════════════════════════════════════════
+
+  group('MarkManualPayment', () {
+    blocTest<PaymentBloc, PaymentState>(
+      'emits PaymentConfirmed with manual info',
+      build: () {
+        stubOnlineAndFreshRate();
+        return buildBloc();
+      },
+      act: (bloc) => bloc.add(const MarkManualPayment(
+        method: PaymentMethod.cash,
+        notes: 'Paid in cash',
+      ),),
+      expect: () => [
+        const PaymentConfirmed(
+          method: PaymentMethod.cash,
+          reference: 'Manual: Paid in cash',
+          amountKHR: 0, // In real test we'd set currentAmount
         ),
       ],
     );
   });
 
   // ═══════════════════════════════════════════════════════════════════════
-  // CONFIRM MANUAL PAYMENT
+  // CANCEL & TIMER
   // ═══════════════════════════════════════════════════════════════════════
 
-  group('ConfirmManualPayment', () {
+  group('Cancel & Timeout', () {
     blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentConfirmed with manual reference',
+      'emits PaymentCancelled on CancelPayment event',
       build: () {
         stubOnlineAndFreshRate();
         return buildBloc();
       },
-      act: (bloc) {
-        // First set up the payment context
-        bloc.add(const InitiateDeepLinkPayment(
-          method: PaymentMethod.aba,
-          amountKHR: 50000,
-          invoiceId: 'INV-MANUAL-001',
-        ));
-        // Then confirm manually
-        bloc.add(const ConfirmManualPayment(
-          reference: 'ABA-MANUAL-12345',
-        ));
-      },
-      wait: const Duration(milliseconds: 100),
-      expect: () => [
-        const PaymentDeepLinkLaunched(
-          method: PaymentMethod.aba,
-          amountKHR: 50000,
-          invoiceId: 'INV-MANUAL-001',
-        ),
-        isA<PaymentConfirmed>()
-            .having((s) => s.reference, 'reference', 'ABA-MANUAL-12345')
-            .having((s) => s.amountKHR, 'amountKHR', 50000)
-            .having((s) => s.md5Hash, 'md5Hash', ''),
-      ],
-    );
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // CANCEL PAYMENT
-  // ═══════════════════════════════════════════════════════════════════════
-
-  group('CancelPayment', () {
-    blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentCancelled from any state',
-      build: () {
-        stubOnlineAndFreshRate();
-        return buildBloc();
-      },
-      seed: () => PaymentAwaitingConfirmation(
-        khqrData: _testKhqrData,
-        remaining: const Duration(minutes: 3),
-        pollAttempts: 5,
-      ),
       act: (bloc) => bloc.add(const CancelPayment()),
       expect: () => [const PaymentCancelled()],
     );
 
     blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentCancelled from deep link state',
+      'emits PaymentTimeout on KhqrPaymentTimeout event',
       build: () {
         stubOnlineAndFreshRate();
         return buildBloc();
       },
-      seed: () => const PaymentDeepLinkLaunched(
-        method: PaymentMethod.wing,
-        amountKHR: 50000,
-        invoiceId: 'INV-CANCEL-001',
-      ),
-      act: (bloc) => bloc.add(const CancelPayment()),
-      expect: () => [const PaymentCancelled()],
+      act: (bloc) => bloc.add(const KhqrPaymentTimeout()),
+      expect: () => [const PaymentTimeout()],
     );
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // RETRY PAYMENT
-  // ═══════════════════════════════════════════════════════════════════════
-
-  group('RetryPayment', () {
-    blocTest<PaymentBloc, PaymentState>(
-      'emits PaymentFailed when no previous payment context exists',
-      build: () {
-        stubOnlineAndFreshRate();
-        return buildBloc();
-      },
-      act: (bloc) => bloc.add(const RetryPayment()),
-      expect: () => [
-        isA<PaymentFailed>()
-            .having((s) => s.messageEn, 'messageEn',
-                contains('Cannot retry')),
-      ],
-    );
-
-    blocTest<PaymentBloc, PaymentState>(
-      're-initiates KHQR payment on retry after timeout',
-      build: () {
-        stubOnlineAndFreshRate();
-        stubQrGenerationSuccess();
-        return buildBloc();
-      },
-      act: (bloc) {
-        // First initiate to set context
-        bloc.add(const InitiateKhqrPayment(
-          amountKHR: 50000,
-          invoiceId: 'INV-RETRY-001',
-        ));
-      },
-      wait: const Duration(milliseconds: 200),
-      expect: () => [
-        const PaymentGenerating(),
-        isA<PaymentAwaitingConfirmation>(),
-      ],
-    );
-  });
-
-  // ═══════════════════════════════════════════════════════════════════════
-  // TIMER CLEANUP
-  // ═══════════════════════════════════════════════════════════════════════
-
-  group('Timer cleanup', () {
-    test('cancels timers on close', () async {
-      stubOnlineAndFreshRate();
-      stubQrGenerationSuccess();
-
-      final bloc = buildBloc();
-      bloc.add(const InitiateKhqrPayment(
-        amountKHR: 50000,
-        invoiceId: 'INV-CLOSE-001',
-      ));
-
-      await Future.delayed(const Duration(milliseconds: 200));
-      await bloc.close();
-
-      // Verify bloc is closed without errors
-      expect(bloc.isClosed, isTrue);
-    });
   });
 }

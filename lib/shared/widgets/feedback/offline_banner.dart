@@ -34,6 +34,7 @@ import 'package:khmerbiz_pos/core/theme/app_spacing.dart';
 /// )
 /// ```
 class OfflineBanner extends StatefulWidget {
+  /// Creates an [OfflineBanner].
   const OfflineBanner({
     super.key,
     this.isPendingCount = 0,
@@ -145,7 +146,7 @@ class _OfflineBannerState extends State<OfflineBanner>
         color: AppColors.warning,
         boxShadow: [
           BoxShadow(
-            color: AppColors.shadow.withOpacity(0.2),
+            color: AppColors.shadow.withValues(alpha: 0.2),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -261,12 +262,16 @@ class _OfflineBannerState extends State<OfflineBanner>
 
 /// Compact offline indicator (for AppBar)
 class OfflineIndicator extends StatelessWidget {
+  /// Creates an [OfflineIndicator].
   const OfflineIndicator({
     super.key,
     this.pendingCount,
     this.onTap,
   });
+  /// Number of pending items.
   final int? pendingCount;
+
+  /// Callback when indicator is tapped.
   final VoidCallback? onTap;
 
   @override
@@ -308,7 +313,7 @@ class OfflineIndicator extends StatelessWidget {
                   vertical: 2,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(AppSpacing.radiusSmall),
                 ),
                 child: Text(
@@ -338,6 +343,7 @@ class OfflineIndicator extends StatelessWidget {
 
 /// Connection status widget
 class ConnectionStatus extends StatelessWidget {
+  /// Creates a [ConnectionStatus].
   const ConnectionStatus({
     required this.isOnline,
     super.key,
@@ -345,9 +351,16 @@ class ConnectionStatus extends StatelessWidget {
     this.lastSync,
     this.onRetry,
   });
+  /// Whether the device is online.
   final bool isOnline;
+
+  /// Number of pending items.
   final int pendingCount;
+
+  /// Time of last successful sync.
   final DateTime? lastSync;
+
+  /// Callback to retry connection/sync.
   final VoidCallback? onRetry;
 
   @override

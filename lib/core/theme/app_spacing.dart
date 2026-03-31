@@ -76,6 +76,7 @@ final class AppSpacing {
   /// Product card (grid): minimum 140dp wide, 180dp tall
   /// Ensures product info is readable in busy environments
   static const double productCardWidth = 140;
+  /// Standard product card height
   static const double productCardHeight = 180;
 
   /// Product card (list): 80dp height
@@ -237,6 +238,7 @@ final class AppSpacing {
 
   /// Chip internal padding: 8dp horizontal, 4dp vertical
   static const double chipPaddingH = sm;
+  /// Chip internal padding: 12dp horizontal, 4dp vertical
   static const double chipPaddingV = xs;
 
   /// Convert dp to EdgeInsets

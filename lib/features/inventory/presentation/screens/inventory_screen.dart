@@ -85,10 +85,10 @@ class _InventoryScreenState extends State<InventoryScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.check_circle_outline,
-                  size: 64, color: AppColors.success),
+                  size: 64, color: AppColors.success,),
               const SizedBox(height: AppSpacing.base),
               Text('All products are well stocked!',
-                  style: AppTextStyles.headlineMedium),
+                  style: AppTextStyles.headlineMedium,),
             ],
           ),
         );
@@ -161,7 +161,6 @@ class _InventoryScreenState extends State<InventoryScreen>
         trailing: StockBadge(
           status: stockStatus,
           quantity: product.stock.toInt(),
-          style: StockBadgeStyle.compact,
         ),
         onTap: () => StockAdjustmentSheet.show(context, product),
       ),
@@ -179,10 +178,10 @@ class _InventoryScreenState extends State<InventoryScreen>
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Icon(Icons.history,
-                  size: 64, color: AppColors.textTertiary),
+                  size: 64, color: AppColors.textTertiary,),
               const SizedBox(height: AppSpacing.base),
               Text('No inventory activity yet',
-                  style: AppTextStyles.headlineMedium),
+                  style: AppTextStyles.headlineMedium,),
             ],
           ),
         );

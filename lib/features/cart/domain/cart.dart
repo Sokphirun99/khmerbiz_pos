@@ -1,8 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:khmerbiz_pos/features/products/domain/product.dart';
+import 'package:khmerbiz_pos/domain/entities/product.dart';
 
 /// Cart item representing a product added to the cart.
 final class CartItem extends Equatable {
+  /// Creates a [CartItem].
   const CartItem({
     required this.id,
     required this.product,
@@ -35,7 +36,7 @@ final class CartItem extends Equatable {
   final DateTime addedAt;
 
   /// Get the unit price (override or product price)
-  double get unitPrice => priceOverride ?? product.priceKhr;
+  double get unitPrice => priceOverride ?? product.retailPrice;
 
   /// Get total price for this item (before discount)
   double get subtotal => unitPrice * quantity;
@@ -59,6 +60,7 @@ final class CartItem extends Equatable {
     return copyWith(notes: newNotes);
   }
 
+  /// Creates a copy of this [CartItem] with the given fields replaced.
   CartItem copyWith({
     String? id,
     Product? product,
@@ -93,6 +95,7 @@ final class CartItem extends Equatable {
 
 /// Shopping cart containing items for current transaction.
 final class Cart extends Equatable {
+  /// Creates a [Cart].
   const Cart({
     required this.id,
     required this.items,
@@ -149,6 +152,7 @@ final class Cart extends Equatable {
     return items.fold(0, (sum, item) => sum + item.total);
   }
 
+  /// Get total discount amount (item-level + cart-level)
   double get totalDiscount {
     final itemDiscounts =
         items.fold<double>(0, (sum, item) => sum + item.discountAmount);
@@ -261,6 +265,7 @@ final class Cart extends Equatable {
     );
   }
 
+  /// Creates a copy of this [Cart] with the given fields replaced.
   Cart copyWith({
     String? id,
     List<CartItem>? items,
